@@ -1,0 +1,12 @@
+include 'LibMongoDomainObjects',
+        'LibMongoUtilities',
+        'LibMongoPromote',
+        'LibMongoLatestMavenVersionResolver',
+        'LibMongoPomImporter',
+        'LibMongoPomGenerator',
+        'LibMongoJenkinsJobsGenerator',
+	'MsApplicationMavenRepoImporter',
+        'MsVertxMavenRepoProxy',
+        'MsVertxMongoScriptsRunner',
+        'MsVertxPomImporter'
+

@@ -1,0 +1,4 @@
+- Rajouter des tests au pomgenerator
+- Utiliser Gson pour l'API criteria sur le pomimporter
+- Rajouter log  vertx
+- Parametrer MongoDB

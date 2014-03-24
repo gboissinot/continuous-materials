@@ -1,0 +1,20 @@
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.exception;
+
+/**
+ * @author Gregory Boissinot
+ */
+public class POMImporterException extends RuntimeException {
+
+    public POMImporterException(String message) {
+        super(message);
+    }
+
+    public POMImporterException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public POMImporterException(Throwable cause) {
+        super(cause);
+    }
+
+}
