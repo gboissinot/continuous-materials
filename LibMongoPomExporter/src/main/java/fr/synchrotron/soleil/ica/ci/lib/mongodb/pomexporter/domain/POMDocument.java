@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomgenerator.domain;
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain;
 
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ArtifactDocument;

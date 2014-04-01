@@ -13,6 +13,23 @@ import java.util.List;
  */
 public class ArtifactDocumentLoaderService {
 
+
+    private class StatusVersion {
+        String version;
+        String status;
+
+        private StatusVersion() {
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+    }
+
     ArtifactDocument loadPomModel(Model model) {
 
         if (model == null) {
@@ -23,8 +40,9 @@ public class ArtifactDocumentLoaderService {
 
         artifactDocument.setOrganisation(model.getGroupId());
         artifactDocument.setName(model.getName());
-        artifactDocument.setVersion(model.getVersion());
-        artifactDocument.setStatus("RELEASE");
+        StatusVersion statusVersion = extractStatusFromVersion(model.getVersion());
+        artifactDocument.setVersion(statusVersion.version);
+        artifactDocument.setStatus(statusVersion.status);
 
         final List dependencies = model.getDependencies();
         if (dependencies != null) {
@@ -46,5 +64,24 @@ public class ArtifactDocumentLoaderService {
 
 
         return artifactDocument;
+    }
+
+    private StatusVersion extractStatusFromVersion(String version) {
+        StatusVersion statusVersion = new StatusVersion();
+        if (version.endsWith("-SNAPSHOT")) {
+            statusVersion.status = "INTEGRATION";
+            statusVersion.version = version;
+            return statusVersion;
+        }
+
+        if (version.endsWith(".RELEASE")) {
+            statusVersion.status = "RELEASE";
+            statusVersion.version = version.substring(0, version.lastIndexOf(".RELEASE"));
+            return statusVersion;
+        }
+
+        statusVersion.status = "RELEASE";
+        statusVersion.version = version;
+        return statusVersion;
     }
 }

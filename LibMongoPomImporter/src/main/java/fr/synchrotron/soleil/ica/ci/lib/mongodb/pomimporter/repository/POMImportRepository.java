@@ -11,11 +11,11 @@ import org.jongo.MongoCollection;
 /**
  * @author Gregory Boissinot
  */
-public class POMRepository {
+public class POMImportRepository {
 
     private MongoDBDataSource mongoDBDataSource;
 
-    public POMRepository(MongoDBDataSource mongoDBDataSource) {
+    public POMImportRepository(MongoDBDataSource mongoDBDataSource) {
         this.mongoDBDataSource = mongoDBDataSource;
     }
 
@@ -35,7 +35,7 @@ public class POMRepository {
         return artifacts.count(criteria) != 0;
     }
 
-    public void updateOrInsertArtifactDocument(ArtifactDocument artifactDocument) {
+    public void updateArtifactDocument(ArtifactDocument artifactDocument) {
         DB mongoDB = mongoDBDataSource.getMongoDB();
         Jongo jongo = new Jongo(mongoDB);
         MongoCollection artifacts = jongo.getCollection("artifacts");
@@ -67,7 +67,7 @@ public class POMRepository {
         return projects.count(criteria) != 0;
     }
 
-    public void updateOrInsertProjectDocument(ProjectDocument projectDocument) {
+    public void updateProjectDocument(ProjectDocument projectDocument) {
         DB mongoDB = mongoDBDataSource.getMongoDB();
         Jongo jongo = new Jongo(mongoDB);
         MongoCollection projects = jongo.getCollection("projects");

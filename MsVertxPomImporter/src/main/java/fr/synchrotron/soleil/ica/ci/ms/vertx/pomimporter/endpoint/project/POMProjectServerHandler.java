@@ -1,7 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.ms.vertx.pomimporter.endpoint.project;
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMRepository;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMManagementService;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMImportRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
 import org.vertx.java.core.*;
 import org.vertx.java.core.file.AsyncFile;
@@ -50,11 +50,11 @@ public class POMProjectServerHandler implements Handler<HttpServerRequest> {
                                     final HttpServerResponse response = req.response();
                                     try {
                                         final BasicMongoDBDataSource mongoDBDataSource = new BasicMongoDBDataSource("127.0.0.1", 27017, "repo");
-                                        final POMRepository pomRepository = new POMRepository(mongoDBDataSource);
-                                        POMManagementService pomManagementService = new POMManagementService(pomRepository);
+                                        final POMImportRepository pomImportRepository = new POMImportRepository(mongoDBDataSource);
+                                        POMImportService pomImportService = new POMImportService(pomImportRepository);
 
                                         response.setStatusCode(200);
-                                        pomManagementService.insertProjectDocument(uploadedFile);
+                                        pomImportService.insertProjectDocument(uploadedFile);
                                         response.setStatusMessage("OK.");
                                         String okMessage = "POM File inserted in MongoDB\n";
                                         response.putHeader("Content-Length", String.valueOf(okMessage.getBytes().length));

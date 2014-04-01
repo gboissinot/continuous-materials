@@ -13,7 +13,7 @@ import java.io.Reader;
  */
 public class PomReaderService {
 
-    Model getModel(Reader pomReader) {
+    public Model getModel(Reader pomReader) {
 
         if (pomReader == null) {
             throw new NullPointerException("A pom content as reader object is required.");

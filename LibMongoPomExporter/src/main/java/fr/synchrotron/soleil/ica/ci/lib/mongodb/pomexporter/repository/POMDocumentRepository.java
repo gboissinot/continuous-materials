@@ -1,11 +1,11 @@
-package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomgenerator.repository;
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomgenerator.domain.POMDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomgenerator.exception.POMGeneratorException;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.exception.POMExporterException;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
@@ -50,12 +50,12 @@ public class POMDocumentRepository {
         final Iterable<ArtifactDocument> artifactDocuments = artifacts.find(gson.toJson(artifactDocumentQuery)).as(ArtifactDocument.class);
         final Iterator<ArtifactDocument> artifactDocumentIterator = artifactDocuments.iterator();
         if (!artifactDocumentIterator.hasNext()) {
-            throw new POMGeneratorException("At least one Artifact document must match criteria.");
+            throw new POMExporterException("At least one Artifact document must match criteria.");
         }
 
         final ArtifactDocument artifactDocument = artifactDocumentIterator.next();
         if (artifactDocumentIterator.hasNext()) {
-            throw new POMGeneratorException("Only one Artifact document must be returned.");
+            throw new POMExporterException("Only one Artifact document must be returned.");
         }
 
         return artifactDocument;
@@ -73,12 +73,12 @@ public class POMDocumentRepository {
         final Iterable<ProjectDocument> projectDocuments = projects.find(gson.toJson(projectDocumentQuery)).as(ProjectDocument.class);
         final Iterator<ProjectDocument> projectDocumentIterator = projectDocuments.iterator();
         if (!projectDocumentIterator.hasNext()) {
-            throw new POMGeneratorException("One Project document must match criteria.");
+            throw new POMExporterException("One Project document must match criteria.");
         }
 
         final ProjectDocument projectDocument = projectDocumentIterator.next();
         if (projectDocumentIterator.hasNext()) {
-            throw new POMGeneratorException("Only one Project document must be returned.");
+            throw new POMExporterException("Only one Project document must be returned.");
         }
 
         return projectDocument;

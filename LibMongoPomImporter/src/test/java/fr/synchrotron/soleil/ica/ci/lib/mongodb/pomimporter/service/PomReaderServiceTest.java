@@ -5,7 +5,6 @@ import org.apache.maven.model.Model;
 import org.junit.After;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,13 +18,13 @@ public class PomReaderServiceTest {
 
     private PomReaderService pomReaderService = new PomReaderService();
 
-    private InputStreamReader pomAsInputStreamReader;
+    private InputStream resourceAsStream;
 
     @After
     public void cleanup() {
-        if (pomAsInputStreamReader != null) {
+        if (resourceAsStream != null) {
             try {
-                pomAsInputStreamReader.close();
+                resourceAsStream.close();
             } catch (IOException e) {
                 //Ignore
             }
@@ -38,19 +37,21 @@ public class PomReaderServiceTest {
     }
 
     @Test
-    public void readPom() throws FileNotFoundException {
-        InputStream resourceAsStream = this.getClass().getResourceAsStream("pom-1.xml");
-        pomAsInputStreamReader = new InputStreamReader(resourceAsStream);
+    public void readPom() throws IOException {
+        resourceAsStream = this.getClass().getResourceAsStream("pom-1.xml");
+        InputStreamReader pomAsInputStreamReader = new InputStreamReader(resourceAsStream);
         Model model = pomReaderService.getModel(pomAsInputStreamReader);
         assertNotNull(model);
+        pomAsInputStreamReader.close();
     }
 
     @Test(expected = POMImporterException.class)
-    public void wrongPom() throws FileNotFoundException {
-        InputStream resourceAsStream = this.getClass().getResourceAsStream("wrongpom.xml");
-        pomAsInputStreamReader = new InputStreamReader(resourceAsStream);
+    public void wrongPom() throws IOException {
+        resourceAsStream = this.getClass().getResourceAsStream("wrongpom.xml");
+        InputStreamReader pomAsInputStreamReader = new InputStreamReader(resourceAsStream);
         Model model = pomReaderService.getModel(pomAsInputStreamReader);
         assertNotNull(model);
+        pomAsInputStreamReader.close();
     }
 
 

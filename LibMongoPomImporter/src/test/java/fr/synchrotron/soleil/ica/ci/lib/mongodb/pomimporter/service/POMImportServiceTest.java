@@ -7,7 +7,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ArtifactDependency
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.DeveloperDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMImportRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
@@ -26,18 +27,18 @@ import static org.junit.Assert.*;
 /**
  * @author Gregory Boissinot
  */
-public class POMManagementServiceTest {
+public class POMImportServiceTest {
 
     private static DB mongoDB;
     private static Jongo jongo;
-    private static POMManagementService pomManagementService;
+    private static POMImportService pomImportService;
 
     @BeforeClass
     public static void setupMongoDB() throws IOException {
         Fongo fongo = new Fongo("testMongoServer");
         mongoDB = fongo.getDB("repo");
         jongo = new Jongo(mongoDB);
-        pomManagementService = new POMManagementService(new POMRepository(new InMemoryMongoDBDataSource()));
+        pomImportService = new POMImportService(new POMImportRepository(new InMemoryMongoDBDataSource()));
     }
 
     @After
@@ -45,7 +46,6 @@ public class POMManagementServiceTest {
         MongoCollection projectsCollection = jongo.getCollection("projects");
         projectsCollection.remove();
     }
-
 
     static private class InMemoryMongoDBDataSource implements MongoDBDataSource {
         @Override
@@ -82,7 +82,10 @@ public class POMManagementServiceTest {
 
         URL resource = this.getClass().getResource("pom-1.xml");
         File pomFile = new File(resource.toURI());
-        pomManagementService.insertArtifactDocument(pomFile);
+        FileReader pomFileReader = new FileReader(pomFile);
+        PomReaderService pomReaderService = new PomReaderService();
+        pomImportService.insertArtifactDocument(pomReaderService.getModel(pomFileReader));
+        pomFileReader.close();
 
         final Iterable<ArtifactDocument> artifactDocumentIterable = getArtifactDocument();
         final Iterator<ArtifactDocument> iterator = artifactDocumentIterable.iterator();
@@ -118,7 +121,10 @@ public class POMManagementServiceTest {
 
         URL resource = this.getClass().getResource("pom-1.xml");
         File pomFile = new File(resource.toURI());
-        pomManagementService.insertProjectDocument(pomFile);
+        FileReader pomFileReader = new FileReader(pomFile);
+        PomReaderService pomReaderService = new PomReaderService();
+        pomImportService.insertProjectDocument(pomReaderService.getModel(pomFileReader));
+        pomFileReader.close();
 
         final Iterable<ProjectDocument> projectDocumentIterable = getProjectDocument();
         final Iterator<ProjectDocument> iterator = projectDocumentIterable.iterator();
@@ -150,9 +156,15 @@ public class POMManagementServiceTest {
         File pomFile2 = new File(resource2.toURI());
 
 
-        pomManagementService.insertProjectDocument(pomFile1);
+        PomReaderService pomReaderService = new PomReaderService();
+        FileReader pomFileReader1 = new FileReader(pomFile1);
+        pomImportService.insertProjectDocument(pomReaderService.getModel(pomFileReader1));
+        pomFileReader1.close();
+
         //Insert the same project with some modification
-        pomManagementService.insertProjectDocument(pomFile2);
+        FileReader pomFileReader2 = new FileReader(pomFile2);
+        pomImportService.insertProjectDocument(pomReaderService.getModel(pomFileReader2));
+        pomFileReader2.close();
 
         final Iterable<ProjectDocument> projectDocumentIterable = getProjectDocument();
         final Iterator<ProjectDocument> iterator = projectDocumentIterable.iterator();
