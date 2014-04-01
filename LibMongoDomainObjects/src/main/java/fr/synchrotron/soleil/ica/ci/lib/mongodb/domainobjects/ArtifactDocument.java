@@ -11,7 +11,7 @@ public class ArtifactDocument {
 
     @Required
     @Order(1)
-    private String organisation;
+    private String org;
 
     @Required
     @Order(2)
@@ -67,19 +67,19 @@ public class ArtifactDocument {
     @Override
     public String toString() {
         return "ArtifactDocument{" +
-                "organisation='" + organisation + '\'' +
+                "organisation='" + org + '\'' +
                 ", name='" + name + '\'' +
                 ", version='" + version + '\'' +
                 ", type='" + type + '\'' +
                 '}';
     }
 
-    public String getOrganisation() {
-        return organisation;
+    public String getOrg() {
+        return org;
     }
 
-    public void setOrganisation(String organisation) {
-        this.organisation = organisation;
+    public void setOrg(String org) {
+        this.org = org;
     }
 
     public String getName() {
