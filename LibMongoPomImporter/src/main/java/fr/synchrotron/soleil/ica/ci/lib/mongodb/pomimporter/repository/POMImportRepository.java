@@ -49,11 +49,11 @@ public class POMImportRepository {
     }
 
     public void insertArtifactDocument(ArtifactDocument artifactDocument) {
-         DB mongoDB = mongoDBDataSource.getMongoDB();
-         Jongo jongo = new Jongo(mongoDB);
-         MongoCollection artifacts = jongo.getCollection("artifacts");
-         artifacts.insert(artifactDocument);
-     }
+        DB mongoDB = mongoDBDataSource.getMongoDB();
+        Jongo jongo = new Jongo(mongoDB);
+        MongoCollection artifacts = jongo.getCollection("artifacts");
+        artifacts.insert(artifactDocument);
+    }
 
     /*
      *   Project Document

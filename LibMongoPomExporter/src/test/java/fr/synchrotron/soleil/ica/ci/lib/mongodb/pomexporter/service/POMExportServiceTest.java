@@ -7,9 +7,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMImport
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.PomReaderService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
-import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Model;
-import org.custommonkey.xmlunit.Diff;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
 import org.junit.After;
@@ -22,7 +20,6 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Gregory Boissinot
