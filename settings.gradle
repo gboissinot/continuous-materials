@@ -8,5 +8,5 @@ include 'LibMongoDomainObjects',
         'MsApplicationMavenRepoImporter',
         'MsVertxMavenRepoProxy',
         'MsVertxMongoScriptsRunner',
-        'MsVertxPomImporter'
+        'MsVertxPomDescriptor'
 

@@ -1,5 +1,7 @@
-package fr.synchrotron.soleil.ica.ci.ms.vertx.pomimporter.endpoint.project;
+package fr.synchrotron.soleil.ica.ci.ms.vertx.pomdescriptor.endpoint;
 
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service.POMExportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMImportRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
@@ -10,21 +12,70 @@ import org.vertx.java.core.http.HttpServerResponse;
 import org.vertx.java.core.streams.Pump;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.UUID;
 
 /**
  * @author Gregory Boissinot
  */
-public class POMProjectServerHandler implements Handler<HttpServerRequest> {
+public class POMDescriptorServerHandler implements Handler<HttpServerRequest> {
 
     private final Vertx vertx;
+    private final String mongoHost;
+    private final int mongoPort;
+    private final String mongoDBName;
 
-    public POMProjectServerHandler(Vertx vertx) {
+    public POMDescriptorServerHandler(Vertx vertx, String mongoHost, int mongoPort, String mongoDBName) {
         this.vertx = vertx;
+        this.mongoHost = mongoHost;
+        this.mongoPort = mongoPort;
+        this.mongoDBName = mongoDBName;
     }
 
     @Override
-    public void handle(final HttpServerRequest req) {
+    public void handle(final HttpServerRequest request) {
+        try {
+            final String method = request.method();
+
+            if ("PUT".equals(method) || "POST".equals(method)) {
+                handleUploadPom(request);
+            } else if ("GET".equals(method)) {
+                handleDownloadPom(request);
+            } else {
+                request.response().setStatusCode(400);
+                request.response().setStatusMessage("Only GET, PUT and POST requests are supported.");
+                request.response().end();
+            }
+        } catch (Throwable e) {
+            request.response().setStatusCode(500);
+            request.response().setStatusMessage(e.toString());
+            request.response().end();
+        }
+
+    }
+
+    private void handleDownloadPom(final HttpServerRequest request) {
+        final BasicMongoDBDataSource mongoDBDataSource = new BasicMongoDBDataSource(mongoHost, mongoPort, mongoDBName);
+        final POMDocumentRepository pomDocumentRepository = new POMDocumentRepository(mongoDBDataSource);
+        POMExportService pomExportService = new POMExportService(pomDocumentRepository);
+
+        final MultiMap params = request.params();
+        String org = params.get("org");
+        String name = params.get("name");
+        String status = params.get("status");
+        String version = params.get("version");
+
+        StringWriter stringWriter = new StringWriter();
+        pomExportService.exportPomFile(stringWriter, org, name, status, version);
+        String pomContent = stringWriter.toString();
+
+        request.response().setStatusCode(200);
+        request.response().putHeader("Content-Length", String.valueOf(pomContent.getBytes().length));
+        request.response().write(pomContent);
+        request.response().end();
+    }
+
+    private void handleUploadPom(final HttpServerRequest req) {
 
         req.pause();
 
@@ -49,14 +100,14 @@ public class POMProjectServerHandler implements Handler<HttpServerRequest> {
                                 if (ar.succeeded()) {
                                     final HttpServerResponse response = req.response();
                                     try {
-                                        final BasicMongoDBDataSource mongoDBDataSource = new BasicMongoDBDataSource("127.0.0.1", 27017, "repo");
+                                        final BasicMongoDBDataSource mongoDBDataSource = new BasicMongoDBDataSource(mongoHost, mongoPort, mongoDBName);
                                         final POMImportRepository pomImportRepository = new POMImportRepository(mongoDBDataSource);
                                         POMImportService pomImportService = new POMImportService(pomImportRepository);
 
                                         response.setStatusCode(200);
-                                        pomImportService.insertProjectDocument(uploadedFile);
+                                        pomImportService.importPomFile(uploadedFile);
                                         response.setStatusMessage("OK.");
-                                        String okMessage = "POM File inserted in MongoDB\n";
+                                        String okMessage = "POM file inserted in MongoDB\n";
                                         response.putHeader("Content-Length", String.valueOf(okMessage.getBytes().length));
                                         response.write(okMessage);
                                         response.end();
