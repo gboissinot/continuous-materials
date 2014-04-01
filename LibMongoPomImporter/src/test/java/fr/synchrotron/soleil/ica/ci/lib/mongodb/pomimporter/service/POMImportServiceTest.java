@@ -58,7 +58,7 @@ public class POMImportServiceTest {
         Jongo jongo = new Jongo(mongoDB);
         MongoCollection artifactsCollection = jongo.getCollection("artifacts");
         final ArtifactDocument artifactDocument = new ArtifactDocument();
-        artifactDocument.setOrganisation("fr.synchrotron.soleil.ica.ci.lib");
+        artifactDocument.setOrg("fr.synchrotron.soleil.ica.ci.lib");
         artifactDocument.setName("maven-versionresolver");
         artifactDocument.setVersion("1.0.1-SNAPSHOT");
         artifactDocument.setStatus("RELEASE");
@@ -93,7 +93,7 @@ public class POMImportServiceTest {
         final ArtifactDocument artifactDocument = iterator.next();
         assertFalse(iterator.hasNext());
 
-        assertEquals("fr.synchrotron.soleil.ica.ci.lib", artifactDocument.getOrganisation());
+        assertEquals("fr.synchrotron.soleil.ica.ci.lib", artifactDocument.getOrg());
         assertEquals("maven-versionresolver", artifactDocument.getName());
 
         assertEquals("1.0.1-SNAPSHOT", artifactDocument.getVersion());

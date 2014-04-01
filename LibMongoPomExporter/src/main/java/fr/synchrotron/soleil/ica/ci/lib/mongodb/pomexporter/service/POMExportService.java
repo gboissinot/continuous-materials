@@ -47,7 +47,7 @@ public class POMExportService {
         final POMDocument pomDocument = pomDocumentRepository.loadPOMDocument(org, name, status, version);
 
         final ArtifactDocument aritfactDocument = pomDocument.getAritfactDocument();
-        pomModel.setGroupId(aritfactDocument.getOrganisation());
+        pomModel.setGroupId(aritfactDocument.getOrg());
         pomModel.setArtifactId(aritfactDocument.getName());
         pomModel.setVersion(aritfactDocument.getVersion() + "." + aritfactDocument.getStatus());
 

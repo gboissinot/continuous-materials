@@ -38,7 +38,7 @@ public class ArtifactDocumentLoaderService {
 
         ArtifactDocument artifactDocument = new ArtifactDocument();
 
-        artifactDocument.setOrganisation(model.getGroupId());
+        artifactDocument.setOrg(model.getGroupId());
         artifactDocument.setName(model.getName());
         StatusVersion statusVersion = extractStatusFromVersion(model.getVersion());
         artifactDocument.setVersion(statusVersion.version);

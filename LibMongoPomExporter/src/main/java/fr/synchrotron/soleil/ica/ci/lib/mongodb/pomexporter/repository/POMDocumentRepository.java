@@ -41,7 +41,7 @@ public class POMDocumentRepository {
 
         MongoCollection artifacts = jongo.getCollection("artifacts");
         ArtifactDocument artifactDocumentQuery = new ArtifactDocument();
-        artifactDocumentQuery.setOrganisation(org);
+        artifactDocumentQuery.setOrg(org);
         artifactDocumentQuery.setName(name);
         artifactDocumentQuery.setStatus(status);
         artifactDocumentQuery.setVersion(version);
