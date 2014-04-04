@@ -2,8 +2,8 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ArtifactDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.exception.POMExporterException;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;

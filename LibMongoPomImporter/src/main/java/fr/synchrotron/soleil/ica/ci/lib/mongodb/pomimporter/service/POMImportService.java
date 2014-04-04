@@ -1,7 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ArtifactDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.exception.POMImporterException;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMImportRepository;
 import org.apache.maven.model.Model;

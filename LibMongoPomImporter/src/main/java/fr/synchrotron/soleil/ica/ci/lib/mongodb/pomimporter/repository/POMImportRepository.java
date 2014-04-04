@@ -2,8 +2,8 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository;
 
 import com.mongodb.DB;
 import com.mongodb.WriteConcern;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ArtifactDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;

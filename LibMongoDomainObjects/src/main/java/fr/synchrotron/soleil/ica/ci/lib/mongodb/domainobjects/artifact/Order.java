@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects;
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact;
 
 import java.lang.annotation.*;
 

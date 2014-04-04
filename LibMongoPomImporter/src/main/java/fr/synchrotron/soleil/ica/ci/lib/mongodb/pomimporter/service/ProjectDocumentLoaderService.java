@@ -1,7 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.DeveloperDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Scm;
