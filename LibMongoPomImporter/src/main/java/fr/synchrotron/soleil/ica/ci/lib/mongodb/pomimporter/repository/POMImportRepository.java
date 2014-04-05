@@ -32,7 +32,6 @@ public class POMImportRepository {
                 + "\", \"status\":\"" + artifactDocument.getStatus()
                 + "\", \"version\":\"" + artifactDocument.getVersion()
                 + "\"}";
-//        Gson gson = new Gson();
         return artifacts.count(criteria) != 0;
     }
 
@@ -46,7 +45,6 @@ public class POMImportRepository {
                 + "\", \"status\":\"" + artifactDocument.getStatus()
                 + "\", \"version\":\"" + artifactDocument.getVersion()
                 + "\"}";
-//        Gson gson = new Gson();
         artifacts.update(criteria).with(artifactDocument);
     }
 

@@ -1,6 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.MavenProjectInfo;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
@@ -52,6 +53,12 @@ public class ProjectDocumentLoaderService {
                 projectDocument.setScmConnection(extractMavenScmUrl);
             }
         }
+
+        MavenProjectInfo mavenProjectInfo = new MavenProjectInfo();
+        final String packaging = model.getPackaging();
+        mavenProjectInfo.setPackaging(packaging != null ? packaging : "jar");
+        projectDocument.setMaven(mavenProjectInfo);
+
 
         return projectDocument;
     }

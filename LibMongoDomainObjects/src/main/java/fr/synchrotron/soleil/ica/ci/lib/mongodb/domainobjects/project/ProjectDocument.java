@@ -19,6 +19,8 @@ public class ProjectDocument {
 
     private String scmConnection;
 
+    private MavenProjectInfo maven;
+
     public String getOrg() {
         return org;
     }
@@ -57,5 +59,13 @@ public class ProjectDocument {
 
     public void setScmConnection(String scmConnection) {
         this.scmConnection = scmConnection;
+    }
+
+    public MavenProjectInfo getMaven() {
+        return maven;
+    }
+
+    public void setMaven(MavenProjectInfo maven) {
+        this.maven = maven;
     }
 }
