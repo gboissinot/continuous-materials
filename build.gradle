@@ -81,6 +81,9 @@ project(':LibMongoLatestMavenVersionResolver') {
 }
 
 project('MsVertxPomDescriptor') {
+
+    apply from: "http://dl.bintray.com/synchrotron-soleil-ica/ci-artifacts/vertx.gradle"
+
     dependencies {
         compile project(':LibMongoPomImporter')
         compile project(':LibMongoPomExporter')

@@ -1,0 +1,8 @@
+{
+    "main": "fr.synchrotron.soleil.ica.ci.ms.vertx.pomdescriptor.endpoint.POMDescriptorEndpoint",
+    "description": "An HTTP Maven Descriptor Endpoint",
+    "licenses": ["MIT license"],
+    "author": "Gregory Boissinot",
+    "developers": ["Gregory Boissinot"],
+    "keywords": ["maven", "pom", "endpoint"]
+}
