@@ -115,7 +115,7 @@ project(':LibMongoLatestMavenVersionResolver') {
     }
 }
 
-project('MsVertxPomDescriptor') {
+project('MsVertxModulePomDescriptor') {
 
     apply from: "http://dl.bintray.com/synchrotron-soleil-ica/ci-artifacts/vertx.gradle"
 
@@ -130,7 +130,7 @@ project('MsVertxPomDescriptor') {
 }
 
 
-project('MsVertxMavenRepoProxy'){
+project('MsVertxModuleMavenRepoProxy'){
     dependencies {
         compile project(':LibMongoLatestMavenVersionResolver')
         compile "org.springframework:spring-core:$springVersion"
@@ -142,7 +142,6 @@ project('MsVertxMavenRepoProxy'){
             exclude group: "org.slf4j"
         }
         compile "io.vertx:vertx-platform:$vertxVerison"
-
     }
 }
 

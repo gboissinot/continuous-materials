@@ -6,7 +6,7 @@ include 'LibMongoDomainObjects',
         'LibMongoPomExporter',
         'LibMongoJenkinsJobsGenerator',
         'MsApplicationMavenRepoImporter',
-        'MsVertxMavenRepoProxy',
-        'MsVertxMongoScriptsRunner',
-        'MsVertxPomDescriptor'
+        'MsVertxModuleMavenRepoProxy',
+        'MsVertxModuleMongoScriptsRunner',
+        'MsVertxModulePomDescriptor'
 
