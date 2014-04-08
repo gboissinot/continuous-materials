@@ -27,6 +27,7 @@ subprojects {
     repositories {
         maven {
             url "http://calypso/nexus/content/groups/public"
+           //url "http://172.16.5.7:8090/maven"
         }
     }
     dependencies {
@@ -127,7 +128,7 @@ project('MsVertxModulePomDescriptor') {
 
 project('MsVertxModuleMavenRepoProxy') {
 
-    apply from: "vertx/vertx.gradle"
+    //apply from: "vertx/vertx.gradle"
 
     dependencies {
         compile project(':LibMongoLatestMavenVersionResolver')

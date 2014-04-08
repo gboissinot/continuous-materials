@@ -27,6 +27,30 @@ class SoleilBuildPlugin implements Plugin<Gradle> {
     @Override
     public void apply(Gradle gradle) {
 
+
+/*
+gradle.allprojects { project ->
+
+            project.repositories {
+                //remove all repositories not pointing to the enterprise repository url
+                all { ArtifactRepository repo ->
+                    if (!(repo instanceof MavenArtifactRepository) || repo.url.toString() != NEXUSMAVEN_REPOSITORY_URL) {
+                        //project.logger.lifecycle "Repository ${repo.url} removed. Only $NEXUSMAVEN_REPOSITORY_URL is allowed"
+                        remove repo
+                   }
+                }
+
+
+                // add the enterprise repository
+                maven {
+                    name "Soleil Nexus Maven Repository"
+                    url "$NEXUSMAVEN_REPOSITORY_URL"
+                }
+
+
+            }
+ */
+
         gradle.allprojects(new Action<Project>() {
             @Override
             public void execute(Project project) {
