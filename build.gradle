@@ -9,9 +9,9 @@ project.ext {
     xmlunitVersion = '1.3'
     mockitoVersion = '1.9.5'
     commonsioVersion = '2.4'
-    vertxVerison = '2.1RC1'
-    springVersion='3.2.4.RELEASE'
-    utils4jVersion='0.7.0'
+    vertxVersion = '2.1RC1'
+    springVersion = '3.2.4.RELEASE'
+    utils4jVersion = '0.7.0'
 }
 
 subprojects {
@@ -25,9 +25,8 @@ subprojects {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
     repositories {
-        mavenCentral()
         maven {
-            url "http://dl.bintray.com/synchrotron-soleil-ica/ci-artifacts"
+            url "http://calypso/nexus/content/groups/public"
         }
     }
     dependencies {
@@ -117,20 +116,19 @@ project(':LibMongoLatestMavenVersionResolver') {
 
 project('MsVertxModulePomDescriptor') {
 
-    apply from: "http://dl.bintray.com/synchrotron-soleil-ica/ci-artifacts/vertx.gradle"
-
     dependencies {
         compile project(':LibMongoPomImporter')
         compile project(':LibMongoPomExporter')
-        compile("io.vertx:vertx-core:$vertxVerison") {
-            exclude group: "org.slf4j"
-        }
-        compile "io.vertx:vertx-platform:$vertxVerison"
+        compile("io.vertx:vertx-core:$vertxVersion")
+        compile "io.vertx:vertx-platform:$vertxVersion"
     }
 }
 
 
-project('MsVertxModuleMavenRepoProxy'){
+project('MsVertxModuleMavenRepoProxy') {
+
+    apply from: "vertx/vertx.gradle"
+
     dependencies {
         compile project(':LibMongoLatestMavenVersionResolver')
         compile "org.springframework:spring-core:$springVersion"
@@ -138,10 +136,20 @@ project('MsVertxModuleMavenRepoProxy'){
         compile "org.apache.maven:maven-core:$mavenCoreVersion"
         compile "org.fuin:utils4j:$utils4jVersion"
         compile "commons-io:commons-io:$commonsioVersion"
-        compile("io.vertx:vertx-core:$vertxVerison")
-        compile "io.vertx:vertx-platform:$vertxVerison"
+        compile("io.vertx:vertx-core:$vertxVersion")
+        compile "io.vertx:vertx-platform:$vertxVersion"
         compile "org.slf4j:slf4j-log4j12:1.6.1"
     }
 }
 
+project('ScriptsGradle') {
+    apply plugin: 'groovy'
+    dependencies {
+        compile project(':LibMongoLatestMavenVersionResolver')
+        compile project(':LibMongoUtilities')
+        compile "org.mongodb:mongo-java-driver:2.11.3"
+        compile gradleApi()
+        compile localGroovy()
+    }
+}
 

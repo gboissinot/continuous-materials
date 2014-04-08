@@ -1,0 +1,12 @@
+initscript {
+    dependencies {
+        classpath files('libs/LibMongoLatestMavenVersionResolver.jar')
+        classpath files('libs/LibMongoUtilities.jar')
+        classpath files('libs/mongo-java-driver-2.11.3.jar')
+        classpath files('libs/ScriptsGradle.jar')
+    }
+}
+
+apply plugin: 'proxy'
+
+
