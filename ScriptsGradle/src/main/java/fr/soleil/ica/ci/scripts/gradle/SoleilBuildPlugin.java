@@ -12,7 +12,8 @@ import org.gradle.api.invocation.Gradle;
 
 
 /**
- * Created by ABEILLE on 08/04/2014.
+ * @author Gregory Boissinot
+ * @author Gwenaelle Abeille
  */
 public class SoleilBuildPlugin implements Plugin<Gradle> {
 
@@ -21,21 +22,25 @@ public class SoleilBuildPlugin implements Plugin<Gradle> {
     @Override
     public void apply(Gradle gradle) {
 
+
         gradle.allprojects(new Action<Project>() {
             @Override
             public void execute(Project project) {
-                ConfigurationContainer configurations = project.getConfigurations();
-                for (Configuration configuration : configurations) {
-                    ResolutionStrategy resolutionStrategy = configuration.getResolutionStrategy();
-                    resolutionStrategy.eachDependency(new Action<DependencyResolveDetails>() {
-                        @Override
-                        public void execute(DependencyResolveDetails dependencyResolveDetails) {
-                            ModuleVersionSelector requested = dependencyResolveDetails.getRequested();
-                            String version = resolveMavenVersion(requested.getGroup(), requested.getName(), requested.getVersion());
-                            dependencyResolveDetails.useVersion(version);
-                        }
-                    });
-                }
+
+                project.getLogger().info("Working with project:" + project.getName());
+
+//                ConfigurationContainer configurations = project.getConfigurations();
+//                for (Configuration configuration : configurations) {
+//                    ResolutionStrategy resolutionStrategy = configuration.getResolutionStrategy();
+//                    resolutionStrategy.eachDependency(new Action<DependencyResolveDetails>() {
+//                        @Override
+//                        public void execute(DependencyResolveDetails dependencyResolveDetails) {
+//                            ModuleVersionSelector requested = dependencyResolveDetails.getRequested();
+//                            String version = resolveMavenVersion(requested.getGroup(), requested.getName(), requested.getVersion());
+//                            dependencyResolveDetails.useVersion(version);
+//                        }
+//                    });
+//                }
             }
         });
 
