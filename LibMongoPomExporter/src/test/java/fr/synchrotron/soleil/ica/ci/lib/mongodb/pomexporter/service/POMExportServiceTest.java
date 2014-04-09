@@ -60,7 +60,7 @@ public class POMExportServiceTest {
 
 
     @Test
-    public void test() throws IOException, URISyntaxException, SAXException {
+    public void testExport() throws IOException, URISyntaxException, SAXException {
 
         //TEST DATA
         StringWriter writer = new StringWriter();
