@@ -19,7 +19,7 @@ public class ProjectDocument {
 
     private String scmConnection;
 
-    private MavenProjectInfo maven;
+    private String language;
 
     public String getOrg() {
         return org;

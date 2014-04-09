@@ -1,2 +1,5 @@
 main class:org.vertx.java.platform.impl.cli.Starter
-program parameters:run fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.HttpArtifactProxyEndpoint
+program parameters:
+run
+fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.HttpArtifactProxyEndpoint
+-Dorg.vertx.logger-delegate-factory-class-name=org.vertx.java.core.logging.impl.Log4jLogDelegateFactory

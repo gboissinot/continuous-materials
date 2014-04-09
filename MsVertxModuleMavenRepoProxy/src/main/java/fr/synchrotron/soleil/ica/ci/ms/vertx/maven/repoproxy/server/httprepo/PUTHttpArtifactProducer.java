@@ -1,9 +1,7 @@
-package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.put;
+package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo;
 
 import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.HandleResponseClient;
 import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.HttpArtifactProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -23,8 +21,6 @@ import java.util.Map;
 @Scope("singleton")
 @Profile("repoHttp")
 public class PUTHttpArtifactProducer extends HttpArtifactProducer {
-
-    private Logger logger = LoggerFactory.getLogger(PUTHttpArtifactProducer.class);
 
     public void handle(final HttpServerRequest request) {
 
