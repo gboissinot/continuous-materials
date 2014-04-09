@@ -46,7 +46,7 @@ public class POMImportService {
 
     void insertArtifactDocument(Model pomModel) {
         ArtifactDocumentLoaderService artifactDocumentLoaderService = new ArtifactDocumentLoaderService();
-        final ArtifactDocument artifactDocument = artifactDocumentLoaderService.loadPomModel(pomModel);
+        final ArtifactDocument artifactDocument = artifactDocumentLoaderService.populateArtifactDocument(pomModel);
 
         if (pomImportRepository.isArtifactDocumentAlreadyExists(artifactDocument)) {
             pomImportRepository.updateArtifactDocument(artifactDocument);
@@ -57,7 +57,7 @@ public class POMImportService {
 
     void insertProjectDocument(Model pomModel) {
         ProjectDocumentLoaderService projectDocumentLoaderService = new ProjectDocumentLoaderService();
-        final ProjectDocument projectDocument = projectDocumentLoaderService.loadPomModel(pomModel);
+        final ProjectDocument projectDocument = projectDocumentLoaderService.populateProjectDocument(pomModel);
 
         if (pomImportRepository.isProjectDocumentAlreadyExists(projectDocument)) {
             pomImportRepository.updateProjectDocument(projectDocument);

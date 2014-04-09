@@ -2,6 +2,9 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildContext;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildTool;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.maven.MavenProjectInfo;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 
@@ -30,7 +33,7 @@ public class ArtifactDocumentLoaderService {
         }
     }
 
-    ArtifactDocument loadPomModel(Model model) {
+    public ArtifactDocument populateArtifactDocument(Model model) {
 
         if (model == null) {
             throw new NullPointerException("A Maven Model is required.");
@@ -63,6 +66,17 @@ public class ArtifactDocumentLoaderService {
         }
 
 
+        MavenProjectInfo mavenProjectInfo = new MavenProjectInfo();
+        final String packaging = model.getPackaging();
+        mavenProjectInfo.setPackaging(packaging != null ? packaging : "jar");
+
+        final BuildContext buildContext = new BuildContext();
+        final BuildTool buildTool = new BuildTool();
+        buildTool.setMaven(mavenProjectInfo);
+        buildContext.setBuildTool(buildTool);
+        artifactDocument.setBuildContext(buildContext);
+
+
         return artifactDocument;
     }
 
@@ -70,7 +84,7 @@ public class ArtifactDocumentLoaderService {
         StatusVersion statusVersion = new StatusVersion();
         if (version.endsWith("-SNAPSHOT")) {
             statusVersion.status = "INTEGRATION";
-            statusVersion.version = version;
+            statusVersion.version = version.substring(0, version.lastIndexOf("-SNAPSHOT"));
             return statusVersion;
         }
 
