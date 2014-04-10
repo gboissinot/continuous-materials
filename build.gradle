@@ -154,3 +154,17 @@ project('ScriptsGradle') {
     }
 }
 
+project('LibMongoJenkinsJobsGenerator') {
+    dependencies {
+        compile project(':LibMongoDomainObjects')
+        compile project(':LibMongoUtilities')
+        compile "org.mongodb:mongo-java-driver:2.11.3"
+        compile "commons-lang:commons-lang:2.6"
+        compile "commons-io:commons-io:2.4"
+        compile "ch.qos.logback:logback-classic:1.1.1"
+        compile "org.jongo:jongo:1.0"
+        compile "com.github.spullara.mustache.java:compiler:0.8.10"
+        compile "guava:guava:11.0-rc1"
+    }
+}
+
