@@ -1,6 +1,8 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact;
 
 
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildContext;
+
 import java.util.Date;
 import java.util.List;
 
@@ -9,60 +11,41 @@ import java.util.List;
  */
 public class ArtifactDocument {
 
-    @Required
-    @Order(1)
     private String org;
 
-    @Required
-    @Order(2)
     private String name;
 
-    @Order(3)
     private String version;
 
-    @Required
-    @Order(4)
     private String status;
 
-    @Order(5)
     private String type;
 
-    @Order(6)
     private boolean isThirdParty;
 
-    @Required
-    @Order(7)
     private Date creationDate;
 
-    @Required
-    @Order(8)
     private Date publicationDate;
 
-    @Order(9)
     private String sha1;
 
-    @Order(10)
     private String md5;
 
-    @Order(11)
     private String description;
 
-    @Order(12)
     private String fileExtension;
 
-    @Order(13)
     private long fileSize;
 
-    @Order(14)
     private boolean isForce;
 
-    @Order(15)
     private ArtifactDocumentForJava javaLanguage;
 
-    @Order(16)
     private ArtifactDocumentForC cLanguage;
 
     private List<ArtifactDependency> dependencies;
+
+    private BuildContext buildContext;
 
     @Override
     public String toString() {
@@ -208,5 +191,13 @@ public class ArtifactDocument {
 
     public void setDependencies(List<ArtifactDependency> dependencies) {
         this.dependencies = dependencies;
+    }
+
+    public BuildContext getBuildContext() {
+        return buildContext;
+    }
+
+    public void setBuildContext(BuildContext buildContext) {
+        this.buildContext = buildContext;
     }
 }

@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project;
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.maven;
 
 /**
  * @author Gregory Boissinot

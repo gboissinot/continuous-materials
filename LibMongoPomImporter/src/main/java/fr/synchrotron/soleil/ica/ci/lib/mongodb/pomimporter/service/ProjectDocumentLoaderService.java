@@ -1,7 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.MavenProjectInfo;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
@@ -15,14 +14,13 @@ import java.util.List;
  */
 public class ProjectDocumentLoaderService {
 
-    ProjectDocument loadPomModel(Model model) {
+    ProjectDocument populateProjectDocument(Model model) {
 
         if (model == null) {
             throw new NullPointerException("A Maven Model is required.");
         }
 
         ProjectDocument projectDocument = new ProjectDocument();
-
         projectDocument.setOrg(model.getGroupId());
         projectDocument.setName(model.getArtifactId());
         projectDocument.setDescription(model.getDescription());
@@ -31,7 +29,6 @@ public class ProjectDocumentLoaderService {
         List<DeveloperDocument> developerDocuments = new ArrayList<DeveloperDocument>();
         for (Object developerObject : developers) {
             Developer developer = (Developer) developerObject;
-
             DeveloperDocument developerDocument = new DeveloperDocument();
             developerDocument.setId(developer.getId());
             developerDocument.setName(developer.getName());
@@ -40,7 +37,6 @@ public class ProjectDocumentLoaderService {
             developerDocument.setRoles(developer.getRoles());
             developerDocument.setTimezone(developer.getTimezone());
             developerDocument.setUrl(developer.getUrl());
-
             developerDocuments.add(developerDocument);
         }
         projectDocument.setDevelopers(developerDocuments);
@@ -53,12 +49,6 @@ public class ProjectDocumentLoaderService {
                 projectDocument.setScmConnection(extractMavenScmUrl);
             }
         }
-
-        MavenProjectInfo mavenProjectInfo = new MavenProjectInfo();
-        final String packaging = model.getPackaging();
-        mavenProjectInfo.setPackaging(packaging != null ? packaging : "jar");
-        projectDocument.setMaven(mavenProjectInfo);
-
 
         return projectDocument;
     }

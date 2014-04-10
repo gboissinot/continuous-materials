@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.logging.Logger;
 
 /**
  * @author Gregory Boissinot
@@ -29,7 +30,13 @@ public class HttpArtifactProducer {
     @Value("${repo.uri.path}")
     protected String repoURIPath;
 
+    protected Logger logger;
+
     private Vertx vertx;
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
 
     public void setVertx(Vertx vertx) {
         this.vertx = vertx;

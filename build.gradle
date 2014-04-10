@@ -25,9 +25,9 @@ subprojects {
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
     repositories {
+        mavenCentral()
         maven {
-            url "http://calypso/nexus/content/groups/public"
-           //url "http://172.16.5.7:8090/maven"
+            url "http://dl.bintray.com/synchrotron-soleil-ica/ci-artifacts"
         }
     }
     dependencies {

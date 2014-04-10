@@ -15,6 +15,7 @@ public class HttpArtifactProxyEndpoint extends Verticle {
     public static final int port = 8090;
 
     public void start() {
+
         HttpServer httpServer = null;
         try {
             AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
@@ -26,6 +27,7 @@ public class HttpArtifactProxyEndpoint extends Verticle {
 
             HttpArtifactServerHandler httpArtifactServerHandler = applicationContext.getBean(HttpArtifactServerHandler.class);
             httpArtifactServerHandler.setVertx(vertx);
+
 
             RouteMatcher routeMatcher = new RouteMatcher();
             routeMatcher.allWithRegEx("/maven/.*", httpArtifactServerHandler);

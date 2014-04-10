@@ -3,7 +3,9 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.MavenProjectInfo;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildContext;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildTool;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.maven.MavenProjectInfo;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.exception.POMExporterException;
@@ -47,6 +49,8 @@ public class POMExportService {
 
         final POMDocument pomDocument = pomDocumentRepository.loadPOMDocument(org, name, status, version);
 
+        //-- Populate form ArtifactDocument
+
         final ArtifactDocument aritfactDocument = pomDocument.getAritfactDocument();
         pomModel.setGroupId(aritfactDocument.getOrg());
         pomModel.setArtifactId(aritfactDocument.getName());
@@ -65,7 +69,19 @@ public class POMExportService {
             }
         }
 
+        //Extract Maven specifities
+        final BuildContext buildContext = aritfactDocument.getBuildContext();
+        if (buildContext != null) {
+            final BuildTool buildTool = buildContext.getBuildTool();
+            if (buildTool != null) {
+                final MavenProjectInfo mavenProjectInfo = buildTool.getMaven();
+                if (mavenProjectInfo != null) {
+                    pomModel.setPackaging(mavenProjectInfo.getPackaging());
+                }
+            }
+        }
 
+        //-- Populate form ProjectDocument
         final ProjectDocument projectDocument = pomDocument.getProjectDocument();
         pomModel.setDescription(projectDocument.getDescription());
 
@@ -90,12 +106,6 @@ public class POMExportService {
             final Scm scm = new Scm();
             scm.setConnection(scmConnection);
             pomModel.setScm(scm);
-        }
-
-        //Maven specifities
-        final MavenProjectInfo mavenProjectInfo = projectDocument.getMaven();
-        if (mavenProjectInfo != null) {
-            pomModel.setPackaging(mavenProjectInfo.getPackaging());
         }
 
 

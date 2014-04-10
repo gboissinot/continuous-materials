@@ -19,7 +19,7 @@ public class ProjectDocument {
 
     private String scmConnection;
 
-    private MavenProjectInfo maven;
+    private String language;
 
     public String getOrg() {
         return org;
@@ -61,11 +61,11 @@ public class ProjectDocument {
         this.scmConnection = scmConnection;
     }
 
-    public MavenProjectInfo getMaven() {
-        return maven;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setMaven(MavenProjectInfo maven) {
-        this.maven = maven;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

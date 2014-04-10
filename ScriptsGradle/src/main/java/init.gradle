@@ -1,4 +1,13 @@
-package fr.soleil.ica.ci.scripts.gradle;
+initscript {
+    dependencies {
+        classpath files('libs/LibMongoLatestMavenVersionResolver.jar')
+        classpath files('libs/LibMongoUtilities.jar')
+        classpath files('libs/mongo-java-driver-2.11.3.jar')
+        classpath files('libs/ScriptsGradle.jar')
+    }
+}
+
+apply plugin: SoleilBuildPlugin
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.domain.MavenInputArtifact;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.mongodb.MongoDBArtifactRepository;
@@ -11,36 +20,28 @@ import org.gradle.api.artifacts.*;
 import org.gradle.api.invocation.Gradle;
 
 
-/**
- * @author Gregory Boissinot
- * @author Gwenaelle Abeille
- */
-public class SoleilBuildPlugin implements Plugin<Gradle> {
+class SoleilBuildPlugin implements Plugin<Gradle> {
 
     private static String NEXUSMAVEN_REPOSITORY_URL = "http://172.16.5.7:8090/maven";
 
     @Override
     public void apply(Gradle gradle) {
 
-
         gradle.allprojects(new Action<Project>() {
             @Override
             public void execute(Project project) {
-
-                project.getLogger().info("Working with project:" + project.getName());
-
-//                ConfigurationContainer configurations = project.getConfigurations();
-//                for (Configuration configuration : configurations) {
-//                    ResolutionStrategy resolutionStrategy = configuration.getResolutionStrategy();
-//                    resolutionStrategy.eachDependency(new Action<DependencyResolveDetails>() {
-//                        @Override
-//                        public void execute(DependencyResolveDetails dependencyResolveDetails) {
-//                            ModuleVersionSelector requested = dependencyResolveDetails.getRequested();
-//                            String version = resolveMavenVersion(requested.getGroup(), requested.getName(), requested.getVersion());
-//                            dependencyResolveDetails.useVersion(version);
-//                        }
-//                    });
-//                }
+                ConfigurationContainer configurations = project.getConfigurations();
+                for (Configuration configuration : configurations) {
+                    ResolutionStrategy resolutionStrategy = configuration.getResolutionStrategy();
+                    resolutionStrategy.eachDependency(new Action<DependencyResolveDetails>() {
+                        @Override
+                        public void execute(DependencyResolveDetails dependencyResolveDetails) {
+                            ModuleVersionSelector requested = dependencyResolveDetails.getRequested();
+                            String version = resolveMavenVersion(requested.getGroup(), requested.getName(), requested.getVersion());
+                            dependencyResolveDetails.useVersion(version);
+                        }
+                    });
+                }
             }
         });
 

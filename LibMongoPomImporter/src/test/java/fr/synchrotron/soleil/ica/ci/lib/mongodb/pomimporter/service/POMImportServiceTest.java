@@ -60,7 +60,7 @@ public class POMImportServiceTest {
         final ArtifactDocument artifactDocument = new ArtifactDocument();
         artifactDocument.setOrg("fr.synchrotron.soleil.ica.ci.lib");
         artifactDocument.setName("maven-versionresolver");
-        artifactDocument.setVersion("1.0.1-SNAPSHOT");
+        artifactDocument.setVersion("1.0.1");
         artifactDocument.setStatus("INTEGRATION");
         Gson gson = new Gson();
         return artifactsCollection.find(gson.toJson(artifactDocument)).as(ArtifactDocument.class);
@@ -96,7 +96,7 @@ public class POMImportServiceTest {
         assertEquals("fr.synchrotron.soleil.ica.ci.lib", artifactDocument.getOrg());
         assertEquals("maven-versionresolver", artifactDocument.getName());
 
-        assertEquals("1.0.1-SNAPSHOT", artifactDocument.getVersion());
+        assertEquals("1.0.1", artifactDocument.getVersion());
         assertEquals("INTEGRATION", artifactDocument.getStatus());
 
         final List<ArtifactDependency> dependencies = artifactDocument.getDependencies();

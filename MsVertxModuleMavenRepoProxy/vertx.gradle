@@ -1,0 +1,17 @@
+task modZip(type: Zip, dependsOn: 'pullInDeps', description: 'Package the module .zip file') {
+    group = 'vert.x'
+    classifier = "mod"
+    description = "Assembles a vert.x module"
+    destinationDir = project.file('build/libs')
+    archiveName = "${modname}-${version}" + ".zip"
+    from copyMod
+}
+
+task fatJar(dependsOn: modZip, description: 'Creates a fat executable jar which contains everything needed to run the module') << {
+    if (createFatJar == 'true') {
+        setSysProps()
+        def args = ['fatjar', moduleName, '-d', 'build/libs']
+        Starter.main(args as String[])
+    }
+}
+
