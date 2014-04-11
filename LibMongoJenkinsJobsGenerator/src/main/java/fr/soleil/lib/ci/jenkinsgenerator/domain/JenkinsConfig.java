@@ -1,28 +1,18 @@
-package fr.soleil.ci.jenkins.job.model;
+package fr.soleil.lib.ci.jenkinsgenerator.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * Created by ABEILLE on 09/04/2014.
+ * Created by ABEILLE on 11/04/2014.
  */
-public class SvnConfig {
-
+public class JenkinsConfig {
     private String description;
-
-
-
-    private String svnurl;
     private String emails;
 
-    public SvnConfig(String description, String emails, String svnurl) {
+    public JenkinsConfig(String description, String emails) {
         this.description = description;
         this.emails = emails;
-        this.svnurl = svnurl;
-    }
-
-    public String getSvnurl() {
-        return svnurl;
     }
 
     public String getEmails() {
@@ -32,6 +22,7 @@ public class SvnConfig {
     public String getDescription() {
         return description;
     }
+
 
     @Override
     public String toString() {

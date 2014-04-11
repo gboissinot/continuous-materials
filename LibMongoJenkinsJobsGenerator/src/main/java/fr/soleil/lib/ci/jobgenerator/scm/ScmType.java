@@ -1,4 +1,4 @@
-package fr.soleil.ci.scm;
+package fr.soleil.lib.ci.jobgenerator.scm;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 

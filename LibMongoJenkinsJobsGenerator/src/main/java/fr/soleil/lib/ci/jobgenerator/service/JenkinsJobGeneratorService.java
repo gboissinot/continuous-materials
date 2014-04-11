@@ -1,8 +1,7 @@
-package fr.soleil.ci.jenkins;
+package fr.soleil.lib.ci.jobgenerator.service;
 
-import fr.soleil.ci.jenkins.job.model.CvsConfigGenerator;
-import fr.soleil.ci.jenkins.job.model.SvnConfigGenerator;
-import fr.soleil.ci.scm.ScmType;
+import fr.soleil.lib.ci.jenkinsjobgenerator.repository.mongodb.MongoDBProjectRepository;
+import fr.soleil.lib.ci.jobgenerator.scm.ScmType;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,26 +16,47 @@ import java.net.URL;
  *
  * @author ABEILLE
  */
-public class JobGenerator {
+public class JenkinsJobGeneratorService {
 
-    private Logger logger = LoggerFactory.getLogger(JobGenerator.class);
+    private static String MONGODB_HOSTNAME = System.getProperty("fr.soleil.ci.mongodb.hostname");
+    private static String MONGODB_PORT= System.getProperty("fr.soleil.ci.mongodb.port");
+    private static String JENKINS_URL= System.getProperty("fr.soleil.ci.jenkins.url");
+    private static String JENKINS_USER= System.getProperty("fr.soleil.ci.jenkins.user");
+    private static String JENKINS_PWD= System.getProperty("fr.soleil.ci.jenkins.pwd");
 
-    private String jenkinsURL;
-    private String user;
-    private String password;
+    private Logger logger = LoggerFactory.getLogger(JenkinsJobGeneratorService.class);
 
-    // TODO parameters
+
     private static String TEMPLATE_SVN = "templateSVN";
     private static String TEMPLATE_CVS = "templateCVS";
-    private  CvsConfigGenerator configGenerator ;
-    private SvnConfigGenerator configGeneratorSVN;
+    private JenkinsCvsConfigGeneratorService configGenerator ;
+    private JenkinsSvnConfigGeneratorService configGeneratorSVN;
 
-    public JobGenerator(String jenkinsURL, String user, String password) throws IOException {
-        this.jenkinsURL = jenkinsURL;
-        this.user = user;
-        this.password = password;
-        configGenerator = new CvsConfigGenerator();
-        configGeneratorSVN = new SvnConfigGenerator();
+    public JenkinsJobGeneratorService() throws IOException {
+        configGenerator = new JenkinsCvsConfigGeneratorService();
+        configGeneratorSVN = new JenkinsSvnConfigGeneratorService();
+    }
+
+    /**
+     * Load all projects from mongodb and create their jenkins jobs
+     */
+    public void createAllJobs() throws IOException {
+
+        JenkinsJobGeneratorService jobGenerator = new JenkinsJobGeneratorService();
+
+        // load projects from mongodb
+        MongoDBProjectRepository loader = new MongoDBProjectRepository(MONGODB_HOSTNAME, Integer.valueOf(MONGODB_PORT));
+        Iterable<ProjectDocument> projects = loader.loadProjects();
+        // process jenkins jobs
+        for (ProjectDocument projectDocument : projects) {
+            try {
+                jobGenerator.processJob(projectDocument);
+            }catch (Throwable e){
+                logger.error("could not process job {}", JobUtilities.getJobName(projectDocument));
+                logger.error("error is: ",e);
+            }
+        }
+
     }
 
     public void processJob(ProjectDocument projectDocument) {
@@ -64,23 +84,23 @@ public class JobGenerator {
         URL url;
         String jobName = JobUtilities.getJobName(projectDocument);
         if (createJob) {
-            url = new URL(jenkinsURL + "/createItem?name=" + jobName);
+            url = new URL(JENKINS_URL + "/createItem?name=" + jobName);
         } else {
-            url = new URL(jenkinsURL + "/job/" + jobName + "/config.xml");
+            url = new URL(JENKINS_URL + "/job/" + jobName + "/config.xml");
         }
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         try {
 
-            JobUtilities.addAuth(conn, user, password);
+            JobUtilities.addAuth(conn, JENKINS_USER, JENKINS_USER);
             conn.setRequestMethod("POST");
             OutputStream os = conn.getOutputStream();
             Writer writer = new OutputStreamWriter(os);
             switch (scmType) {
                 case CVS:
-                    configGenerator.loadFromMongoToJenkins(writer, projectDocument);
+                    configGenerator.load(writer, projectDocument);
                     break;
                 case SVN:
-                    configGeneratorSVN.loadFromMongoToJenkins(writer, projectDocument);
+                    configGeneratorSVN.load(writer, projectDocument);
                     break;
                 default:
                     //TODO
@@ -104,11 +124,11 @@ public class JobGenerator {
 
     private boolean isJenkinsJobExists(String jobName) throws IOException,
             JAXBException {
-        URL jobURL = new URL(jenkinsURL + "/job/" + jobName + "/config.xml");
+        URL jobURL = new URL(JENKINS_URL + "/job/" + jobName + "/config.xml");
         HttpURLConnection conn = (HttpURLConnection) jobURL.openConnection();
         boolean isJenkinsJobExists = false;
         try {
-            JobUtilities.addAuth(conn, user, password);
+            JobUtilities.addAuth(conn, JENKINS_USER, JENKINS_PWD);
             conn.setRequestMethod("GET");
             conn.getInputStream();
             isJenkinsJobExists = true;
@@ -119,5 +139,15 @@ public class JobGenerator {
             conn.disconnect();
         }
         return isJenkinsJobExists;
+    }
+
+    public static void main(String[] args) {
+      // -Dfr.soleil.ci.mongodb.hostname="172.16.5.7" -Dfr.soleil.ci.mongodb.port= "27001"
+      // -Dfr.soleil.ci.jenkins.url="http://172.16.5.6:8080"  -Dfr.soleil.ci.jenkins.user="admin"  -Dfr.soleil.ci.jenkins.pwd="admin"
+        try {
+            new JenkinsJobGeneratorService().createAllJobs();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
