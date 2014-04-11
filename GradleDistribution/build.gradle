@@ -17,7 +17,7 @@ dependencies {
     initDir "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
 }
 
-task buildInitDirCopy(type: Copy) {
+task buildInitDir(type: Copy) {
     into("$buildDir/init.d")
     from('src/init.d') {
         include "**/*.gradle"
@@ -28,9 +28,9 @@ task buildInitDirCopy(type: Copy) {
     }
 }
 
-task distInitDir(type: Zip, dependsOn: buildInitDirCopy) {
+task distInitDir(type: Zip, dependsOn: buildInitDir) {
     baseName = 'init.d'
-    from buildInitDirCopy
+    from buildInitDir
 }
 
 task downloadGradleDistrib(type: DownloadGradle) {
@@ -47,7 +47,7 @@ task buildCustomGradleDistrib(type: Zip, dependsOn: downloadGradleDistrib) {
     from zipTree(downloadGradleDistrib.destinationFile)
     into("${downloadGradleDistrib.distributionNameBase}") {
         into('init.d') {
-            from buildInitDirCopy
+            from buildInitDir
         }
     }
 }
@@ -61,7 +61,7 @@ class DownloadGradle extends DefaultTask {
     File destinationDir
 
     @Input
-    String gradleDownloadBase = "http://services.gradle.org/distributions"
+    String gradleDownloadBase
 
     @TaskAction
     doDownloadGradle() {
