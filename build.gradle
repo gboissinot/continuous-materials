@@ -143,17 +143,6 @@ project('MsVertxModuleMavenRepoProxy') {
     }
 }
 
-project('ScriptsGradle') {
-    apply plugin: 'groovy'
-    dependencies {
-        compile project(':LibMongoLatestMavenVersionResolver')
-        compile project(':LibMongoUtilities')
-        compile "org.mongodb:mongo-java-driver:2.11.3"
-        compile gradleApi()
-        compile localGroovy()
-    }
-}
-
 project('LibMongoJenkinsJobsGenerator') {
     dependencies {
         compile project(':LibMongoDomainObjects')

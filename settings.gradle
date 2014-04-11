@@ -9,5 +9,5 @@ include 'LibMongoDomainObjects',
         'MsVertxModuleMavenRepoProxy',
         'MsVertxModuleMongoScriptsRunner',
         'MsVertxModulePomDescriptor',
-        'ScriptsGradle'
+        'GradleDistribution'
 
