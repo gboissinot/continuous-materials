@@ -1,9 +1,9 @@
-package fr.soleil.lib.ci.jobgenerator.service;
+package fr.soleil.lib.ci.jenkinsjobgenerator.service;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
-import fr.soleil.lib.ci.jenkinsgenerator.domain.JenkinsConfig;
-import fr.soleil.lib.ci.jenkinsgenerator.exception.JenkinsJobGeneratorException;
+import fr.soleil.lib.ci.jenkinsjobgenerator.domain.JenkinsConfig;
+import fr.soleil.lib.ci.jenkinsjobgenerator.exception.JenkinsJobGeneratorException;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

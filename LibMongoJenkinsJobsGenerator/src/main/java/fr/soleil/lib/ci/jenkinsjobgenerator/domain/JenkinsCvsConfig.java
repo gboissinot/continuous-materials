@@ -1,4 +1,4 @@
-package fr.soleil.lib.ci.jenkinsgenerator.domain;
+package fr.soleil.lib.ci.jenkinsjobgenerator.domain;
 
 /**
  * Created by ABEILLE on 09/04/2014.

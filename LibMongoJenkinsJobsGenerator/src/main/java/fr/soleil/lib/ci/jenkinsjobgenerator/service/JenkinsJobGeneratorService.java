@@ -1,7 +1,7 @@
-package fr.soleil.lib.ci.jobgenerator.service;
+package fr.soleil.lib.ci.jenkinsjobgenerator.service;
 
 import fr.soleil.lib.ci.jenkinsjobgenerator.repository.mongodb.MongoDBProjectRepository;
-import fr.soleil.lib.ci.jobgenerator.scm.ScmType;
+import fr.soleil.lib.ci.jenkinsjobgenerator.scm.ScmType;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,13 +141,13 @@ public class JenkinsJobGeneratorService {
         return isJenkinsJobExists;
     }
 
-    public static void main(String[] args) {
-      // -Dfr.soleil.ci.mongodb.hostname="172.16.5.7" -Dfr.soleil.ci.mongodb.port= "27001"
-      // -Dfr.soleil.ci.jenkins.url="http://172.16.5.6:8080"  -Dfr.soleil.ci.jenkins.user="admin"  -Dfr.soleil.ci.jenkins.pwd="admin"
-        try {
-            new JenkinsJobGeneratorService().createAllJobs();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//      // -Dfr.soleil.ci.mongodb.hostname="172.16.5.7" -Dfr.soleil.ci.mongodb.port= "27001"
+//      // -Dfr.soleil.ci.jenkins.url="http://172.16.5.6:8080"  -Dfr.soleil.ci.jenkins.user="admin"  -Dfr.soleil.ci.jenkins.pwd="admin"
+//        try {
+//            new JenkinsJobGeneratorService().createAllJobs();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

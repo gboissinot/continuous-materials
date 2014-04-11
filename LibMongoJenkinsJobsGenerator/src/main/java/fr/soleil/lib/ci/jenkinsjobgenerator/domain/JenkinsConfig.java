@@ -1,4 +1,4 @@
-package fr.soleil.lib.ci.jenkinsgenerator.domain;
+package fr.soleil.lib.ci.jenkinsjobgenerator.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;

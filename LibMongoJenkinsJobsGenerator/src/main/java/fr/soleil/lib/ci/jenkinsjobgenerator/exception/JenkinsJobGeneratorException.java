@@ -1,4 +1,4 @@
-package fr.soleil.lib.ci.jenkinsgenerator.exception;
+package fr.soleil.lib.ci.jenkinsjobgenerator.exception;
 
 /**
  * Created by ABEILLE on 11/04/2014.

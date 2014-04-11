@@ -1,4 +1,4 @@
-package fr.soleil.lib.ci.jobgenerator.service;
+package fr.soleil.lib.ci.jenkinsjobgenerator.service;
 
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
