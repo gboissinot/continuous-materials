@@ -1,0 +1,89 @@
+apply plugin: 'base'
+
+defaultTasks 'distInitDir'
+
+ext {
+    gradleVersion = '1.11'
+    gradleDownloadBase = "http://services.gradle.org/distributions"
+}
+
+configurations {
+    initDir
+}
+
+dependencies {
+    initDir project(':LibMongoLatestMavenVersionResolver')
+    initDir project(':LibMongoUtilities')
+    initDir "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
+}
+
+task buildInitDirCopy(type: Copy) {
+    into("$buildDir/init.d")
+    from('src/init.d') {
+        include "**/*.gradle"
+    }
+    into("lib") {
+        from configurations.initDir
+        rename '(.*)-(.*).jar', '$1.jar'
+    }
+}
+
+task distInitDir(type: Zip, dependsOn: buildInitDirCopy) {
+    baseName = 'init.d'
+    from buildInitDirCopy
+}
+
+task downloadGradleDistrib(type: DownloadGradle) {
+    description 'Download the original Gradle distribution from Gradle distributions website'
+    gradleVersion project.gradleVersion
+    gradleDownloadBase project.gradleDownloadBase
+    destinationDir file("$buildDir/gradle-downloads")
+}
+
+task buildCustomGradleDistrib(type: Zip, dependsOn: downloadGradleDistrib) {
+    description 'Build a custom Gradle distribution wtih custom init.d directory'
+    baseName = 'custom-gradle'
+    classifier = 'bin'
+    from zipTree(downloadGradleDistrib.destinationFile)
+    into("${downloadGradleDistrib.distributionNameBase}") {
+        into('init.d') {
+            from buildInitDirCopy
+        }
+    }
+}
+
+class DownloadGradle extends DefaultTask {
+
+    @Input
+    String gradleVersion
+
+    @Input
+    File destinationDir
+
+    @Input
+    String gradleDownloadBase = "http://services.gradle.org/distributions"
+
+    @TaskAction
+    doDownloadGradle() {
+        destinationFile.bytes = new URL(downloadUrl).bytes
+    }
+
+    String getDownloadUrl() {
+        return "$gradleDownloadBase/$downloadFileName"
+    }
+
+    String getDistributionNameBase() {
+        return "gradle-$gradleVersion"
+    }
+
+    String getDownloadFileName() {
+        return "$distributionNameBase-bin.zip"
+    }
+
+    @OutputFile
+    File getDestinationFile() {
+        return new File(destinationDir, downloadFileName)
+    }
+}
+
+
