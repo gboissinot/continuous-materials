@@ -1,6 +1,0 @@
-{"_id" : { "org" : "testGroupId", "name" : "testArtifactId", "type" : "binary", "status" : "INTEGRATION"},"value" : "1.7.INTEGRATION"}
-{"_id" : { "org" : "testGroupId", "name" : "testArtifactId", "type" : "binary", "status" : "TEST"},"value" : "1.6.TEST"}
-{"_id" : { "org" : "testGroupId", "name" : "testArtifactId", "type" : "binary", "status" : "RELEASE"},"value" : "1.5.RELEASE"}
-{"_id" : { "org" : "testGroupId", "name" : "testArtifactId", "type" : "binary", "status" : "anyLevercaseStatus"},"value" : "1.5.anyLevercaseStatus"}
-{"_id" : { "org" : "testGroupId", "name" : "testArtifactId", "type" : "binary", "status" : "ANYUPPERCASESTATUS"},"value" : "1.5.ANYUPPERCASESTATUS"}
-{"_id" : { "org" : "testGroupId", "name" : "testArtifactIdWithNoIntegration", "type" : "binary", "status" : "RELEASE"},"value" : "1.5.RELEASE"}
