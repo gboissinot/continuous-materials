@@ -1,8 +1,10 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.serializer.ProjectDocumentSerializer;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -33,7 +35,8 @@ public class ProjectDocumentSerializerServiceTest {
         developerDocuments.add(developerDocument1);
         projectDocument.setDevelopers(developerDocuments);
 
-        Gson gson = new Gson();
+        //Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(ProjectDocument.class, new ProjectDocumentSerializer()).create();
         String result = gson.toJson(projectDocument);
         final String expectedMongodDBDocument = "{\"org\":\"org\",\"name\":\"name\",\"developers\":[{\"id\":\"developer1\",\"name\":\"Developer 1\",\"email\":\"dev@mail.com\",\"roles\":[\"Project owner\",\"Project developer\"]}]}";
 

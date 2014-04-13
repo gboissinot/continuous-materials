@@ -9,15 +9,7 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class ArtifactDocument {
-
-    private String org;
-
-    private String name;
-
-    private String version;
-
-    private String status;
+public class ArtifactDocument extends BaseArtifactDocument {
 
     private String type;
 
@@ -46,48 +38,6 @@ public class ArtifactDocument {
     private List<ArtifactDependency> dependencies;
 
     private BuildContext buildContext;
-
-    @Override
-    public String toString() {
-        return "ArtifactDocument{" +
-                "organisation='" + org + '\'' +
-                ", name='" + name + '\'' +
-                ", version='" + version + '\'' +
-                ", type='" + type + '\'' +
-                '}';
-    }
-
-    public String getOrg() {
-        return org;
-    }
-
-    public void setOrg(String org) {
-        this.org = org;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
     public String getType() {
         return type;

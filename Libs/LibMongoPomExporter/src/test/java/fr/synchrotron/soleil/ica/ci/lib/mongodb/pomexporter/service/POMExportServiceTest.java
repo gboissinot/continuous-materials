@@ -26,6 +26,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class POMExportServiceTest {
 
+
     private static DB mongoDB;
     private static Jongo jongo;
 
@@ -58,7 +59,6 @@ public class POMExportServiceTest {
         }
     }
 
-
     @Test
     public void testExport() throws IOException, URISyntaxException, SAXException {
 
@@ -69,14 +69,14 @@ public class POMExportServiceTest {
         String version = "1.0.0";
         String status = "RELEASE";
         File inputPomFile = new File(this.getClass().getResource("pom-1.xml").toURI());
-
-        pomImportService.importPomFile(inputPomFile);
-        pomExportService.exportPomFile(writer, org, name, status, version);
-
         PomReaderService pomReaderService = new PomReaderService();
         FileReader inputPomFileReader = new FileReader(inputPomFile);
         Model inputPomFileModel = pomReaderService.getModel(inputPomFileReader);
         inputPomFileReader.close();
+
+
+        pomImportService.importPomFile(inputPomFile);
+        pomExportService.exportPomFile(writer, org, name, version, status);
 
         final String outputPomContent = writer.toString();
         assertNotNull(outputPomContent);

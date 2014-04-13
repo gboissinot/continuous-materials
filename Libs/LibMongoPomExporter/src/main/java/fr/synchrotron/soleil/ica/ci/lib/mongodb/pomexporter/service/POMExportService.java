@@ -31,10 +31,10 @@ public class POMExportService {
         this.pomDocumentRepository = pomDocumentRepository;
     }
 
-    public void exportPomFile(Writer writer, String org, String name, String status, String version) throws POMExporterException {
+    public void exportPomFile(Writer writer, String org, String name, String version, String status) throws POMExporterException {
 
         final MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
-        Model pomModel = getMavenModel(org, name, status, version);
+        Model pomModel = getMavenModel(org, name, version, status);
         try {
             mavenXpp3Writer.write(writer, pomModel);
         } catch (IOException ioe) {
@@ -42,12 +42,12 @@ public class POMExportService {
         }
     }
 
-    private Model getMavenModel(String org, String name, String status, String version) {
+    private Model getMavenModel(String org, String name, String version, String status) {
 
 
         Model pomModel = new Model();
 
-        final POMDocument pomDocument = pomDocumentRepository.loadPOMDocument(org, name, status, version);
+        final POMDocument pomDocument = pomDocumentRepository.loadPOMDocument(org, name, version, status);
 
         //-- Populate form ArtifactDocument
 

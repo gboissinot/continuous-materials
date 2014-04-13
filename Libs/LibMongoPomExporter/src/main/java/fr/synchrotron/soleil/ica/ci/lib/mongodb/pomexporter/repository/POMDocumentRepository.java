@@ -3,6 +3,8 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository;
 import com.google.gson.Gson;
 import com.mongodb.DB;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.BaseArtifactDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.BaseProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.exception.POMExporterException;
@@ -24,30 +26,26 @@ public class POMDocumentRepository {
     }
 
 
-    public POMDocument loadPOMDocument(String org, String name, String status, String version) {
+    public POMDocument loadPOMDocument(String org, String name, String version, String status) {
 
         POMDocument pomDocumentResult = new POMDocument();
         DB mongoDB = mongoDBDataSource.getMongoDB();
         Jongo jongo = new Jongo(mongoDB);
 
-        pomDocumentResult.setAritfactDocument(loadArtifactDocument(jongo, org, name, status, version));
+        pomDocumentResult.setAritfactDocument(loadArtifactDocument(jongo, org, name, version, status));
         pomDocumentResult.setProjectDocument(loadProjectDocument(jongo, org, name));
 
         return pomDocumentResult;
 
     }
 
-    private ArtifactDocument loadArtifactDocument(Jongo jongo, String org, String name, String status, String version) {
+    private ArtifactDocument loadArtifactDocument(Jongo jongo, String org, String name, String version, String status) {
 
-        MongoCollection artifacts = jongo.getCollection("artifacts");
-        ArtifactDocument artifactDocumentQuery = new ArtifactDocument();
-        artifactDocumentQuery.setOrg(org);
-        artifactDocumentQuery.setName(name);
-        artifactDocumentQuery.setStatus(status);
-        artifactDocumentQuery.setVersion(version);
+        MongoCollection artifacts = jongo.getCollection(BaseArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
 
+        BaseArtifactDocument queryObject = new BaseArtifactDocument(org, name, version, status);
         Gson gson = new Gson();
-        final Iterable<ArtifactDocument> artifactDocuments = artifacts.find(gson.toJson(artifactDocumentQuery)).as(ArtifactDocument.class);
+        final Iterable<ArtifactDocument> artifactDocuments = artifacts.find(gson.toJson(queryObject)).as(ArtifactDocument.class);
         final Iterator<ArtifactDocument> artifactDocumentIterator = artifactDocuments.iterator();
         if (!artifactDocumentIterator.hasNext()) {
             throw new POMExporterException("At least one Artifact document must match criteria.");
@@ -64,13 +62,11 @@ public class POMDocumentRepository {
 
     private ProjectDocument loadProjectDocument(Jongo jongo, String org, String name) {
 
-        MongoCollection projects = jongo.getCollection("projects");
-        ProjectDocument projectDocumentQuery = new ProjectDocument();
-        projectDocumentQuery.setOrg(org);
-        projectDocumentQuery.setName(name);
+        MongoCollection projects = jongo.getCollection(BaseProjectDocument.MONGO_PROJECTS_COLLECTION_NAME);
+        BaseProjectDocument queryObject = new BaseProjectDocument(org, name);
 
         Gson gson = new Gson();
-        final Iterable<ProjectDocument> projectDocuments = projects.find(gson.toJson(projectDocumentQuery)).as(ProjectDocument.class);
+        final Iterable<ProjectDocument> projectDocuments = projects.find(gson.toJson(queryObject)).as(ProjectDocument.class);
         final Iterator<ProjectDocument> projectDocumentIterator = projectDocuments.iterator();
         if (!projectDocumentIterator.hasNext()) {
             throw new POMExporterException("One Project document must match criteria.");

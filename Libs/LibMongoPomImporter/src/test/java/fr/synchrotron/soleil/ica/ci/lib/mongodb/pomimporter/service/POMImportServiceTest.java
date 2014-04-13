@@ -57,12 +57,16 @@ public class POMImportServiceTest {
     private Iterable<ArtifactDocument> getArtifactDocument() {
         Jongo jongo = new Jongo(mongoDB);
         MongoCollection artifactsCollection = jongo.getCollection("artifacts");
+
+
+
         final ArtifactDocument artifactDocument = new ArtifactDocument();
         artifactDocument.setOrg("fr.synchrotron.soleil.ica.ci.lib");
         artifactDocument.setName("maven-versionresolver");
         artifactDocument.setVersion("1.0.1");
         artifactDocument.setStatus("INTEGRATION");
         Gson gson = new Gson();
+
         return artifactsCollection.find(gson.toJson(artifactDocument)).as(ArtifactDocument.class);
     }
 

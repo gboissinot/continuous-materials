@@ -7,11 +7,7 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class ProjectDocument {
-
-    private String org;
-
-    private String name;
+public class ProjectDocument extends BaseProjectDocument {
 
     private List<DeveloperDocument> developers;
 
@@ -20,22 +16,6 @@ public class ProjectDocument {
     private String scmConnection;
 
     private String language;
-
-    public String getOrg() {
-        return org;
-    }
-
-    public void setOrg(String org) {
-        this.org = org;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<DeveloperDocument> getDevelopers() {
         return developers;
