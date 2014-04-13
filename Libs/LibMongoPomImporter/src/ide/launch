@@ -1,0 +1,2 @@
+org.vertx.java.platform.impl.cli.Starter
+run fr.synchrotron.soleil.ica.ci.lib.mavenproject.mongoimport.endpoint.PomMongoEndpoint
