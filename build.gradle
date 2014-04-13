@@ -55,11 +55,11 @@ subprojects {
 
 }
 
-project('LibMongoPomImporter') {
+project(':Libs/LibMongoPomImporter') {
 
     dependencies {
-        compile project(':LibMongoDomainObjects')
-        compile project(':LibMongoUtilities')
+        compile project(':Libs/LibMongoDomainObjects')
+        compile project(':Libs/LibMongoUtilities')
         compile("org.apache.maven:maven-core:$mavenCoreVersion") {
             exclude group: "org.slf4j"
         }
@@ -74,10 +74,10 @@ project('LibMongoPomImporter') {
     }
 }
 
-project(':LibMongoPomExporter') {
+project(':Libs/LibMongoPomExporter') {
     dependencies {
-        compile project(':LibMongoDomainObjects')
-        compile project(':LibMongoUtilities')
+        compile project(':Libs/LibMongoDomainObjects')
+        compile project(':Libs/LibMongoUtilities')
         compile("org.apache.maven:maven-core:2.1.0") {
             exclude group: "org.slf4j"
         }
@@ -87,7 +87,7 @@ project(':LibMongoPomExporter') {
         compile "org.slf4j:jul-to-slf4j:$log4jVersion"
         compile "org.jongo:jongo:$jongoVersion"
 
-        testCompile project(':LibMongoPomImporter')
+        testCompile project(':Libs/LibMongoPomImporter')
         testCompile "commons-io:commons-io:$commonsioVersion"
         testCompile "xmlunit:xmlunit:$xmlunitVersion"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"
@@ -95,15 +95,15 @@ project(':LibMongoPomExporter') {
     }
 }
 
-project(':LibMongoUtilities') {
+project(':Libs/LibMongoUtilities') {
     dependencies {
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
     }
 }
 
-project(':LibMongoLatestMavenVersionResolver') {
+project(':Libs/LibMongoLatestMavenVersionResolver') {
     dependencies {
-        compile project(':LibMongoUtilities')
+        compile project(':Libs/LibMongoUtilities')
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"
         testCompile "org.slf4j:slf4j-log4j12:$log4jVersion"
@@ -115,23 +115,23 @@ project(':LibMongoLatestMavenVersionResolver') {
     }
 }
 
-project('MsVertxModulePomDescriptor') {
+project(':Services/MsVertxModulePomDescriptor') {
 
     dependencies {
-        compile project(':LibMongoPomImporter')
-        compile project(':LibMongoPomExporter')
+        compile project(':Libs/LibMongoPomImporter')
+        compile project(':Libs/LibMongoPomExporter')
         compile("io.vertx:vertx-core:$vertxVersion")
         compile "io.vertx:vertx-platform:$vertxVersion"
     }
 }
 
 
-project('MsVertxModuleMavenRepoProxy') {
+project(':Services/MsVertxModuleMavenRepoProxy') {
 
     //apply from: "vertx/vertx.gradle"
 
     dependencies {
-        compile project(':LibMongoLatestMavenVersionResolver')
+        compile project(':Libs/LibMongoLatestMavenVersionResolver')
         compile "org.springframework:spring-core:$springVersion"
         compile "org.springframework:spring-context:$springVersion"
         compile "org.apache.maven:maven-core:$mavenCoreVersion"
@@ -143,10 +143,10 @@ project('MsVertxModuleMavenRepoProxy') {
     }
 }
 
-project('LibMongoJenkinsJobsGenerator') {
+project(':Libs/LibMongoJenkinsJobsGenerator') {
     dependencies {
-        compile project(':LibMongoDomainObjects')
-        compile project(':LibMongoUtilities')
+        compile project(':Libs/LibMongoDomainObjects')
+        compile project(':Libs/LibMongoUtilities')
         compile "org.mongodb:mongo-java-driver:2.11.3"
         compile "commons-lang:commons-lang:2.6"
         compile "commons-io:commons-io:2.4"
