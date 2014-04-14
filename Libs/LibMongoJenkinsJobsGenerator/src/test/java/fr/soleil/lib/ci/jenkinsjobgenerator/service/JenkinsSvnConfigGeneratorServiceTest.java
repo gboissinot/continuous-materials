@@ -1,6 +1,6 @@
 package fr.soleil.lib.ci.jenkinsjobgenerator.service;
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.hamcrest.core.StringContains;
 import org.junit.Assert;

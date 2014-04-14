@@ -3,7 +3,6 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 import com.github.fakemongo.Fongo;
 import com.google.gson.Gson;
 import com.mongodb.DB;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectModule;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
@@ -14,7 +13,6 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMImport
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
-import org.jongo.marshall.jackson.JacksonMapper;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;

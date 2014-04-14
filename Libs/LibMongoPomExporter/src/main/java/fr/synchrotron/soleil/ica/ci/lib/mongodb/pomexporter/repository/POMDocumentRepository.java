@@ -2,10 +2,6 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository;
 
 import com.google.gson.Gson;
 import com.mongodb.DB;
-import com.mongodb.DBObject;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectDocumentDeSerializer;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectDocumentSerializer;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectModule;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
@@ -14,10 +10,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.exception.POMExporterException;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.jongo.Jongo;
-import org.jongo.Mapper;
 import org.jongo.MongoCollection;
-import org.jongo.ResultHandler;
-import org.jongo.marshall.jackson.JacksonMapper;
 
 import java.util.Iterator;
 

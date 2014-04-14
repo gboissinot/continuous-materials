@@ -3,13 +3,11 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository;
 import com.google.gson.Gson;
 import com.mongodb.DB;
 import com.mongodb.WriteConcern;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectModule;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
-import org.jongo.marshall.jackson.JacksonMapper;
 
 /**
  * @author Gregory Boissinot
