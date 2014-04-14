@@ -16,7 +16,7 @@ public class JenkinsCvsConfigGeneratorService extends JenkinsConfigGeneratorServ
 
     private Logger logger = LoggerFactory.getLogger(JenkinsCvsConfigGeneratorService.class);
 
-    public JenkinsCvsConfigGeneratorService() throws IOException {
+    public JenkinsCvsConfigGeneratorService() {
         super("mustache-template-config-java-cvs.xml");
     }
 

@@ -161,6 +161,7 @@ project(':Libs/LibMongoJenkinsJobsGenerator') {
         compile "org.jongo:jongo:1.0"
         compile "com.github.spullara.mustache.java:compiler:0.8.10"
         compile "com.google.guava:guava:11.0-rc1"
+        testCompile "junit:junit:$junitVersion"
     }
 }
 

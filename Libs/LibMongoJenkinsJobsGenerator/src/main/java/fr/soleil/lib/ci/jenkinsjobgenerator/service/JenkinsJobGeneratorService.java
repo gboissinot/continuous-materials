@@ -26,9 +26,6 @@ public class JenkinsJobGeneratorService {
 
     private Logger logger = LoggerFactory.getLogger(JenkinsJobGeneratorService.class);
 
-
-    private static String TEMPLATE_SVN = "templateSVN";
-    private static String TEMPLATE_CVS = "templateCVS";
     private JenkinsCvsConfigGeneratorService configGenerator ;
     private JenkinsSvnConfigGeneratorService configGeneratorSVN;
 
