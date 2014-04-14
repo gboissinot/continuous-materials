@@ -16,7 +16,7 @@ public class JenkinsSvnConfigGeneratorService extends JenkinsConfigGeneratorServ
 
     private Logger logger = LoggerFactory.getLogger(JenkinsSvnConfigGeneratorService.class);
 
-    public JenkinsSvnConfigGeneratorService() throws IOException {
+    public JenkinsSvnConfigGeneratorService() {
         super("mustache-template-config-java-svn.xml");
     }
 

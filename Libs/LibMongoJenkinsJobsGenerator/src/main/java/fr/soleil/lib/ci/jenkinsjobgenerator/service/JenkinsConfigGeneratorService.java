@@ -18,7 +18,6 @@ import java.io.Writer;
  * Created by ABEILLE on 11/04/2014.
  */
 public abstract class JenkinsConfigGeneratorService {
-    private Logger logger = LoggerFactory.getLogger(JenkinsSvnConfigGeneratorService.class);
     private Mustache mustache;
 
     public JenkinsConfigGeneratorService(String templateName)  {
