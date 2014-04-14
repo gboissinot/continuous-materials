@@ -2,9 +2,9 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.GsonProjectDocumentSerializer;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.serializer.ProjectDocumentSerializer;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -20,9 +20,7 @@ public class ProjectDocumentSerializerServiceTest {
 
     @Test
     public void testProjectDocument() {
-        ProjectDocument projectDocument = new ProjectDocument();
-        projectDocument.setOrg("org");
-        projectDocument.setName("name");
+        ProjectDocument projectDocument = new ProjectDocument("org", "name");
         List<DeveloperDocument> developerDocuments = new ArrayList<DeveloperDocument>();
 
         //Developer1
@@ -36,7 +34,7 @@ public class ProjectDocumentSerializerServiceTest {
         projectDocument.setDevelopers(developerDocuments);
 
         //Gson gson = new Gson();
-        Gson gson = new GsonBuilder().registerTypeAdapter(ProjectDocument.class, new ProjectDocumentSerializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(ProjectDocument.class, new GsonProjectDocumentSerializer()).create();
         String result = gson.toJson(projectDocument);
         final String expectedMongodDBDocument = "{\"org\":\"org\",\"name\":\"name\",\"developers\":[{\"id\":\"developer1\",\"name\":\"Developer 1\",\"email\":\"dev@mail.com\",\"roles\":[\"Project owner\",\"Project developer\"]}]}";
 

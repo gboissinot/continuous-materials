@@ -55,6 +55,13 @@ subprojects {
 
 }
 
+
+project(':Libs/LibMongoDomainObjects') {
+    dependencies {
+        compile "com.google.code.gson:gson:$gsonVersion"
+    }
+}
+
 project(':Libs/LibMongoPomImporter') {
 
     dependencies {

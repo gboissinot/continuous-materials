@@ -2,10 +2,10 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildContext;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildTool;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.maven.MavenProjectInfo;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildContext;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildTool;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.maven.MavenProjectInfo;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.exception.POMExporterException;
@@ -52,9 +52,9 @@ public class POMExportService {
         //-- Populate form ArtifactDocument
 
         final ArtifactDocument aritfactDocument = pomDocument.getAritfactDocument();
-        pomModel.setGroupId(aritfactDocument.getOrg());
-        pomModel.setArtifactId(aritfactDocument.getName());
-        pomModel.setVersion(aritfactDocument.getVersion() + "." + aritfactDocument.getStatus());
+        pomModel.setGroupId(aritfactDocument.getKey().getOrg());
+        pomModel.setArtifactId(aritfactDocument.getKey().getName());
+        pomModel.setVersion(aritfactDocument.getKey().getVersion() + "." + aritfactDocument.getKey().getStatus());
 
         final List<ArtifactDependency> dependencies = aritfactDocument.getDependencies();
         if (dependencies != null) {

@@ -2,9 +2,9 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildContext;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildTool;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.maven.MavenProjectInfo;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildContext;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildTool;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.maven.MavenProjectInfo;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 
@@ -39,13 +39,13 @@ public class ArtifactDocumentLoaderService {
             throw new NullPointerException("A Maven Model is required.");
         }
 
-        ArtifactDocument artifactDocument = new ArtifactDocument();
-
-        artifactDocument.setOrg(model.getGroupId());
-        artifactDocument.setName(model.getName());
         StatusVersion statusVersion = extractStatusFromVersion(model.getVersion());
-        artifactDocument.setVersion(statusVersion.version);
-        artifactDocument.setStatus(statusVersion.status);
+        ArtifactDocument artifactDocument =
+                new ArtifactDocument(
+                        model.getGroupId(),
+                        model.getName(),
+                        statusVersion.version,
+                        statusVersion.status);
 
         final List dependencies = model.getDependencies();
         if (dependencies != null) {

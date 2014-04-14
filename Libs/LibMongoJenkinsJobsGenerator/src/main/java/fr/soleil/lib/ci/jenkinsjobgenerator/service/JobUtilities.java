@@ -1,7 +1,7 @@
 package fr.soleil.lib.ci.jenkinsjobgenerator.service;
 
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 
 import java.net.HttpURLConnection;
@@ -37,7 +37,7 @@ public class JobUtilities {
     }
 
     public static String getJobName(ProjectDocument projectDocument) {
-        return projectDocument.getOrg() + "." + projectDocument.getName() + "_" + projectDocument.getLanguage();
+        return projectDocument.getKey().getOrg() + "." + projectDocument.getKey().getName() + "_" + projectDocument.getLanguage();
     }
 
     public static void addAuth(HttpURLConnection conn, String user,

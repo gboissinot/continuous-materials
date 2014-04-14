@@ -3,13 +3,13 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository;
 import com.google.gson.Gson;
 import com.mongodb.DB;
 import com.mongodb.WriteConcern;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ProjectModule;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.BaseArtifactDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.BaseProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
+import org.jongo.marshall.jackson.JacksonMapper;
 
 /**
  * @author Gregory Boissinot
@@ -18,8 +18,17 @@ public class POMImportRepository {
 
     private MongoDBDataSource mongoDBDataSource;
 
+    private Jongo jongo;
+
     public POMImportRepository(MongoDBDataSource mongoDBDataSource) {
         this.mongoDBDataSource = mongoDBDataSource;
+        DB mongoDB = mongoDBDataSource.getMongoDB();
+        jongo = new Jongo(mongoDB);
+//        jongo = new Jongo(mongoDB,
+//                new JacksonMapper.Builder()
+//                        .registerModule(new ProjectModule()).build()
+//        );
+
     }
 
     /*
@@ -27,37 +36,22 @@ public class POMImportRepository {
      */
 
     public boolean isArtifactDocumentAlreadyExists(ArtifactDocument artifactDocument) {
-        DB mongoDB = mongoDBDataSource.getMongoDB();
-        Jongo jongo = new Jongo(mongoDB);
-        MongoCollection artifacts = jongo.getCollection(BaseArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
-        BaseArtifactDocument queryObject =
-                new BaseArtifactDocument(artifactDocument.getOrg(),
-                        artifactDocument.getName(),
-                        artifactDocument.getStatus(),
-                        artifactDocument.getVersion());
-        Gson gson = new Gson();
-        return artifacts.count(gson.toJson(queryObject)) != 0;
+        MongoCollection artifacts = jongo.getCollection(ArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
+        Gson gson = ArtifactDocument.getGson();
+        return artifacts.count(gson.toJson(artifactDocument.getKey())) != 0;
     }
 
     public void updateArtifactDocument(ArtifactDocument artifactDocument) {
-        DB mongoDB = mongoDBDataSource.getMongoDB();
-        Jongo jongo = new Jongo(mongoDB);
-        MongoCollection artifacts = jongo.getCollection(BaseArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
+        MongoCollection artifacts = jongo.getCollection(ArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
         artifacts.withWriteConcern(WriteConcern.SAFE);
-        BaseArtifactDocument queryObject =
-                new BaseArtifactDocument(artifactDocument.getOrg(),
-                        artifactDocument.getName(),
-                        artifactDocument.getStatus(),
-                        artifactDocument.getVersion());
-        Gson gson = new Gson();
-        artifacts.update(gson.toJson(queryObject)).with(artifactDocument);
+        Gson gson = ArtifactDocument.getGson();
+        artifacts.update(gson.toJson(artifactDocument.getKey())).with(artifactDocument);
     }
 
     public void insertArtifactDocument(ArtifactDocument artifactDocument) {
-        DB mongoDB = mongoDBDataSource.getMongoDB();
-        Jongo jongo = new Jongo(mongoDB);
-        MongoCollection artifacts = jongo.getCollection(BaseArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
-        artifacts.insert(artifactDocument);
+        MongoCollection artifacts = jongo.getCollection(ArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
+        Gson gson = ArtifactDocument.getGson();
+        artifacts.insert(gson.toJson(artifactDocument));
     }
 
     /*
@@ -65,28 +59,20 @@ public class POMImportRepository {
      */
 
     public boolean isProjectDocumentAlreadyExists(ProjectDocument projectDocument) {
-        DB mongoDB = mongoDBDataSource.getMongoDB();
-        Jongo jongo = new Jongo(mongoDB);
-        MongoCollection projects = jongo.getCollection(BaseProjectDocument.MONGO_PROJECTS_COLLECTION_NAME);
-        BaseProjectDocument queryObject = new BaseProjectDocument(projectDocument.getOrg(), projectDocument.getName());
-        Gson gson = new Gson();
-        return projects.count(gson.toJson(queryObject)) != 0;
+        MongoCollection projects = jongo.getCollection(ProjectDocument.MONGO_PROJECTS_COLLECTION_NAME);
+        Gson gson = ProjectDocument.getGson();
+        return projects.count(gson.toJson(projectDocument.getKey())) != 0;
     }
 
     public void updateProjectDocument(ProjectDocument projectDocument) {
-        DB mongoDB = mongoDBDataSource.getMongoDB();
-        Jongo jongo = new Jongo(mongoDB);
-        MongoCollection projects = jongo.getCollection(BaseProjectDocument.MONGO_PROJECTS_COLLECTION_NAME);
+        MongoCollection projects = jongo.getCollection(ProjectDocument.MONGO_PROJECTS_COLLECTION_NAME);
         projects.withWriteConcern(WriteConcern.SAFE);
-        BaseProjectDocument queryObject = new BaseProjectDocument(projectDocument.getOrg(), projectDocument.getName());
-        Gson gson = new Gson();
-        projects.update(gson.toJson(queryObject)).with(projectDocument);
+        Gson gson = ProjectDocument.getGson();
+        projects.update(gson.toJson(projectDocument.getKey())).with(projectDocument);
     }
 
     public void insertProjectDocument(ProjectDocument projectDocument) {
-        DB mongoDB = mongoDBDataSource.getMongoDB();
-        Jongo jongo = new Jongo(mongoDB);
-        MongoCollection projects = jongo.getCollection(BaseProjectDocument.MONGO_PROJECTS_COLLECTION_NAME);
+        MongoCollection projects = jongo.getCollection(ProjectDocument.MONGO_PROJECTS_COLLECTION_NAME);
         projects.insert(projectDocument);
     }
 }

@@ -3,18 +3,16 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project;
 /**
  * @author Gregory Boissinot
  */
-public class BaseProjectDocument {
-
-    public static final String MONGO_PROJECTS_COLLECTION_NAME = "projects";
+public class ProjectDocumentKey {
 
     private String org;
 
     private String name;
 
-    public BaseProjectDocument() {
+    public ProjectDocumentKey() {
     }
 
-    public BaseProjectDocument(String org, String name) {
+    public ProjectDocumentKey(String org, String name) {
         this.org = org;
         this.name = name;
     }

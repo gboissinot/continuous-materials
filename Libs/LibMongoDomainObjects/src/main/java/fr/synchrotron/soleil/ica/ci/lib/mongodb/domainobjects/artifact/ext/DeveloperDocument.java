@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact;
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext;
 
 import java.util.List;
 

@@ -1,7 +1,11 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact;
 
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.traceability.BuildContext;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.ArtifactDocumentForC;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.ArtifactDocumentForJava;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildContext;
 
 import java.util.Date;
 import java.util.List;
@@ -9,7 +13,41 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class ArtifactDocument extends BaseArtifactDocument {
+public class ArtifactDocument {
+
+    public static final String MONGO_ARTIFACTS_COLLECTION_NAME = "artifacts";
+
+    //private ArtifactDocumentKey key;
+
+    private String org;
+
+    private String name;
+
+    private String version;
+
+    private String status;
+
+    public ArtifactDocument() {
+    }
+
+    public ArtifactDocument(String org, String name, String version, String status) {
+        this.org = org;
+        this.name = name;
+        this.version = version;
+        this.status = status;
+    }
+
+    public ArtifactDocumentKey getKey() {
+        return new ArtifactDocumentKey(org, name, version, status);
+    }
+
+//    public ArtifactDocument(String org, String name, String version, String status) {
+//        this.key = new ArtifactDocumentKey(org, name, version, status);
+//    }
+//
+//    public ArtifactDocument(ArtifactDocumentKey key) {
+//        this.key = key;
+//    }
 
     private String type;
 
@@ -38,6 +76,49 @@ public class ArtifactDocument extends BaseArtifactDocument {
     private List<ArtifactDependency> dependencies;
 
     private BuildContext buildContext;
+
+    //TODO Return a thrad safe Gson
+    public static Gson getGson() {
+        return new GsonBuilder().registerTypeAdapter(ArtifactDocument.class, new ArtifactDocumentSerializer()).create();
+    }
+
+//
+//    public ArtifactDocumentKey getKey() {
+//        return key;
+//    }
+
+
+    public String getOrg() {
+        return org;
+    }
+
+    public void setOrg(String org) {
+        this.org = org;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getType() {
         return type;

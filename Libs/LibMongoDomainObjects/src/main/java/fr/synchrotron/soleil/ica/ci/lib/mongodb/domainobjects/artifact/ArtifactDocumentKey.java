@@ -3,9 +3,7 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact;
 /**
  * @author Gregory Boissinot
  */
-public class BaseArtifactDocument {
-
-    public static final String MONGO_ARTIFACTS_COLLECTION_NAME = "artifacts";
+public class ArtifactDocumentKey {
 
     private String org;
 
@@ -15,10 +13,7 @@ public class BaseArtifactDocument {
 
     private String status;
 
-    public BaseArtifactDocument() {
-    }
-
-    public BaseArtifactDocument(String org, String name, String version, String status) {
+    public ArtifactDocumentKey(String org, String name, String version, String status) {
         this.org = org;
         this.name = name;
         this.version = version;

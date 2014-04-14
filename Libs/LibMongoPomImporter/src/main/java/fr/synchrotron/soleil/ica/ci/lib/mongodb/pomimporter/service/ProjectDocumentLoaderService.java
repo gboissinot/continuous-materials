@@ -1,6 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
@@ -20,9 +20,7 @@ public class ProjectDocumentLoaderService {
             throw new NullPointerException("A Maven Model is required.");
         }
 
-        ProjectDocument projectDocument = new ProjectDocument();
-        projectDocument.setOrg(model.getGroupId());
-        projectDocument.setName(model.getArtifactId());
+        ProjectDocument projectDocument = new ProjectDocument(model.getGroupId(), model.getArtifactId());
         projectDocument.setDescription(model.getDescription());
 
         List developers = model.getDevelopers();
