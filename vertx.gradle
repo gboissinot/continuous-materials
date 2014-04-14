@@ -1,0 +1,43 @@
+
+group = modowner
+archivesBaseName = modname
+
+project.ext.moduleName = "$modowner~$modname~$version"
+
+
+task copyMod(type: Copy, dependsOn: 'classes', description: 'Assemble the module into the local mods directory') {
+    into "build/mods/$moduleName"
+    from compileJava
+    from 'src/main/resources'
+    into('lib') {
+        from configurations.compile
+    }
+}
+
+task pullInDeps(type:JavaExec, dependsOn: copyMod, description: 'Pull in all the module dependencies for the module into the nested mods directory') {
+   main = 'org.vertx.java.platform.impl.cli.Starter'
+   classpath = sourceSets.main.compileClasspath
+   systemProperties =  ["vertx.mods": "build/mods"]
+   args = ['pulldeps', moduleName]
+}
+
+task modZip(type: Zip, dependsOn: 'pullInDeps', description: 'Package the module .zip file') {
+    group = 'vert.x'
+    classifier = "mod"
+    description = "Assembles a vert.x module"
+    destinationDir = project.file('build/libs')
+    archiveName = "${modname}-${version}" + ".zip"
+    from copyMod
+}
+
+
+artifacts {
+    archives  modZip
+}
+
+task fatJar(type:JavaExec, dependsOn: modZip, description: 'Creates a fat executable jar which contains everything needed to run the module') {
+   main = 'org.vertx.java.platform.impl.cli.Starter'
+   classpath = sourceSets.main.compileClasspath
+   systemProperties =  ["vertx.mods": "build/mods"]
+   args = ['fatjar', moduleName, '-d', 'build/libs'] 
+}
