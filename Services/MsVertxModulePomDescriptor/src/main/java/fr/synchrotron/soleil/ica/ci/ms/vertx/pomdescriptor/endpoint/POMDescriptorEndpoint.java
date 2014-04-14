@@ -48,7 +48,7 @@ public class POMDescriptorEndpoint extends Verticle {
             container.logger().info("Vert.x instance started, listening on port:" + PORT);
 
         } catch (Throwable e) {
-            System.out.println(e);
+            container.logger().error(e);
         }
     }
 

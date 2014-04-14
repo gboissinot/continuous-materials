@@ -1,8 +1,5 @@
 package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo;
 
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.HandleResponseClient;
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.HttpArtifactProducer;
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.POMHandleResponseClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;

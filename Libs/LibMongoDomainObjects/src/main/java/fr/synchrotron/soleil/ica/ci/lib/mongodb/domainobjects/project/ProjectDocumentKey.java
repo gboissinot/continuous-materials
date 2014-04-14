@@ -9,9 +9,6 @@ public class ProjectDocumentKey {
 
     private String name;
 
-    public ProjectDocumentKey() {
-    }
-
     public ProjectDocumentKey(String org, String name) {
         this.org = org;
         this.name = name;

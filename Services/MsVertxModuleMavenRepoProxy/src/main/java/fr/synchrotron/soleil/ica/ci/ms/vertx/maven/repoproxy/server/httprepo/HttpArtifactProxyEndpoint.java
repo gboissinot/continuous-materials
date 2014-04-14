@@ -37,7 +37,7 @@ public class HttpArtifactProxyEndpoint extends Verticle {
             container.logger().info("Webserver proxy started, listening on port:" + port);
 
         } catch (Throwable e) {
-            System.out.println(e);
+            container.logger().error(e);
             if (httpServer != null) {
                 httpServer.close();
             }

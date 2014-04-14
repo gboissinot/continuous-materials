@@ -1,4 +1,3 @@
-
 group = modowner
 archivesBaseName = modname
 
@@ -14,11 +13,11 @@ task copyMod(type: Copy, dependsOn: 'classes', description: 'Assemble the module
     }
 }
 
-task pullInDeps(type:JavaExec, dependsOn: copyMod, description: 'Pull in all the module dependencies for the module into the nested mods directory') {
-   main = 'org.vertx.java.platform.impl.cli.Starter'
-   classpath = sourceSets.main.compileClasspath
-   systemProperties =  ["vertx.mods": "build/mods"]
-   args = ['pulldeps', moduleName]
+task pullInDeps(type: JavaExec, dependsOn: copyMod, description: 'Pull in all the module dependencies for the module into the nested mods directory') {
+    main = 'org.vertx.java.platform.impl.cli.Starter'
+    classpath = sourceSets.main.compileClasspath
+    systemProperties = ["vertx.mods": "build/mods"]
+    args = ['pulldeps', moduleName]
 }
 
 task modZip(type: Zip, dependsOn: 'pullInDeps', description: 'Package the module .zip file') {
@@ -32,12 +31,12 @@ task modZip(type: Zip, dependsOn: 'pullInDeps', description: 'Package the module
 
 
 artifacts {
-    archives  modZip
+    archives modZip
 }
 
-task fatJar(type:JavaExec, dependsOn: modZip, description: 'Creates a fat executable jar which contains everything needed to run the module') {
-   main = 'org.vertx.java.platform.impl.cli.Starter'
-   classpath = sourceSets.main.compileClasspath
-   systemProperties =  ["vertx.mods": "build/mods"]
-   args = ['fatjar', moduleName, '-d', 'build/libs'] 
+task fatJar(type: JavaExec, dependsOn: modZip, description: 'Creates a fat executable jar which contains everything needed to run the module') {
+    main = 'org.vertx.java.platform.impl.cli.Starter'
+    classpath = sourceSets.main.compileClasspath
+    systemProperties = ["vertx.mods": "build/mods"]
+    args = ['fatjar', moduleName, '-d', 'build/libs']
 }

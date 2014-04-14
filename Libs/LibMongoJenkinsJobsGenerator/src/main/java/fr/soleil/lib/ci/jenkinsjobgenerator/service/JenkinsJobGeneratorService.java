@@ -1,8 +1,9 @@
 package fr.soleil.lib.ci.jenkinsjobgenerator.service;
 
-import fr.soleil.lib.ci.jenkinsjobgenerator.repository.mongodb.MongoDBProjectRepository;
-import fr.soleil.lib.ci.jenkinsjobgenerator.scm.ScmType;
+import fr.soleil.lib.ci.jenkinsjobgenerator.domain.mustache.ScmType;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ProjectRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,7 @@ import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * TODO manage GIT SCM
@@ -19,14 +21,14 @@ import java.net.URL;
 public class JenkinsJobGeneratorService {
 
     private static String MONGODB_HOSTNAME = System.getProperty("fr.soleil.ci.mongodb.hostname");
-    private static String MONGODB_PORT= System.getProperty("fr.soleil.ci.mongodb.port");
-    private static String JENKINS_URL= System.getProperty("fr.soleil.ci.jenkins.url");
-    private static String JENKINS_USER= System.getProperty("fr.soleil.ci.jenkins.user");
-    private static String JENKINS_PWD= System.getProperty("fr.soleil.ci.jenkins.pwd");
+    private static String MONGODB_PORT = System.getProperty("fr.soleil.ci.mongodb.port");
+    private static String JENKINS_URL = System.getProperty("fr.soleil.ci.jenkins.url");
+    private static String JENKINS_USER = System.getProperty("fr.soleil.ci.jenkins.user");
+    private static String JENKINS_PWD = System.getProperty("fr.soleil.ci.jenkins.pwd");
 
     private Logger logger = LoggerFactory.getLogger(JenkinsJobGeneratorService.class);
 
-    private JenkinsCvsConfigGeneratorService configGenerator ;
+    private JenkinsCvsConfigGeneratorService configGenerator;
     private JenkinsSvnConfigGeneratorService configGeneratorSVN;
 
     public JenkinsJobGeneratorService() throws IOException {
@@ -39,24 +41,16 @@ public class JenkinsJobGeneratorService {
      */
     public void createAllJobs() throws IOException {
 
-        JenkinsJobGeneratorService jobGenerator = new JenkinsJobGeneratorService();
-
-        // load projects from mongodb
-        MongoDBProjectRepository loader = new MongoDBProjectRepository(MONGODB_HOSTNAME, Integer.valueOf(MONGODB_PORT));
-        Iterable<ProjectDocument> projects = loader.loadProjects();
-        // process jenkins jobs
-        for (ProjectDocument projectDocument : projects) {
-            try {
-                jobGenerator.processJob(projectDocument);
-            }catch (Throwable e){
-                logger.error("could not process job {}", JobUtilities.getJobName(projectDocument));
-                logger.error("error is: ",e);
-            }
+        int mongoPort = Integer.parseInt(MONGODB_PORT);
+        ProjectRepository projectRepository = new ProjectRepository(new BasicMongoDBDataSource(MONGODB_HOSTNAME, mongoPort));
+        final List<ProjectDocument> allProjectDocument = projectRepository.getAllProjectDocument();
+        for (ProjectDocument projectDocument : allProjectDocument) {
+            processJob(projectDocument);
         }
 
     }
 
-    public void processJob(ProjectDocument projectDocument) {
+    private void processJob(ProjectDocument projectDocument) {
         String jenkinsJobName = JobUtilities.getJobName(projectDocument);
         logger.debug("processing job {}", jenkinsJobName);
         int rep = 0;
@@ -138,13 +132,4 @@ public class JenkinsJobGeneratorService {
         return isJenkinsJobExists;
     }
 
-//    public static void main(String[] args) {
-//      // -Dfr.soleil.ci.mongodb.hostname="172.16.5.7" -Dfr.soleil.ci.mongodb.port= "27001"
-//      // -Dfr.soleil.ci.jenkins.url="http://172.16.5.6:8080"  -Dfr.soleil.ci.jenkins.user="admin"  -Dfr.soleil.ci.jenkins.pwd="admin"
-//        try {
-//            new JenkinsJobGeneratorService().createAllJobs();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

@@ -1,7 +1,5 @@
 package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo;
 
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.HandleResponseClient;
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo.HttpArtifactProducer;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

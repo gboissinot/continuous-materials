@@ -3,7 +3,7 @@ package fr.soleil.lib.ci.jenkinsjobgenerator.exception;
 /**
  * Created by ABEILLE on 11/04/2014.
  */
-public class JenkinsJobGeneratorException extends  RuntimeException {
+public class JenkinsJobGeneratorException extends RuntimeException {
 
 
     public JenkinsJobGeneratorException() {

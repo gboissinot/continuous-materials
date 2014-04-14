@@ -16,21 +16,22 @@ import java.io.Writer;
  * Created by ABEILLE on 11/04/2014.
  */
 public abstract class JenkinsConfigGeneratorService {
+
     private Mustache mustache;
 
-    public JenkinsConfigGeneratorService(String templateName)  {
+    public JenkinsConfigGeneratorService(String templateName) {
         InputStream inputStream = getClass()
                 .getResourceAsStream(templateName);
         try {
             mustache = new DefaultMustacheFactory().compile(new StringReader(IOUtils.toString(inputStream)), templateName);
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             throw new JenkinsJobGeneratorException(ioe);
         } finally {
             IOUtils.closeQuietly(inputStream);
         }
     }
 
-    protected void compile(Writer writer, JenkinsConfig config)  {
+    protected void compile(Writer writer, JenkinsConfig config) {
         mustache.execute(writer, config);
         try {
             writer.flush();

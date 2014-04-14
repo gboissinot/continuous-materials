@@ -10,11 +10,9 @@ import java.util.List;
 public class JobUtilities {
 
 
-    //private static final Logger LOGGER = LoggerFactory.getLogger(JobUtilities.class);
     private static final String SYNCHROTRON_SOLEIL_FR = "@synchrotron-soleil.fr";
 
     private JobUtilities() {
-
     }
 
     public static String getEmails(ProjectDocument projectDocument) {

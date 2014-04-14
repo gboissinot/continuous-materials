@@ -11,8 +11,6 @@ public class ProjectDocument {
 
     public static final String MONGO_PROJECTS_COLLECTION_NAME = "projects";
 
-    //private ProjectDocumentKey key;
-
     private String org;
 
     private String name;

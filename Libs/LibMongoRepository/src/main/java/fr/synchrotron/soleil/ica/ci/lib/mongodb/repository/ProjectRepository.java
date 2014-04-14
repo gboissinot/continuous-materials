@@ -12,7 +12,9 @@ import org.jongo.MongoCollection;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Gregory Boissinot
@@ -21,6 +23,16 @@ public class ProjectRepository extends AbstractRepository {
 
     public ProjectRepository(MongoDBDataSource mongoDBDataSource) {
         super(mongoDBDataSource);
+    }
+
+    public List<ProjectDocument> getAllProjectDocument() {
+        List<ProjectDocument> result = new ArrayList<ProjectDocument>();
+        MongoCollection projects = jongo.getCollection(ProjectDocument.MONGO_PROJECTS_COLLECTION_NAME);
+        final Iterable<ProjectDocument> projectDocuments = projects.find().as(ProjectDocument.class);
+        for (ProjectDocument projectDocument : projectDocuments) {
+            result.add(projectDocument);
+        }
+        return result;
     }
 
     public ProjectDocument findProjectDocument(String org, String name) {

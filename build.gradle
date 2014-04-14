@@ -141,6 +141,7 @@ project(':Libs/LibMongoJenkinsJobsGenerator') {
     dependencies {
         compile project(':Libs/LibMongoDomainObjects')
         compile project(':Libs/LibMongoUtilities')
+        compile project(':Libs/LibMongoRepository')
         compile "org.mongodb:mongo-java-driver:2.11.3"
         compile "commons-lang:commons-lang:2.6"
         compile "commons-io:commons-io:2.4"

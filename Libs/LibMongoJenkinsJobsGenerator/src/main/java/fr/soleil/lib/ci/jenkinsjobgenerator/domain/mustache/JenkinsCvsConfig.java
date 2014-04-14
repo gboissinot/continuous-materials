@@ -3,14 +3,14 @@ package fr.soleil.lib.ci.jenkinsjobgenerator.domain.mustache;
 /**
  * Created by ABEILLE on 09/04/2014.
  */
-public class JenkinsCvsConfig extends JenkinsConfig{
-
+public class JenkinsCvsConfig extends JenkinsConfig {
 
     private String cvmodulename;
+
     private String cvsroot;
 
     public JenkinsCvsConfig(String description, String emails, String cvsroot, String cvmodulename) {
-       super(description,emails);
+        super(description, emails);
         this.cvsroot = cvsroot;
         this.cvmodulename = cvmodulename;
     }
@@ -22,7 +22,6 @@ public class JenkinsCvsConfig extends JenkinsConfig{
     public String getCvmodulename() {
         return cvmodulename;
     }
-
 
 
 }

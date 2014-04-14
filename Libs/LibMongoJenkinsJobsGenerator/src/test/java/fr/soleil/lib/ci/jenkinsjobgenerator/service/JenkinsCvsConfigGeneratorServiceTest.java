@@ -43,7 +43,7 @@ public class JenkinsCvsConfigGeneratorServiceTest {
     }
 
     @Test
-     public void testCVSDescription() {
+    public void testCVSDescription() {
         JenkinsCvsConfigGeneratorService cvsService = new JenkinsCvsConfigGeneratorService();
         projectDocument.setDescription("desc");
         Writer writer = new StringWriter();

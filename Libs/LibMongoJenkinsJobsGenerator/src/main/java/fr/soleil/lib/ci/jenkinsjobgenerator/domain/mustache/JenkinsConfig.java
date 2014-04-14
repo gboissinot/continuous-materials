@@ -7,7 +7,9 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * Created by ABEILLE on 11/04/2014.
  */
 public class JenkinsConfig {
+
     private String description;
+
     private String emails;
 
     public JenkinsConfig(String description, String emails) {
