@@ -23,7 +23,7 @@ public class JobUtilities {
         if (developers != null) {
             StringBuilder sb = new StringBuilder();
             for (DeveloperDocument developerDocument : developers) {
-                if (developerDocument.getEmail().isEmpty()) {
+                if (developerDocument.getEmail() == null || developerDocument.getEmail().isEmpty()) {
                     sb.append(developerDocument.getId()).append(
                             SYNCHROTRON_SOLEIL_FR);
                 } else {
