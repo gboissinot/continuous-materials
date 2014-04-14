@@ -1,0 +1,32 @@
+apply plugin: SetRemoteRepositoriesPlugin
+
+class SetRemoteRepositoriesPlugin implements Plugin<Gradle> {
+
+    private static String NEXUSMAVEN_REPOSITORY_URL = "http://calypso/nexus/content/groups/public"
+
+    void apply(Gradle gradle) {
+
+        gradle.allprojects { project ->
+
+            project.repositories {
+
+                //remove all repositories not pointing to the enterprise repository url
+                all {
+                    ArtifactRepository repo ->
+                        if (!(repo instanceof MavenArtifactRepository) || repo.url.toString() != NEXUSMAVEN_REPOSITORY_URL) {
+                            //project.logger.lifecycle "Repository ${repo.url} removed. Only $NEXUSMAVEN_REPOSITORY_URL is allowed"
+                            remove repo
+                        }
+                }
+
+                // add the enterprise repository
+                maven {
+                    name "Soleil Nexus Maven Repository"
+                    url NEXUSMAVEN_REPOSITORY_URL
+                }
+            }
+
+        }
+    }
+
+}

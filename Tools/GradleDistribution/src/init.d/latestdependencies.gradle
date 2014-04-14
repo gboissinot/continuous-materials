@@ -1,0 +1,47 @@
+initscript {
+    dependencies {
+        classpath files('lib/LibMongoLatestMavenVersionResolver-1.0.0.jar')
+        classpath files('lib/LibMongoUtilities.jar')
+        classpath files('lib/mongo-java-driver-2.11.3.jar')
+    }
+}
+
+
+apply plugin: LatestDependencyPlugin
+
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.domain.MavenInputArtifact
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.mongodb.MongoDBArtifactRepository
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolverService
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource
+
+class LatestDependencyPlugin implements Plugin<Gradle> {
+
+    void apply(Gradle gradle) {
+
+        gradle.allprojects { project ->
+
+            configurations.all {
+                resolutionStrategy.eachDependency {
+                    DependencyResolveDetails details ->
+                        String requestedVersion = details.requested.version;
+                        if (requestedVersion.startsWith("latest")) {
+                            def group = details.requested.group
+                            def name = details.requested.name
+                            def latestVersion = getLatestVersion(group, name, requestedVersion)
+                            logger.lifecycle("Resolved latest dependency $group:$name:$requestedVersion to $latestVersion \n")
+                            details.useVersion latestVersion
+                        }
+                }
+            }
+        }
+    }
+
+
+    private String getLatestVersion(String group, String name, String version) {
+        MavenVersionResolverService resolverService = new MavenVersionResolverService(new MongoDBArtifactRepository(
+                new BasicMongoDBDataSource("172.16.5.7", 27001, "repo")));
+        MavenInputArtifact mavenInputArtifact = new MavenInputArtifact(group, name, version);
+        return resolverService.getLatestArtifact(mavenInputArtifact.getGroupId(), mavenInputArtifact.getArtifactId());
+    }
+
+}
