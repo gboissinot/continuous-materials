@@ -1,3 +1,6 @@
+
+defaultTasks "clean","build"
+
 project.ext {
     mavenCoreVersion = '2.1.0'
     mongoJavaDriverVerison = '2.11.3'
@@ -17,7 +20,6 @@ project.ext {
 subprojects {
 
     apply plugin: 'java'
-    apply plugin: 'maven'
 
     group = 'fr.synchrotron.soleil.ica.ci.lib'
     version = '1.0.0'
@@ -30,28 +32,10 @@ subprojects {
             url "http://dl.bintray.com/synchrotron-soleil-ica/ci-artifacts"
         }
     }
+
     dependencies {
         testCompile "junit:junit:$junitVersion"
     }
-
-//    task sourceJar(type: Jar) {
-//        description = 'Builds a source jar artifact suitable for maven deployment.'
-//        classifier = 'sources'
-//        from sourceSets.main.allSource
-//    }
-
-//    task javadocJar(type: Jar) {
-//        description = 'Builds a javadoc jar artifact suitable for maven deployment.'
-//        classifier = 'javadoc'
-//        from javadoc.destinationDir
-//    }
-//    javadocJar.dependsOn javadoc
-//
-//    build.dependsOn sourceJar, javadocJar
-
-//    artifacts {
-//        archives sourceJar, javadocJar
-//    }
 
 }
 
