@@ -1,8 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.ArtifactDocumentForC;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.ArtifactDocumentForJava;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildContext;
@@ -16,8 +14,6 @@ import java.util.List;
 public class ArtifactDocument {
 
     public static final String MONGO_ARTIFACTS_COLLECTION_NAME = "artifacts";
-
-    //private ArtifactDocumentKey key;
 
     private String org;
 
@@ -40,14 +36,6 @@ public class ArtifactDocument {
     public ArtifactDocumentKey getKey() {
         return new ArtifactDocumentKey(org, name, version, status);
     }
-
-//    public ArtifactDocument(String org, String name, String version, String status) {
-//        this.key = new ArtifactDocumentKey(org, name, version, status);
-//    }
-//
-//    public ArtifactDocument(ArtifactDocumentKey key) {
-//        this.key = key;
-//    }
 
     private String type;
 
@@ -76,17 +64,6 @@ public class ArtifactDocument {
     private List<ArtifactDependency> dependencies;
 
     private BuildContext buildContext;
-
-    //TODO Return a thrad safe Gson
-    public static Gson getGson() {
-        return new GsonBuilder().registerTypeAdapter(ArtifactDocument.class, new ArtifactDocumentSerializer()).create();
-    }
-
-//
-//    public ArtifactDocumentKey getKey() {
-//        return key;
-//    }
-
 
     public String getOrg() {
         return org;

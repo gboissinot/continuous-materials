@@ -1,5 +1,6 @@
 include 'Libs/LibMongoDomainObjects',
         'Libs/LibMongoUtilities',
+        'Libs/LibMongoRepository',
         'Libs/LibMongoPromote',
         'Libs/LibMongoLatestMavenVersionResolver',
         'Libs/LibMongoPomImporter',

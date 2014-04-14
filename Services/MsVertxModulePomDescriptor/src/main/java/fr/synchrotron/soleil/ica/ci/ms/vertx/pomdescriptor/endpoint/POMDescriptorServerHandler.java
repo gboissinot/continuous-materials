@@ -2,7 +2,6 @@ package fr.synchrotron.soleil.ica.ci.ms.vertx.pomdescriptor.endpoint;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service.POMExportService;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMImportRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
 import org.vertx.java.core.*;
@@ -101,8 +100,7 @@ public class POMDescriptorServerHandler implements Handler<HttpServerRequest> {
                                     final HttpServerResponse response = req.response();
                                     try {
                                         final BasicMongoDBDataSource mongoDBDataSource = new BasicMongoDBDataSource(mongoHost, mongoPort, mongoDBName);
-                                        final POMImportRepository pomImportRepository = new POMImportRepository(mongoDBDataSource);
-                                        POMImportService pomImportService = new POMImportService(pomImportRepository);
+                                        POMImportService pomImportService = new POMImportService(mongoDBDataSource);
 
                                         response.setStatusCode(200);
                                         pomImportService.importPomFile(uploadedFile);

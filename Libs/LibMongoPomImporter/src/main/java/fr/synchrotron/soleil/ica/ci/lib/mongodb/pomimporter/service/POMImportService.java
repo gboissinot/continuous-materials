@@ -3,7 +3,9 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.exception.POMImporterException;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.repository.POMImportRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ArtifactRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ProjectRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.apache.maven.model.Model;
 
 import java.io.File;
@@ -16,18 +18,19 @@ import java.io.IOException;
  */
 public class POMImportService {
 
-    private POMImportRepository pomImportRepository;
-    private PomReaderService pomReaderService;
+    private ProjectRepository projectRepository;
+    private ArtifactRepository artifactRepository;
 
-    public POMImportService(POMImportRepository pomImportRepository) {
-        this.pomImportRepository = pomImportRepository;
-        this.pomReaderService = new PomReaderService();
+    public POMImportService(MongoDBDataSource mongoDBDataSource) {
+        this.projectRepository = new ProjectRepository(mongoDBDataSource);
+        this.artifactRepository = new ArtifactRepository(mongoDBDataSource);
     }
 
     public void importPomFile(File pomFile) {
         FileReader fileReader = null;
         try {
             fileReader = new FileReader(pomFile);
+            PomReaderService pomReaderService = new PomReaderService();
             final Model pomModel = pomReaderService.getModel(fileReader);
             insertProjectDocument(pomModel);
             insertArtifactDocument(pomModel);
@@ -48,10 +51,10 @@ public class POMImportService {
         ArtifactDocumentLoaderService artifactDocumentLoaderService = new ArtifactDocumentLoaderService();
         final ArtifactDocument artifactDocument = artifactDocumentLoaderService.populateArtifactDocument(pomModel);
 
-        if (pomImportRepository.isArtifactDocumentAlreadyExists(artifactDocument)) {
-            pomImportRepository.updateArtifactDocument(artifactDocument);
+        if (artifactRepository.isArtifactDocumentAlreadyExists(artifactDocument.getKey())) {
+            artifactRepository.updateArtifactDocument(artifactDocument);
         } else {
-            pomImportRepository.insertArtifactDocument(artifactDocument);
+            artifactRepository.insertArtifactDocument(artifactDocument);
         }
     }
 
@@ -59,10 +62,10 @@ public class POMImportService {
         ProjectDocumentLoaderService projectDocumentLoaderService = new ProjectDocumentLoaderService();
         final ProjectDocument projectDocument = projectDocumentLoaderService.populateProjectDocument(pomModel);
 
-        if (pomImportRepository.isProjectDocumentAlreadyExists(projectDocument)) {
-            pomImportRepository.updateProjectDocument(projectDocument);
+        if (projectRepository.isProjectDocumentAlreadyExists(projectDocument.getKey())) {
+            projectRepository.updateProjectDocument(projectDocument);
         } else {
-            pomImportRepository.insertProjectDocument(projectDocument);
+            projectRepository.insertProjectDocument(projectDocument);
         }
     }
 

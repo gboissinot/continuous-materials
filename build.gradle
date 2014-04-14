@@ -1,5 +1,4 @@
-
-defaultTasks "clean","build"
+defaultTasks "clean", "build"
 
 project.ext {
     mavenCoreVersion = '2.1.0'
@@ -40,32 +39,35 @@ subprojects {
 
 }
 
-configure(subprojects.findAll {it.name.startsWith('Services/MsVertxModule')}) {
-   apply from: "$rootDir/vertx.gradle"
+configure(subprojects.findAll { it.name.startsWith('Services/MsVertxModule') }) {
+    apply from: "$rootDir/vertx.gradle"
 }
 
-
-project(':Libs/LibMongoDomainObjects') {
+project(':Libs/LibMongoRepository') {
     dependencies {
-        compile "com.google.code.gson:gson:$gsonVersion"
+        compile project(':Libs/LibMongoDomainObjects')
+        compile project(':Libs/LibMongoUtilities')
+
+        compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison",
+                "org.jongo:jongo:$jongoVersion"
     }
 }
 
 project(':Libs/LibMongoPomImporter') {
-
     dependencies {
         compile project(':Libs/LibMongoDomainObjects')
         compile project(':Libs/LibMongoUtilities')
+        compile project(':Libs/LibMongoRepository')
         compile("org.apache.maven:maven-core:$mavenCoreVersion") {
             exclude group: "org.slf4j"
         }
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison",
                 "org.jongo:jongo:$jongoVersion",
-                "com.google.code.gson:gson:$gsonVersion",
                 "log4j:log4j:1.2.17",
                 "org.slf4j:slf4j-api:$log4jVersion",
                 "org.slf4j:slf4j-log4j12:$log4jVersion"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"
+        testCompile "com.google.code.gson:gson:$gsonVersion"
 
     }
 }
@@ -74,11 +76,11 @@ project(':Libs/LibMongoPomExporter') {
     dependencies {
         compile project(':Libs/LibMongoDomainObjects')
         compile project(':Libs/LibMongoUtilities')
+        compile project(':Libs/LibMongoRepository')
         compile("org.apache.maven:maven-core:2.1.0") {
             exclude group: "org.slf4j"
         }
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
-        compile "com.google.code.gson:gson:$gsonVersion"
         compile "org.slf4j:slf4j-log4j12:$log4jVersion"
         compile "org.slf4j:jul-to-slf4j:$log4jVersion"
         compile "org.jongo:jongo:$jongoVersion"
@@ -112,7 +114,6 @@ project(':Libs/LibMongoLatestMavenVersionResolver') {
 }
 
 project(':Services/MsVertxModulePomDescriptor') {
-
     dependencies {
         compile project(':Libs/LibMongoPomImporter')
         compile project(':Libs/LibMongoPomExporter')
@@ -123,7 +124,6 @@ project(':Services/MsVertxModulePomDescriptor') {
 
 
 project(':Services/MsVertxModuleMavenRepoProxy') {
-
     dependencies {
         compile project(':Libs/LibMongoLatestMavenVersionResolver')
         compile "org.springframework:spring-core:$springVersion"
