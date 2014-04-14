@@ -61,7 +61,6 @@ public class JenkinsCvsConfigGeneratorServiceTest {
         Writer writer = new StringWriter();
         cvsService.load(writer, projectDocument);
         String xmlString = writer.toString();
-        // System.out.println(writer.toString());
         Assert.assertThat(xmlString, StringContains.containsString("<remoteName>DeviceServer/Generic/Tests/Test</remoteName>"));
         Assert.assertThat(xmlString, StringContains.containsString("<cvsRoot>pserver:anonymous:@ganymede.synchrotron-soleil.fr:/usr/local/CVS</cvsRoot>"));
 
@@ -88,7 +87,6 @@ public class JenkinsCvsConfigGeneratorServiceTest {
         Writer writer = new StringWriter();
         cvsService.load(writer, projectDocument);
         String xmlString = writer.toString();
-        System.out.println(writer.toString());
         Assert.assertThat(xmlString, StringContains.containsString("<recipients>toto@soleil.fr titi@soleil.fr id3@synchrotron-soleil.fr </recipients>"));
     }
 
