@@ -7,7 +7,7 @@ include 'Libs/LibMongoDomainObjects',
         'Libs/LibMongoJenkinsJobsGenerator',
         'Services/MsApplicationMavenRepoImporter',
         'Services/MsVertxModuleMavenRepoProxy',
-        'Services/MsVertxModuleMongoScriptsRunner',
+        //'Services/MsVertxModuleMongoScriptsRunner',
         'Services/MsVertxModulePomDescriptor',
         'Tools/GradleDistribution'
 

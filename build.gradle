@@ -40,7 +40,7 @@ subprojects {
 
 }
 
-configure(subprojects.findAll {it.name.startsWith('Services/MsVertxModuleMavenRepoProxy')}) {
+configure(subprojects.findAll {it.name.startsWith('Services/MsVertxModule')}) {
    apply from: "$rootDir/vertx.gradle"
 }
 
