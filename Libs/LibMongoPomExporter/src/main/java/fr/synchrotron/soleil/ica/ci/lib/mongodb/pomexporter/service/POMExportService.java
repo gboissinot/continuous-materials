@@ -28,10 +28,33 @@ public class POMExportService {
     private POMDocumentRepository pomDocumentRepository;
 
     public POMExportService(POMDocumentRepository pomDocumentRepository) {
+        if (pomDocumentRepository == null) {
+            throw new NullPointerException("A pomDocumentRepository is required.");
+        }
         this.pomDocumentRepository = pomDocumentRepository;
     }
 
     public void exportPomFile(Writer writer, String org, String name, String version, String status) throws POMExporterException {
+
+        if (writer == null) {
+            throw new NullPointerException("An writer element is required.");
+        }
+
+        if (org == null) {
+            throw new NullPointerException("An org element is required.");
+        }
+
+        if (name == null) {
+            throw new NullPointerException("An name element is required.");
+        }
+
+        if (version == null) {
+            throw new NullPointerException("An version element is required.");
+        }
+
+        if (status == null) {
+            throw new NullPointerException("An status element is required.");
+        }
 
         final MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
         Model pomModel = getMavenModel(org, name, version, status);

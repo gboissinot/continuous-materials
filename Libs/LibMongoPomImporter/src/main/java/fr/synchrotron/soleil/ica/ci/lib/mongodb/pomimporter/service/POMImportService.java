@@ -22,11 +22,19 @@ public class POMImportService {
     private ArtifactRepository artifactRepository;
 
     public POMImportService(MongoDBDataSource mongoDBDataSource) {
+        if (mongoDBDataSource == null) {
+            throw new NullPointerException("An mongoDBDataSource element is required.");
+        }
         this.projectRepository = new ProjectRepository(mongoDBDataSource);
         this.artifactRepository = new ArtifactRepository(mongoDBDataSource);
     }
 
     public void importPomFile(File pomFile) {
+
+        if (pomFile == null) {
+            throw new NullPointerException("An pomFile element is required.");
+        }
+
         FileReader fileReader = null;
         try {
             fileReader = new FileReader(pomFile);
