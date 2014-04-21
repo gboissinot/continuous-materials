@@ -53,7 +53,7 @@ public class ArtifactRepository extends AbstractRepository {
 
     public void insertArtifactDocument(ArtifactDocument artifactDocument) {
         MongoCollection artifacts = jongo.getCollection(ArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
-        artifacts.insert(getStringQuery(artifactDocument));
+        artifacts.insert(artifactDocument);
     }
 
 }
