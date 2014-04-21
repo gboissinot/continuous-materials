@@ -22,10 +22,14 @@ public class POMImporterWorkerVerticle extends Verticle {
         eventBus.registerHandler("pom.importer", new Handler<Message>() {
             @Override
             public void handle(Message message) {
-                final BasicMongoDBDataSource mongoDBDataSource = getBasicMongoDBDataSource(config);
-                POMImportService pomImportService = new POMImportService(mongoDBDataSource);
-                pomImportService.importPomFile(String.valueOf(message.body()));
-                message.reply("POM file inserted in Metadata Registry.");
+                try {
+                    final BasicMongoDBDataSource mongoDBDataSource = getBasicMongoDBDataSource(config);
+                    POMImportService pomImportService = new POMImportService(mongoDBDataSource);
+                    pomImportService.importPomFile(String.valueOf(message.body()));
+                    message.reply("POM file inserted in Metadata Registry.");
+                } catch (Throwable e) {
+                    message.reply(e.getMessage());
+                }
             }
         });
     }
