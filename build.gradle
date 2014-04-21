@@ -16,7 +16,6 @@ project.ext {
     utils4jVersion = '0.7.0'
 }
 
-
 subprojects {
 
     apply plugin: 'java'
@@ -36,11 +35,17 @@ subprojects {
     dependencies {
         testCompile "junit:junit:$junitVersion"
     }
-
 }
 
 configure(subprojects.findAll { it.name.startsWith('Services/MsVertxModule') }) {
     apply from: "$rootDir/vertx.gradle"
+}
+
+configure(subprojects.findAll { it.name.startsWith('Services/TaskVerticle') }) {
+    dependencies {
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+    }
 }
 
 project(':Libs/LibMongoRepository') {
@@ -113,30 +118,6 @@ project(':Libs/LibMongoLatestMavenVersionResolver') {
     }
 }
 
-project(':Services/MsVertxModulePomDescriptor') {
-    dependencies {
-        compile project(':Libs/LibMongoPomImporter')
-        compile project(':Libs/LibMongoPomExporter')
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
-    }
-}
-
-
-project(':Services/MsVertxModuleMavenRepoProxy') {
-    dependencies {
-        compile project(':Libs/LibMongoLatestMavenVersionResolver')
-        compile "org.springframework:spring-core:$springVersion"
-        compile "org.springframework:spring-context:$springVersion"
-        compile "org.apache.maven:maven-core:$mavenCoreVersion"
-        compile "org.fuin:utils4j:$utils4jVersion"
-        compile "commons-io:commons-io:$commonsioVersion"
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
-        compile "org.slf4j:slf4j-log4j12:1.6.1"
-    }
-}
-
 project(':Libs/LibMongoJenkinsJobsGenerator') {
     dependencies {
         compile project(':Libs/LibMongoDomainObjects')
@@ -152,4 +133,76 @@ project(':Libs/LibMongoJenkinsJobsGenerator') {
         testCompile "junit:junit:$junitVersion"
     }
 }
+
+project(':Services/MsVertxModuleMavenRepoProxy') {
+    dependencies {
+        compile project(':Libs/LibMongoLatestMavenVersionResolver')
+        compile "org.springframework:spring-core:$springVersion"
+        compile "org.springframework:spring-context:$springVersion"
+        compile "org.apache.maven:maven-core:$mavenCoreVersion"
+        compile "org.fuin:utils4j:$utils4jVersion"
+        compile "commons-io:commons-io:$commonsioVersion"
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+        compile "org.slf4j:slf4j-log4j12:1.6.1"
+    }
+}
+
+project(':Services/TaskVerticlePOMImporter') {
+    dependencies {
+        compile project(':Libs/LibMongoPomImporter')
+    }
+}
+
+
+//project(':Confs') {
+//
+//    apply plugin:'java'
+//
+//    sourceSets {
+//        mongo
+//    }
+//    sourceSets.mongo.resources.srcDir "Mongo/"
+//
+////    configurations {
+////        mongo
+////    }
+//
+//    task mongoJar(type: Jar) {
+//        from sourceSets.mongo.resources
+//    }
+//
+//    artifacts {
+//         myArchives mongoJar
+//    }
+//}
+
+
+project(':Services/MsVertxModuleContinuousMaterials') {
+    dependencies {
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+        compile project(':Services/TaskVerticlePOMImporter')
+        //compile file(project(':Confs').projectDir.path + "/Mongo")
+        //from files(project(':Confs').sourceSets.mongo.output.classesDir)
+        //compile(path: ':Confs', configurationg: 'myArchives')
+        compile project(':Confs')
+    }
+
+    //sourceSets.main.resources.srcDir "$rootDir/Confs/Mongo"
+}
+
+
+project(':Confs'){
+    sourceSets{
+        main{
+            resources.srcDir 'Mongo'
+        }
+    }
+}
+
+
+
+
+
 

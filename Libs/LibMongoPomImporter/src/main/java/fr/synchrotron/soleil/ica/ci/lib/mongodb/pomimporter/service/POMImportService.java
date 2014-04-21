@@ -8,10 +8,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ProjectRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.apache.maven.model.Model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author Gregory Boissinot
@@ -29,19 +26,21 @@ public class POMImportService {
         this.artifactRepository = new ArtifactRepository(mongoDBDataSource);
     }
 
-    public void importPomFile(File pomFile) {
 
+    public void importPomFile(String pomContent) {
+        StringReader stringReader = new StringReader(pomContent);
+        importPomFile(stringReader);
+        stringReader.close();
+    }
+
+    public void importPomFile(File pomFile) {
         if (pomFile == null) {
             throw new NullPointerException("An pomFile element is required.");
         }
-
         FileReader fileReader = null;
         try {
             fileReader = new FileReader(pomFile);
-            PomReaderService pomReaderService = new PomReaderService();
-            final Model pomModel = pomReaderService.getModel(fileReader);
-            insertProjectDocument(pomModel);
-            insertArtifactDocument(pomModel);
+            importPomFile(fileReader);
         } catch (FileNotFoundException fne) {
             throw new POMImporterException(fne);
         } finally {
@@ -53,6 +52,13 @@ public class POMImportService {
                 }
             }
         }
+    }
+
+    private void importPomFile(Reader pomReader) {
+        PomReaderService pomReaderService = new PomReaderService();
+        final Model pomModel = pomReaderService.getModel(pomReader);
+        insertProjectDocument(pomModel);
+        insertArtifactDocument(pomModel);
     }
 
     void insertArtifactDocument(Model pomModel) {

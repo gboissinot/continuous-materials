@@ -1,4 +1,5 @@
-include 'Libs/LibMongoDomainObjects',
+include 'Confs',
+        'Libs/LibMongoDomainObjects',
         'Libs/LibMongoUtilities',
         'Libs/LibMongoRepository',
         'Libs/LibMongoPromote',
@@ -6,9 +7,9 @@ include 'Libs/LibMongoDomainObjects',
         'Libs/LibMongoPomImporter',
         'Libs/LibMongoPomExporter',
         'Libs/LibMongoJenkinsJobsGenerator',
-        'Services/MsApplicationMavenRepoImporter',
-        'Services/MsVertxModuleMavenRepoProxy',
-        //'Services/MsVertxModuleMongoScriptsRunner',
-        'Services/MsVertxModulePomDescriptor',
-        'Tools/GradleDistribution'
 
+        'Services/MsVertxModuleMavenRepoProxy',
+        'Services/TaskVerticlePOMImporter',
+        'Services/MsVertxModuleContinuousMaterials',
+
+        'Tools/GradleDistribution'
