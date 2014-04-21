@@ -1,5 +1,6 @@
 package fr.synchrotron.soleil.ica.msvervice.management;
 
+import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMExportHandler;
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMImportHandler;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.AsyncResultHandler;
@@ -27,6 +28,8 @@ public class HttpEndpointManager extends Verticle {
 
         final EventBus eventBus = vertx.eventBus();
 
+
+        //-- Deploy Required Verticle
         container.deployWorkerVerticle(
                 "fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomimport.POMImporterWorkerVerticle",
                 createConfig(),
@@ -39,17 +42,35 @@ public class HttpEndpointManager extends Verticle {
                     }
                 }
         );
+        container.deployWorkerVerticle(
+                "fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomexporter.POMExporterWorkerVerticle",
+                createConfig(),
+                1,
+                true,
+                new AsyncResultHandler<String>() {
+                    @Override
+                    public void handle(AsyncResult<String> asyncResult) {
+                        onVerticleLoaded(asyncResult);
+                    }
+                }
+        );
+
 
         RouteMatcher routeMatcher = new RouteMatcher();
 
         //-- POM IMPORTER
         final POMImportHandler pomImportHandler = new POMImportHandler(eventBus);
-        routeMatcher.post("/import", pomImportHandler);
-        routeMatcher.put("/import", pomImportHandler);
+        routeMatcher.post("/pom/import", pomImportHandler);
+        routeMatcher.put("/pom/import", pomImportHandler);
+
+        //--POM EXPORTER
+        final POMExportHandler pomExportHandler = new POMExportHandler(eventBus);
+        routeMatcher.post("/pom/export", pomExportHandler);
 
         routeMatcher.allWithRegEx(".*", new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest request) {
+                request.response().setStatusCode(500);
                 request.response().end("Path or Http method not supported.\n");
             }
         });

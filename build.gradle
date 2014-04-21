@@ -148,50 +148,6 @@ project(':Services/MsVertxModuleMavenRepoProxy') {
     }
 }
 
-project(':Services/TaskVerticlePOMImporter') {
-    dependencies {
-        compile project(':Libs/LibMongoPomImporter')
-    }
-}
-
-
-//project(':Confs') {
-//
-//    apply plugin:'java'
-//
-//    sourceSets {
-//        mongo
-//    }
-//    sourceSets.mongo.resources.srcDir "Mongo/"
-//
-////    configurations {
-////        mongo
-////    }
-//
-//    task mongoJar(type: Jar) {
-//        from sourceSets.mongo.resources
-//    }
-//
-//    artifacts {
-//         myArchives mongoJar
-//    }
-//}
-
-
-project(':Services/MsVertxModuleContinuousMaterials') {
-    dependencies {
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
-        compile project(':Services/TaskVerticlePOMImporter')
-        //compile file(project(':Confs').projectDir.path + "/Mongo")
-        //from files(project(':Confs').sourceSets.mongo.output.classesDir)
-        //compile(path: ':Confs', configurationg: 'myArchives')
-        compile project(':Confs')
-    }
-
-    //sourceSets.main.resources.srcDir "$rootDir/Confs/Mongo"
-}
-
 
 project(':Confs'){
     sourceSets{
@@ -200,6 +156,31 @@ project(':Confs'){
         }
     }
 }
+
+project(':Services/TaskVerticlePOMImporter') {
+    dependencies {
+        compile project(':Libs/LibMongoPomImporter')
+    }
+}
+
+project(':Services/TaskVerticlePOMExporter'){
+    dependencies {
+        compile project(':Libs/LibMongoPomExporter')
+    }
+}
+
+project(':Services/MsVertxModuleContinuousMaterials') {
+    dependencies {
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+        compile project(':Services/TaskVerticlePOMImporter')
+        compile project(':Services/TaskVerticlePOMExporter')
+        compile project(':Confs')
+    }
+
+    //sourceSets.main.resources.srcDir "$rootDir/Confs/Mongo"
+}
+
 
 
 
