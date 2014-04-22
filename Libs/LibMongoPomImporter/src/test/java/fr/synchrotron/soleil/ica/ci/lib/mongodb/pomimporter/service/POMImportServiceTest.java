@@ -50,13 +50,6 @@ public class POMImportServiceTest {
         projectRepository.deleteProjectsCollection();
     }
 
-    static private class InMemoryMongoDBDataSource implements MongoDBDataSource {
-        @Override
-        public DB getMongoDB() {
-            return mongoDB;
-        }
-    }
-
     @Test
     public void artifactDocumentInsertion() throws Exception {
 
@@ -97,7 +90,6 @@ public class POMImportServiceTest {
         assertTrue(depMongoDbDriverPresent);
     }
 
-
     @Test
     public void projectDocumentInsertion() throws Exception {
 
@@ -128,7 +120,6 @@ public class POMImportServiceTest {
         assertEquals(2, developerDocument.getRoles().size());
 
     }
-
 
     @Test
     public void projectDocumentInsertionOrUpdate() throws Exception {
@@ -168,5 +159,12 @@ public class POMImportServiceTest {
         assertEquals("gregory.boissinot@gmail.com", developerDocument.getEmail());
         assertEquals(2, developerDocument.getRoles().size());
 
+    }
+
+    static private class InMemoryMongoDBDataSource implements MongoDBDataSource {
+        @Override
+        public DB getMongoDB() {
+            return mongoDB;
+        }
     }
 }

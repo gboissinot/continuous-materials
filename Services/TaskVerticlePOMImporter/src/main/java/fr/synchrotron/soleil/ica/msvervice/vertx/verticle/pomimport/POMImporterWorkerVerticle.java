@@ -16,15 +16,13 @@ public class POMImporterWorkerVerticle extends Verticle {
     @Override
     public void start() {
 
-        final JsonObject config = container.config();
-
+        final POMImportService pomImportService =
+                new POMImportService(getBasicMongoDBDataSource(container.config()));
         final EventBus eventBus = vertx.eventBus();
         eventBus.registerHandler("pom.importer", new Handler<Message>() {
             @Override
             public void handle(Message message) {
                 try {
-                    final BasicMongoDBDataSource mongoDBDataSource = getBasicMongoDBDataSource(config);
-                    POMImportService pomImportService = new POMImportService(mongoDBDataSource);
                     pomImportService.importPomFile(String.valueOf(message.body()));
                     message.reply("POM file inserted in Metadata Registry.");
                 } catch (Throwable e) {

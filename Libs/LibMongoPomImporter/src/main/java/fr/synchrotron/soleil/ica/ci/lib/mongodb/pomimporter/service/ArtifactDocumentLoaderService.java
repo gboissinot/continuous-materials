@@ -17,22 +17,6 @@ import java.util.List;
 public class ArtifactDocumentLoaderService {
 
 
-    private class StatusVersion {
-        String version;
-        String status;
-
-        private StatusVersion() {
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-    }
-
     public ArtifactDocument populateArtifactDocument(Model model) {
 
         if (model == null) {
@@ -97,5 +81,21 @@ public class ArtifactDocumentLoaderService {
         statusVersion.status = "RELEASE";
         statusVersion.version = version;
         return statusVersion;
+    }
+
+    private class StatusVersion {
+        String version;
+        String status;
+
+        private StatusVersion() {
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public String getStatus() {
+            return status;
+        }
     }
 }

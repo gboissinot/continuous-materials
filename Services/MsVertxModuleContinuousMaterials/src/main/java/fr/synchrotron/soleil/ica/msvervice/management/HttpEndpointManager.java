@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.msvervice.management;
 
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMExportHandler;
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMImportHandler;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.AsyncResultHandler;
 import org.vertx.java.core.Handler;
@@ -70,7 +71,7 @@ public class HttpEndpointManager extends Verticle {
         routeMatcher.allWithRegEx(".*", new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest request) {
-                request.response().setStatusCode(500);
+                request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
                 request.response().end("Path or Http method not supported.\n");
             }
         });

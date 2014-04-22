@@ -22,6 +22,20 @@ public class ArtifactDocument {
     private String version;
 
     private String status;
+    private String type;
+    private boolean isThirdParty;
+    private Date creationDate;
+    private Date publicationDate;
+    private String sha1;
+    private String md5;
+    private String description;
+    private String fileExtension;
+    private long fileSize;
+    private boolean isForce;
+    private ArtifactDocumentForJava javaLanguage;
+    private ArtifactDocumentForC cLanguage;
+    private List<ArtifactDependency> dependencies;
+    private BuildContext buildContext;
 
     public ArtifactDocument() {
     }
@@ -36,34 +50,6 @@ public class ArtifactDocument {
     public ArtifactDocumentKey getKey() {
         return new ArtifactDocumentKey(org, name, version, status);
     }
-
-    private String type;
-
-    private boolean isThirdParty;
-
-    private Date creationDate;
-
-    private Date publicationDate;
-
-    private String sha1;
-
-    private String md5;
-
-    private String description;
-
-    private String fileExtension;
-
-    private long fileSize;
-
-    private boolean isForce;
-
-    private ArtifactDocumentForJava javaLanguage;
-
-    private ArtifactDocumentForC cLanguage;
-
-    private List<ArtifactDependency> dependencies;
-
-    private BuildContext buildContext;
 
     public String getOrg() {
         return org;

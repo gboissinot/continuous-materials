@@ -21,12 +21,12 @@ public class POMDocument {
         return aritfactDocument;
     }
 
-    public ProjectDocument getProjectDocument() {
-        return projectDocument;
-    }
-
     public void setAritfactDocument(ArtifactDocument aritfactDocument) {
         this.aritfactDocument = aritfactDocument;
+    }
+
+    public ProjectDocument getProjectDocument() {
+        return projectDocument;
     }
 
     public void setProjectDocument(ProjectDocument projectDocument) {

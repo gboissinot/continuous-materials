@@ -1,5 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.server.httprepo;
 
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
@@ -34,24 +36,22 @@ public class HttpArtifactServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(final HttpServerRequest request) {
         try {
-
             final String method = request.method();
-            if ("GET".equals(method) || "HEAD".equals(method)) {
+            if (HttpMethod.GET.equals(method) || HttpMethod.HEAD.equals(method)) {
                 getHttpArtifactProducer.setVertx(vertx);
                 getHttpArtifactProducer.setLogger(logger);
                 getHttpArtifactProducer.handle(request);
-            } else if ("PUT".equals(method)) {
+            } else if (HttpMethod.PUT.equals(method)) {
                 putHttpArtifactProducer.setVertx(vertx);
-                getHttpArtifactProducer.setLogger(logger);
+                putHttpArtifactProducer.setLogger(logger);
                 putHttpArtifactProducer.handle(request);
             } else {
-                request.response().setStatusCode(400);
-                request.response().setStatusMessage("Only GET requests are supported for now.");
+                request.response().setStatusCode(HttpResponseStatus.METHOD_NOT_ALLOWED.code());
+                request.response().setStatusMessage(String.format("%s method is not supported.", method));
                 request.response().end();
             }
-
         } catch (Throwable e) {
-            request.response().setStatusCode(500);
+            request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
             request.response().setStatusMessage(e.toString());
             request.response().end();
         }

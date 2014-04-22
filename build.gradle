@@ -149,9 +149,9 @@ project(':Services/MsVertxModuleMavenRepoProxy') {
 }
 
 
-project(':Confs'){
-    sourceSets{
-        main{
+project(':Confs') {
+    sourceSets {
+        main {
             resources.srcDir 'Mongo'
         }
     }
@@ -163,7 +163,7 @@ project(':Services/TaskVerticlePOMImporter') {
     }
 }
 
-project(':Services/TaskVerticlePOMExporter'){
+project(':Services/TaskVerticlePOMExporter') {
     dependencies {
         compile project(':Libs/LibMongoPomExporter')
     }

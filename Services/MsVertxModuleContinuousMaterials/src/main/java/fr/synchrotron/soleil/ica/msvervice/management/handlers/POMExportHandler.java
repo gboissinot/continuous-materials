@@ -14,16 +14,24 @@ import java.util.Set;
 /**
  * @author Gregory Boissinot
  */
-public class POMExportHandler implements Handler<HttpServerRequest> {
+public class POMExportHandler extends AbstractHandler {
 
     private EventBus eventBus;
 
     public POMExportHandler(EventBus eventBus) {
+        if (eventBus == null) {
+            throw new NullPointerException("A eventBus object is required.");
+        }
         this.eventBus = eventBus;
     }
 
+
     @Override
     public void handle(final HttpServerRequest request) {
+
+        if (request == null) {
+            throw new NullPointerException("A request object is required.");
+        }
 
         final JsonObject pomIdObject = new JsonObject();
 
@@ -45,20 +53,7 @@ public class POMExportHandler implements Handler<HttpServerRequest> {
                 eventBus.sendWithTimeout("pom.exporter", pomIdObject, HttpEndpointManager.SEND_MS_TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
                     @Override
                     public void handle(AsyncResult<Message<String>> replyMessage) {
-                        if (replyMessage.succeeded()) {
-                            request.response().setStatusCode(200);
-                            request.response().setStatusMessage("OK.");
-                            String okMessage = String.valueOf(replyMessage.result().body()) + "\n";
-                            request.response().putHeader("Content-Length", String.valueOf(okMessage.getBytes().length));
-                            request.response().write(okMessage);
-                            request.response().end();
-                        } else {
-                            request.response().setStatusCode(500);
-                            String okMessage = String.valueOf(replyMessage.cause()) + "\n";
-                            request.response().putHeader("Content-Length", String.valueOf(okMessage.getBytes().length));
-                            request.response().write(okMessage);
-                            request.response().end();
-                        }
+                        buildStringReplyMessage(replyMessage, request);
                     }
                 });
             }

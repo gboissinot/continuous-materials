@@ -52,13 +52,6 @@ public class MongoDBVersionStrategyTest extends AbstractVersionStrategyTest {
         inputStream.close();
     }
 
-    static private class InMemoryMongoDBDataSource implements MongoDBDataSource {
-        @Override
-        public DB getMongoDB() {
-            return mongoDB;
-        }
-    }
-
     @Override
     protected ArtifactRepository getArtifactRepository() {
         return new MongoDBArtifactRepository(new InMemoryMongoDBDataSource());
@@ -104,6 +97,13 @@ public class MongoDBVersionStrategyTest extends AbstractVersionStrategyTest {
     @Test
     public void testArtifactIdWithNoIntegration() {
         Assert.assertEquals("1.5.RELEASE", resolveVersion("testGroupId", "testArtifactIdWithNoIntegration", "latest.integration"));
+    }
+
+    static private class InMemoryMongoDBDataSource implements MongoDBDataSource {
+        @Override
+        public DB getMongoDB() {
+            return mongoDB;
+        }
     }
 
 

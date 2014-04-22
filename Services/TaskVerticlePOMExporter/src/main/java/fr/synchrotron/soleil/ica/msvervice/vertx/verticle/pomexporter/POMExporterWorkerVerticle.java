@@ -19,20 +19,18 @@ public class POMExporterWorkerVerticle extends Verticle {
     @Override
     public void start() {
 
-        final JsonObject config = container.config();
-
+        final POMExportService pomExportService =
+                new POMExportService(new POMDocumentRepository(getBasicMongoDBDataSource(container.config())));
         final EventBus eventBus = vertx.eventBus();
         eventBus.registerHandler("pom.exporter", new Handler<Message>() {
             @Override
             public void handle(Message message) {
-
                 try {
                     JsonObject pomIdObject = (JsonObject) message.body();
                     String org = pomIdObject.getString("org");
                     String name = pomIdObject.getString("name");
                     String version = pomIdObject.getString("version");
                     String status = pomIdObject.getString("status");
-                    POMExportService pomExportService = new POMExportService(new POMDocumentRepository(getBasicMongoDBDataSource(config)));
                     StringWriter stringWriter = new StringWriter();
                     pomExportService.exportPomFile(stringWriter, org, name, version, status);
                     message.reply(stringWriter.toString());

@@ -12,59 +12,6 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 public class MongoDBArtifactRepository implements ArtifactRepository {
 
     public static final String MONGODB_ARTIFACTS_LATEST_COLLECTION = "artifacts.latest";
-
-    private enum DeliveryMavenArtifactStatus {
-
-        INTEGRATION(1, "INTEGRATION", 2),
-        TEST(2, "TEST", 3),
-        RELEASE(3, "RELEASE", -1);
-
-        private final int id;
-        private final String value;
-        private final int nextStatus;
-
-        DeliveryMavenArtifactStatus(int id, String value, int nextStatus) {
-            this.id = id;
-            this.value = value;
-            this.nextStatus = nextStatus;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public int getNextStatus() {
-            return nextStatus;
-        }
-    }
-
-    private enum MavenStatusMongoDBMapping {
-
-        INTEGRATION("INTEGRATION", "INTEGRATION"),
-        TEST("TEST", "TEST"),
-        RELEASE("RELEASE", "RELEASE");
-
-        private final String mavenStatusVersion;
-        private final String mongoDBStatus;
-
-        MavenStatusMongoDBMapping(String mavenStatusVersion, String mongoDBStatus) {
-            this.mavenStatusVersion = mavenStatusVersion;
-            this.mongoDBStatus = mongoDBStatus;
-        }
-
-        public String getMavenStatusVersion() {
-            return mavenStatusVersion;
-        }
-
-        public String getMongoDBStatus() {
-            return mongoDBStatus;
-        }
-    }
-
     private final MongoDBDataSource mongoDBDatasource;
 
     public MongoDBArtifactRepository(MongoDBDataSource mongoDBDatasource) {
@@ -153,7 +100,6 @@ public class MongoDBArtifactRepository implements ArtifactRepository {
         return latestVersion;
     }
 
-
     private String getMongoDBArtifactStatus(DeliveryMavenArtifactStatus mavenArtifactStatus) {
 
         if (mavenArtifactStatus != null) {
@@ -168,7 +114,6 @@ public class MongoDBArtifactRepository implements ArtifactRepository {
         throw new MavenVersionResolverException(String.format("Can't compute the status from the maven version %s", mavenArtifactStatus));
     }
 
-
     private DeliveryMavenArtifactStatus getMavenStatus(String mavenVersion) {
 
         String upperCasedMavenVersion = mavenVersion.toUpperCase();
@@ -180,5 +125,59 @@ public class MongoDBArtifactRepository implements ArtifactRepository {
         }
 
         return null;
+    }
+
+
+    private enum DeliveryMavenArtifactStatus {
+
+        INTEGRATION(1, "INTEGRATION", 2),
+        TEST(2, "TEST", 3),
+        RELEASE(3, "RELEASE", -1);
+
+        private final int id;
+        private final String value;
+        private final int nextStatus;
+
+        DeliveryMavenArtifactStatus(int id, String value, int nextStatus) {
+            this.id = id;
+            this.value = value;
+            this.nextStatus = nextStatus;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public int getNextStatus() {
+            return nextStatus;
+        }
+    }
+
+
+    private enum MavenStatusMongoDBMapping {
+
+        INTEGRATION("INTEGRATION", "INTEGRATION"),
+        TEST("TEST", "TEST"),
+        RELEASE("RELEASE", "RELEASE");
+
+        private final String mavenStatusVersion;
+        private final String mongoDBStatus;
+
+        MavenStatusMongoDBMapping(String mavenStatusVersion, String mongoDBStatus) {
+            this.mavenStatusVersion = mavenStatusVersion;
+            this.mongoDBStatus = mongoDBStatus;
+        }
+
+        public String getMavenStatusVersion() {
+            return mavenStatusVersion;
+        }
+
+        public String getMongoDBStatus() {
+            return mongoDBStatus;
+        }
     }
 }

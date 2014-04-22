@@ -51,13 +51,6 @@ public class POMExportServiceTest {
         artifactsCollection.remove();
     }
 
-    static private class InMemoryMongoDBDataSource implements MongoDBDataSource {
-        @Override
-        public DB getMongoDB() {
-            return mongoDB;
-        }
-    }
-
     @Test
     public void testExport() throws IOException, URISyntaxException, SAXException {
 
@@ -89,6 +82,13 @@ public class POMExportServiceTest {
         assertEquals(inputPomFileModel.getArtifactId(), outputPomFileModel.getArtifactId());
         //assertEquals(inputPomFileModel.getVersion(), outputPomFileModel.getVersion());
 
+    }
+
+    static private class InMemoryMongoDBDataSource implements MongoDBDataSource {
+        @Override
+        public DB getMongoDB() {
+            return mongoDB;
+        }
     }
 
 }

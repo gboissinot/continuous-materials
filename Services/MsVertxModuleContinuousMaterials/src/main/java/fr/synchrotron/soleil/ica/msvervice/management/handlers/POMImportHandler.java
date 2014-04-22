@@ -11,20 +11,26 @@ import org.vertx.java.core.http.HttpServerRequest;
 /**
  * @author Gregory Boissinot
  */
-public class POMImportHandler implements Handler<HttpServerRequest> {
+public class POMImportHandler extends AbstractHandler {
 
 
     private EventBus eventBus;
 
     public POMImportHandler(EventBus eventBus) {
+        if (eventBus == null) {
+            throw new NullPointerException("A eventBus object is required.");
+        }
         this.eventBus = eventBus;
     }
 
     @Override
     public void handle(final HttpServerRequest request) {
 
-        final Buffer pomContent = new Buffer(0);
+        if (request == null) {
+            throw new NullPointerException("A request object is required.");
+        }
 
+        final Buffer pomContent = new Buffer(0);
         request.dataHandler(new Handler<Buffer>() {
             @Override
             public void handle(Buffer buffer) {
@@ -32,31 +38,17 @@ public class POMImportHandler implements Handler<HttpServerRequest> {
             }
         });
 
-        request.endHandler(
-                new Handler<Void>() {
-                    @Override
-                    public void handle(Void event) {
-                        eventBus.sendWithTimeout("pom.importer", pomContent, HttpEndpointManager.SEND_MS_TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
-                            @Override
-                            public void handle(AsyncResult<Message<String>> replyMessage) {
-                                if (replyMessage.succeeded()) {
-                                    request.response().setStatusCode(200);
-                                    request.response().setStatusMessage("OK.");
-                                    String okMessage = String.valueOf(replyMessage.result().body()) + "\n";
-                                    request.response().putHeader("Content-Length", String.valueOf(okMessage.getBytes().length));
-                                    request.response().write(okMessage);
-                                    request.response().end();
-                                } else {
-                                    request.response().setStatusCode(500);
-                                    String okMessage = String.valueOf(replyMessage.cause()) + "\n";
-                                    request.response().putHeader("Content-Length", String.valueOf(okMessage.getBytes().length));
-                                    request.response().write(okMessage);
-                                    request.response().end();
-                                }
-                            }
-                        });
-                    }
-                }
+        request.endHandler(new Handler<Void>() {
+                               @Override
+                               public void handle(Void event) {
+                                   eventBus.sendWithTimeout("pom.importer", pomContent, HttpEndpointManager.SEND_MS_TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
+                                       @Override
+                                       public void handle(AsyncResult<Message<String>> replyMessage) {
+                                           buildStringReplyMessage(replyMessage, request);
+                                       }
+                                   });
+                               }
+                           }
         );
 
 

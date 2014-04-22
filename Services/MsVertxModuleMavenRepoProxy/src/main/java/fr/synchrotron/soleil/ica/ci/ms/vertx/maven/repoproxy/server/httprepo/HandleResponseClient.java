@@ -16,6 +16,7 @@ public class HandleResponseClient implements Handler<HttpClientResponse> {
         this.request = request;
     }
 
+    @Override
     public void handle(HttpClientResponse clientResponse) {
         request.response().setStatusCode(clientResponse.statusCode());
         request.response().setStatusMessage(clientResponse.statusMessage());

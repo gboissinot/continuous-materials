@@ -4,6 +4,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repositor
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
 import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.service.PomArtifactWriter;
 import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.service.PomModelBuilder;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.HttpClientResponse;
@@ -47,7 +48,7 @@ public class POMHandleResponseClient extends HandleResponseClient {
                                     request,
                                     pomModelBuilder.getModelWithResolvedParent(data.toString()));
                 } catch (Throwable e) {
-                    request.response().setStatusCode(500);
+                    request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
                     request.response().end(e.toString());
                 }
             }

@@ -14,6 +14,10 @@ public class ProjectDocument {
     private String org;
 
     private String name;
+    private List<DeveloperDocument> developers;
+    private String description;
+    private String scmConnection;
+    private String language;
 
     public ProjectDocument() {
     }
@@ -42,14 +46,6 @@ public class ProjectDocument {
     public void setName(String name) {
         this.name = name;
     }
-
-    private List<DeveloperDocument> developers;
-
-    private String description;
-
-    private String scmConnection;
-
-    private String language;
 
     public List<DeveloperDocument> getDevelopers() {
         return developers;
