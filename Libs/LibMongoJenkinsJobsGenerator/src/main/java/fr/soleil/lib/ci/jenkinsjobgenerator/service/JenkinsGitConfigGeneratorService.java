@@ -1,7 +1,6 @@
 package fr.soleil.lib.ci.jenkinsjobgenerator.service;
 
 import fr.soleil.lib.ci.jenkinsjobgenerator.domain.mustache.JenkinsSvnConfig;
-import fr.soleil.lib.ci.jenkinsjobgenerator.domain.mustache.ScmType;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

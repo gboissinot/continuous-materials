@@ -22,6 +22,13 @@ public class PomArtifactWriter {
             request.response().end(pomContent);
         } catch (IOException ioe) {
             throw new MavenRepoProxyException(ioe);
+        } finally {
+            try {
+                stringWriter.close();
+            } catch (IOException ioe) {
+                throw new MavenRepoProxyException(ioe);
+            }
         }
     }
+
 }

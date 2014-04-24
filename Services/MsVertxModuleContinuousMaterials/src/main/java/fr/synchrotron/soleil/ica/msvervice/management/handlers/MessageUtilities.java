@@ -2,14 +2,13 @@ package fr.synchrotron.soleil.ica.msvervice.management.handlers;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 
 /**
  * @author Gregory Boissinot
  */
-public abstract class AbstractHandler implements Handler<HttpServerRequest> {
+public class MessageUtilities {
 
     protected void buildStringReplyMessage(final AsyncResult<Message<String>> replyMessage, final HttpServerRequest request) {
         if (replyMessage.succeeded()) {

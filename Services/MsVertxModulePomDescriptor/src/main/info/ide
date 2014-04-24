@@ -1,2 +1,0 @@
-main class:org.vertx.java.platform.impl.cli.Starter
-program parameters:run fr.synchrotron.soleil.ica.ci.ms.vertx.pomdescriptor.endpoint.POMDescriptorEndpoint

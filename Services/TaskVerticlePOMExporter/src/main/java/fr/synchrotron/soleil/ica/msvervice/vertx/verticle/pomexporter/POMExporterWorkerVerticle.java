@@ -2,7 +2,7 @@ package fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomexporter;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service.POMExportService;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.MongoDBUtilities;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
@@ -16,11 +16,17 @@ import java.io.StringWriter;
  */
 public class POMExporterWorkerVerticle extends Verticle {
 
+    private MongoDBUtilities mongoDBUtilities;
+
+    public POMExporterWorkerVerticle() {
+        this.mongoDBUtilities = new MongoDBUtilities();
+    }
+
     @Override
     public void start() {
 
         final POMExportService pomExportService =
-                new POMExportService(new POMDocumentRepository(getBasicMongoDBDataSource(container.config())));
+                new POMExportService(new POMDocumentRepository(mongoDBUtilities.getBasicMongoDBDataSource(container.config())));
         final EventBus eventBus = vertx.eventBus();
         eventBus.registerHandler("pom.exporter", new Handler<Message>() {
             @Override
@@ -41,11 +47,5 @@ public class POMExporterWorkerVerticle extends Verticle {
         });
     }
 
-    private BasicMongoDBDataSource getBasicMongoDBDataSource(JsonObject config) {
-        return new BasicMongoDBDataSource(
-                config.getString("mongo.host"),
-                Integer.parseInt(config.getString("mongo.port")),
-                config.getString("mongo.dbname"));
-    }
 
 }

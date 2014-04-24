@@ -157,15 +157,25 @@ project(':Confs') {
     }
 }
 
+project(':Services/LibVertxUtilities') {
+    dependencies {
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+        compile project(':Libs/LibMongoUtilities')
+    }
+}
+
 project(':Services/TaskVerticlePOMImporter') {
     dependencies {
         compile project(':Libs/LibMongoPomImporter')
+        compile project(':Services/LibVertxUtilities')
     }
 }
 
 project(':Services/TaskVerticlePOMExporter') {
     dependencies {
         compile project(':Libs/LibMongoPomExporter')
+        compile project(':Services/LibVertxUtilities')
     }
 }
 
