@@ -28,12 +28,14 @@ public class JenkinsJobGeneratorService {
 
     private Logger logger = LoggerFactory.getLogger(JenkinsJobGeneratorService.class);
 
-    private JenkinsCvsConfigGeneratorService configGenerator;
+    private JenkinsCvsConfigGeneratorService configGeneratorCVS;
     private JenkinsSvnConfigGeneratorService configGeneratorSVN;
+    private JenkinsGitConfigGeneratorService configGeneratorGIT;
 
     public JenkinsJobGeneratorService() throws IOException {
-        configGenerator = new JenkinsCvsConfigGeneratorService();
+        configGeneratorCVS = new JenkinsCvsConfigGeneratorService();
         configGeneratorSVN = new JenkinsSvnConfigGeneratorService();
+        configGeneratorGIT = new JenkinsGitConfigGeneratorService();
     }
 
     /**
@@ -88,13 +90,15 @@ public class JenkinsJobGeneratorService {
             Writer writer = new OutputStreamWriter(os);
             switch (scmType) {
                 case CVS:
-                    configGenerator.load(writer, projectDocument);
+                    configGeneratorCVS.load(writer, projectDocument);
                     break;
                 case SVN:
                     configGeneratorSVN.load(writer, projectDocument);
                     break;
+                case GIT:
+                    configGeneratorGIT.load(writer, projectDocument);
+                    break;
                 default:
-                    //TODO
                     break;
             }
             os.flush();
