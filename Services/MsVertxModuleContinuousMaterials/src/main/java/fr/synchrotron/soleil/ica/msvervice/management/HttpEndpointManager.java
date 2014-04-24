@@ -2,6 +2,8 @@ package fr.synchrotron.soleil.ica.msvervice.management;
 
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMExportHandler;
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMImportHandler;
+import fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomexporter.POMExporterWorkerVerticle;
+import fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomimport.POMImporterWorkerVerticle;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.AsyncResultHandler;
@@ -42,10 +44,10 @@ public class HttpEndpointManager extends Verticle {
 
             final JsonObject jsonObject = createConfig();
             container.deployWorkerVerticle(
-                    "fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomimport.POMImporterWorkerVerticle",
+                    POMImporterWorkerVerticle.class.getCanonicalName(),
                     jsonObject, 1, true, asyncResultHandler);
             container.deployWorkerVerticle(
-                    "fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomexporter.POMExporterWorkerVerticle",
+                    POMExporterWorkerVerticle.class.getCanonicalName(),
                     jsonObject, 1, true, asyncResultHandler);
 
 
