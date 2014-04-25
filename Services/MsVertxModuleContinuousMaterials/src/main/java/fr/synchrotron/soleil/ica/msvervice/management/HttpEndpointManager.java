@@ -50,7 +50,6 @@ public class HttpEndpointManager extends Verticle {
                     POMExporterWorkerVerticle.class.getCanonicalName(),
                     jsonObject, 1, true, asyncResultHandler);
 
-
             RouteMatcher routeMatcher = new RouteMatcher();
 
             //-- POM IMPORTER
@@ -95,7 +94,6 @@ public class HttpEndpointManager extends Verticle {
 
     private JsonObject createConfig() {
         final JsonObject config = container.config();
-
         Properties properties = loadInfraFile(MONGODB_PROPERTIES_FILEPATH);
         for (Map.Entry<Object, Object> objectObjectEntry : properties.entrySet()) {
             String propKey = (String) objectObjectEntry.getKey();

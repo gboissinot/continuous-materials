@@ -48,6 +48,19 @@ configure(subprojects.findAll { it.name.startsWith('Services/TaskVerticle') }) {
     }
 }
 
+project(':Libs/LibMongoDomainObjects') {
+    dependencies {
+        compile "com.fasterxml.jackson.core:jackson-core:2.2.3"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.2.3"
+    }
+}
+
+project(':Libs/LibMongoUtilities') {
+    dependencies {
+        compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
+    }
+}
+
 project(':Libs/LibMongoRepository') {
     dependencies {
         compile project(':Libs/LibMongoDomainObjects')
@@ -95,12 +108,6 @@ project(':Libs/LibMongoPomExporter') {
         testCompile "xmlunit:xmlunit:$xmlunitVersion"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"
         testCompile "com.google.code.gson:gson:$gsonVersion"
-    }
-}
-
-project(':Libs/LibMongoUtilities') {
-    dependencies {
-        compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
     }
 }
 

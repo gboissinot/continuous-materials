@@ -61,10 +61,12 @@ public class POMImportServiceTest {
         pomFileReader.close();
 
         ArtifactDocument artifactDocument = artifactRepository.findArtifactDocument(
-                "fr.synchrotron.soleil.ica.ci.lib",
-                "maven-versionresolver",
-                "1.0.1",
-                "INTEGRATION");
+                new ArtifactDocumentKey(
+                        "fr.synchrotron.soleil.ica.ci.lib",
+                        "maven-versionresolver",
+                        "1.0.1",
+                        "INTEGRATION")
+        );
         assertNotNull(artifactDocument);
 
         final ArtifactDocumentKey artifactDocumentKey = artifactDocument.getKey();

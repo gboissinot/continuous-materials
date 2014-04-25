@@ -31,7 +31,7 @@ public class POMImporterWorkerVerticle extends Verticle {
                     pomImportService.importPomFile(String.valueOf(message.body()));
                     message.reply("POM file inserted in Metadata Registry.");
                 } catch (Throwable e) {
-                    message.reply(e.getMessage());
+                    message.fail(500, e.getMessage());
                 }
             }
         });

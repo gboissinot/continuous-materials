@@ -13,11 +13,21 @@ public class ArtifactDocumentKey {
 
     private String status;
 
+    public ArtifactDocumentKey() {
+    }
+
     public ArtifactDocumentKey(String org, String name, String version, String status) {
         this.org = org;
         this.name = name;
         this.version = version;
         this.status = status;
+    }
+
+    public boolean isValid() {
+        return org != null
+                && name != null
+                && version != null
+                && status != null;
     }
 
     public String getOrg() {

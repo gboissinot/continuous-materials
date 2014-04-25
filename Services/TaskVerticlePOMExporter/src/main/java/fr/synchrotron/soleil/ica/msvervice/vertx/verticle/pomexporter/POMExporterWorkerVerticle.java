@@ -1,7 +1,10 @@
 package fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomexporter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service.POMExportService;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ObjectMapperUtilities;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.MongoDBUtilities;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -33,15 +36,14 @@ public class POMExporterWorkerVerticle extends Verticle {
             public void handle(Message message) {
                 try {
                     JsonObject pomIdObject = (JsonObject) message.body();
-                    String org = pomIdObject.getString("org");
-                    String name = pomIdObject.getString("name");
-                    String version = pomIdObject.getString("version");
-                    String status = pomIdObject.getString("status");
+                    ObjectMapperUtilities objectMapperUtilities = new ObjectMapperUtilities();
+                    final ObjectMapper objectMapper = objectMapperUtilities.getObjectMapper();
+                    final ArtifactDocumentKey artifactDocumentKey = objectMapper.convertValue(pomIdObject.toMap(), ArtifactDocumentKey.class);
                     StringWriter stringWriter = new StringWriter();
-                    pomExportService.exportPomFile(stringWriter, org, name, version, status);
+                    pomExportService.exportPomFile(stringWriter, artifactDocumentKey);
                     message.reply(stringWriter.toString());
                 } catch (Throwable e) {
-                    message.reply(e.getMessage());
+                    message.fail(500, e.getMessage());
                 }
             }
         });
