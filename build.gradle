@@ -4,6 +4,7 @@ project.ext {
     mavenCoreVersion = '2.1.0'
     mongoJavaDriverVerison = '2.11.3'
     jongoVersion = '1.0'
+    jacksonVersion = '2.2.3'
     gsonVersion = '2.2.4'
     log4jVersion = '1.7.6'
     junitVersion = '4.11'
@@ -11,7 +12,7 @@ project.ext {
     xmlunitVersion = '1.3'
     mockitoVersion = '1.9.5'
     commonsioVersion = '2.4'
-    vertxVersion = '2.1RC1'
+    vertxVersion = '2.1RC3'
     springVersion = '3.2.4.RELEASE'
     utils4jVersion = '0.7.0'
 }
@@ -50,8 +51,8 @@ configure(subprojects.findAll { it.name.startsWith('Services/TaskVerticle') }) {
 
 project(':Libs/LibMongoDomainObjects') {
     dependencies {
-        compile "com.fasterxml.jackson.core:jackson-core:2.2.3"
-        compile "com.fasterxml.jackson.core:jackson-databind:2.2.3"
+        compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     }
 }
 
