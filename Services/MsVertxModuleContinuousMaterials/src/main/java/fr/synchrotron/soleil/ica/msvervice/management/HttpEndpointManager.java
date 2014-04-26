@@ -23,7 +23,6 @@ import java.util.Properties;
  */
 public class HttpEndpointManager extends Verticle {
 
-
     public static final long SEND_MS_TIMEOUT = 10 * 1000l; // in ms
 
     private static final String MONGODB_PROPERTIES_FILEPATH = "/infra.properties";
