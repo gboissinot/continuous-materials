@@ -11,13 +11,21 @@ public class Workflow {
 
     private String name;
     private Map<Integer, Status> allStatus = new HashMap<Integer, Status>();
+    private String latestPromotedStatus;
 
     public Workflow(String name, List<String> orderedLabels) {
         this.name = name;
         Map<Integer, Status> result = new HashMap<Integer, Status>();
         for (int k = 0; k < orderedLabels.size(); k++) {
             int ref = k + 1;
-            result.put(ref, new Status(ref, orderedLabels.get(k), (ref == orderedLabels.size()) ? -1 : ref + 1));
+            boolean last = (ref == orderedLabels.size());
+            final String label = orderedLabels.get(k);
+            if (last) {
+                result.put(ref, new Status(ref, label, -1));
+                latestPromotedStatus = label;
+            } else {
+                result.put(ref, new Status(ref, label, ref + 1));
+            }
         }
         allStatus = result;
     }
@@ -82,5 +90,13 @@ public class Workflow {
 
         return null;
 
+    }
+
+    public String getLatestPromotedStatus() {
+        return latestPromotedStatus;
+    }
+
+    public String getName() {
+        return name;
     }
 }
