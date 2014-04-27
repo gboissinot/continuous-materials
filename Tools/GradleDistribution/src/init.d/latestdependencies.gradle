@@ -12,6 +12,7 @@ apply plugin: LatestDependencyPlugin
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.domain.MavenInputArtifact
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.mongodb.MongoDBArtifactRepository
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolverService
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.ArtifactVersionResolverService
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource
 
 class LatestDependencyPlugin implements Plugin<Gradle> {
@@ -38,8 +39,9 @@ class LatestDependencyPlugin implements Plugin<Gradle> {
 
 
     private String getLatestVersion(String group, String name, String version) {
-        MavenVersionResolverService resolverService = new MavenVersionResolverService(new MongoDBArtifactRepository(
-                new BasicMongoDBDataSource("172.16.5.7", 27001, "repo")));
+        MavenVersionResolverService resolverService =
+                new MavenVersionResolverService(new ArtifactVersionResolverService(new MongoDBArtifactRepository(
+                new BasicMongoDBDataSource("172.16.5.7", 27001, "repo"))));
         MavenInputArtifact mavenInputArtifact = new MavenInputArtifact(group, name, version);
         return resolverService.getLatestArtifact(mavenInputArtifact.getGroupId(), mavenInputArtifact.getArtifactId());
     }

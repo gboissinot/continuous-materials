@@ -145,7 +145,7 @@ project(':Libs/LibMongoJenkinsJobsGenerator') {
 
 project(':Services/MsVertxModuleMavenRepoProxy') {
     dependencies {
-        compile project(':Libs/LibMongoLatestMavenVersionResolver')
+        compile project(':Libs/LibMongoLatestVersionResolver')
         compile "org.springframework:spring-core:$springVersion"
         compile "org.springframework:spring-context:$springVersion"
         compile "org.apache.maven:maven-core:$mavenCoreVersion"
