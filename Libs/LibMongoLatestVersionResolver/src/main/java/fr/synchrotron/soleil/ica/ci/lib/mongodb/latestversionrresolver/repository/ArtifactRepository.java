@@ -23,8 +23,8 @@ public interface ArtifactRepository {
      * @return the latest version, null if none exist for the request artifact
      */
     public String getLatestVersion(String requestedOrg,
-                                           String requestedName,
-                                           String requestedType,
-                                           String requestedStatus);
+                                   String requestedName,
+                                   String requestedType,
+                                   String requestedStatus);
 
 }
