@@ -1,7 +1,5 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository;
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.domain.MavenInputArtifact;
-
 /**
  * @author Gregory Boissinot
  */
