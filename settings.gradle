@@ -1,4 +1,5 @@
 include 'Confs',
+        'Libs/LibWorkflow',
         'Libs/LibMongoDomainObjects',
         'Libs/LibMongoUtilities',
         'Libs/LibMongoRepository',

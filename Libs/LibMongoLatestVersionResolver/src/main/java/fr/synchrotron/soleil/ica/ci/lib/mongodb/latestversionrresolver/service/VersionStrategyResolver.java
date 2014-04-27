@@ -34,7 +34,7 @@ public class VersionStrategyResolver {
             throw new NullPointerException("A given mavenInputArtifact is required.");
         }
 
-        String resolvedVersion = resolveVersion(mavenInputArtifact);
+        String resolvedVersion = resolveMavenVersion(mavenInputArtifact);
         LOGGER.info(String.format("The resolved version is '%s'.", resolvedVersion));
         return new MavenOutputArtifact(
                 mavenInputArtifact.getGroupId(),
@@ -42,27 +42,35 @@ public class VersionStrategyResolver {
                 resolvedVersion);
     }
 
-
     /**
      * Resolves a Maven input artifacts against an artifact repository
      *
      * @param mavenInputArtifact the maven input artifact with its GAV information
      * @return the resolved version
      */
-    private String resolveVersion(MavenInputArtifact mavenInputArtifact) {
+    private String resolveMavenVersion(MavenInputArtifact mavenInputArtifact) {
 
         String inputVersion = mavenInputArtifact.getVersion();
+
         if (inputVersion.startsWith(MavenInputArtifact.LATEST_KEYWORD)) {
             LOGGER.info(String.format("Resolving the latest version against '%s'.", artifactRepository.getName()));
-            String latestVersion = artifactRepository.getLatestVersion(mavenInputArtifact);
+            String latestVersion = artifactRepository.getLatestVersion(mavenInputArtifact.getGroupId(),
+                    mavenInputArtifact.getArtifactId(),
+                    "binary",
+                    mavenInputArtifact.getVersion());
+
+
             if (latestVersion == null) {
                 return inputVersion;
             }
+
+
             return latestVersion;
         }
 
+
+
         return inputVersion;
     }
-
 
 }

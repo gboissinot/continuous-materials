@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class MavenVersionResolverService {
 
-    public static final String LATEST_RELEASE_VERSION_VALUE = "latest.release";
+    public static final String MAVEN_LATEST_KEYWORD_VALUE = "latest";
 
     private static final Logger LOGGER = Logger.getLogger(MavenVersionResolverService.class.getName());
 
@@ -44,7 +44,7 @@ public class MavenVersionResolverService {
         }
 
         MavenOutputArtifact mavenOutputArtifact =
-                resolveArtifact(new MavenInputArtifact(groupId, artifactId, LATEST_RELEASE_VERSION_VALUE));
+                resolveArtifact(new MavenInputArtifact(groupId, artifactId, MAVEN_LATEST_KEYWORD_VALUE));
 
         return mavenOutputArtifact.getVersion();
     }
