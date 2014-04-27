@@ -112,8 +112,9 @@ project(':Libs/LibMongoPomExporter') {
     }
 }
 
-project(':Libs/LibMongoLatestMavenVersionResolver') {
+project(':Libs/LibMongoLatestVersionResolver') {
     dependencies {
+        compile project(':Libs/LibWorkflow')
         compile project(':Libs/LibMongoUtilities')
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"

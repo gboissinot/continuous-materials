@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author Gregory Boissinot
  */
-public class NullVersionStrategyTest extends AbstractVersionStrategyTest {
+public class NullVersionTest extends AbstractVersionTest {
 
     @Override
     protected ArtifactRepository getArtifactRepository() {
@@ -21,19 +21,19 @@ public class NullVersionStrategyTest extends AbstractVersionStrategyTest {
     }
 
     @Test
+    public void buildStatus() {
+        Assert.assertEquals("X.Y.Z.build", resolveVersion("X.Y.Z.build"));
+        Assert.assertEquals("X.Y.Z.BUILD", resolveVersion("X.Y.Z.BUILD"));
+        Assert.assertEquals("latest.build", resolveVersion("latest.build"));
+        Assert.assertEquals("latest.BUILD", resolveVersion("latest.BUILD"));
+    }
+
+    @Test
     public void integrationStatus() {
         Assert.assertEquals("X.Y.Z.integration", resolveVersion("X.Y.Z.integration"));
         Assert.assertEquals("X.Y.Z.INTEGRATION", resolveVersion("X.Y.Z.INTEGRATION"));
         Assert.assertEquals("latest.integration", resolveVersion("latest.integration"));
         Assert.assertEquals("latest.INTEGRATION", resolveVersion("latest.INTEGRATION"));
-    }
-
-    @Test
-    public void testStatus() {
-        Assert.assertEquals("X.Y.Z.test", resolveVersion("X.Y.Z.test"));
-        Assert.assertEquals("X.Y.Z.TEST", resolveVersion("X.Y.Z.TEST"));
-        Assert.assertEquals("latest.test", resolveVersion("latest.test"));
-        Assert.assertEquals("latest.TEST", resolveVersion("latest.TEST"));
     }
 
     @Test

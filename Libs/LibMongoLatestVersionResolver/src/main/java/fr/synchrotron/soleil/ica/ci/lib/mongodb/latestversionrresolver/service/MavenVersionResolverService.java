@@ -4,7 +4,6 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.domain.MavenInputArtifact;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.domain.MavenOutputArtifact;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.exception.MavenVersionResolverException;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.ArtifactRepository;
 
 import java.util.logging.Logger;
 
@@ -13,17 +12,12 @@ import java.util.logging.Logger;
  */
 public class MavenVersionResolverService {
 
-    public static final String MAVEN_LATEST_KEYWORD_VALUE = "latest";
-
     private static final Logger LOGGER = Logger.getLogger(MavenVersionResolverService.class.getName());
 
-    private final ArtifactRepository artifactRepository;
+    private ArtifactVersionResolverService artifactVersionResolverService;
 
-    public MavenVersionResolverService(ArtifactRepository artifactRepository) {
-        if (artifactRepository == null) {
-            throw new NullPointerException("An ArtifactRepository is required.");
-        }
-        this.artifactRepository = artifactRepository;
+    public MavenVersionResolverService(ArtifactVersionResolverService artifactVersionResolverService) {
+        this.artifactVersionResolverService = artifactVersionResolverService;
     }
 
     /**
@@ -44,7 +38,7 @@ public class MavenVersionResolverService {
         }
 
         MavenOutputArtifact mavenOutputArtifact =
-                resolveArtifact(new MavenInputArtifact(groupId, artifactId, MAVEN_LATEST_KEYWORD_VALUE));
+                resolveArtifact(new MavenInputArtifact(groupId, artifactId, MavenInputArtifact.LATEST_KEYWORD));
 
         return mavenOutputArtifact.getVersion();
     }
@@ -61,20 +55,52 @@ public class MavenVersionResolverService {
             throw new NullPointerException("An input artifact is required.");
         }
 
-        LOGGER.info(String.format("Resolving version from Maven Artifact '(%s,%s,%s)'.",
-                mavenInputArtifact.getGroupId(),
-                mavenInputArtifact.getArtifactId(),
-                mavenInputArtifact.getVersion()));
-
         try {
-            VersionStrategyResolver versionStrategyResolver
-                    = new VersionStrategyResolver(artifactRepository);
+            LOGGER.info(String.format("Resolving version from Maven Artifact '%s'", mavenInputArtifact.printMavenArtifact()));
 
-            return versionStrategyResolver.resolveMavenArtifact(mavenInputArtifact);
+            String inputVersion = mavenInputArtifact.getVersion();
+
+            if (inputVersion.equalsIgnoreCase(MavenInputArtifact.LATEST_KEYWORD)) {
+                return buildMavenOutputArtifact(
+                        mavenInputArtifact,
+                        artifactVersionResolverService.getLatestVersion(
+                                mavenInputArtifact.getGroupId(),
+                                mavenInputArtifact.getArtifactId(),
+                                MavenInputArtifact.NO_STATUS)
+                );
+            }
+
+            if (inputVersion.startsWith(MavenInputArtifact.LATEST_STATUS_PATTERN)) {
+                String requestedStatus = inputVersion.substring(MavenInputArtifact.LATEST_STATUS_PATTERN.length());
+                return buildMavenOutputArtifact(
+                        mavenInputArtifact,
+                        artifactVersionResolverService.getLatestVersion(
+                                mavenInputArtifact.getGroupId(),
+                                mavenInputArtifact.getArtifactId(),
+                                requestedStatus)
+                );
+            }
+
+            return buildMavenOutputArtifact(mavenInputArtifact, inputVersion);
 
         } catch (Throwable e) {
             throw new MavenVersionResolverException(e);
         }
     }
+
+    private MavenOutputArtifact buildMavenOutputArtifact(MavenInputArtifact mavenInputArtifact, String resolvedVersion) {
+        if (resolvedVersion != null) {
+            return new MavenOutputArtifact(
+                    mavenInputArtifact.getGroupId(),
+                    mavenInputArtifact.getArtifactId(),
+                    resolvedVersion);
+        } else {
+            return new MavenOutputArtifact(
+                    mavenInputArtifact.getGroupId(),
+                    mavenInputArtifact.getArtifactId(),
+                    mavenInputArtifact.getVersion());
+        }
+    }
+
 
 }

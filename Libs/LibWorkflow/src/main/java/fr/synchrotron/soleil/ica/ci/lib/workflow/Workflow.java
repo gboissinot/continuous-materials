@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class Workflow {
 
-    public static final Workflow SOFTWARE_WORKFLOW_3_STATUS = new Workflow("SOLEIL_STATUS", Arrays.asList("BUILD", "INTEGRATION", "RELEASE"));
+    public static final Workflow DEFAULT_WORKFLOW_STATUS = new Workflow("DEFAULT_WORKFLOW", Arrays.asList("BUILD", "INTEGRATION", "RELEASE"));
 
     private String name;
     private Map<Integer, Status> allStatus = new HashMap<Integer, Status>();
@@ -16,7 +16,8 @@ public class Workflow {
         this.name = name;
         Map<Integer, Status> result = new HashMap<Integer, Status>();
         for (int k = 0; k < orderedLabels.size(); k++) {
-            result.put(k, new Status(k, orderedLabels.get(k), (k == orderedLabels.size() - 1) ? -1 : ++k));
+            int ref = k + 1;
+            result.put(ref, new Status(ref, orderedLabels.get(k), (ref == orderedLabels.size()) ? -1 : ref + 1));
         }
         allStatus = result;
     }
@@ -46,10 +47,16 @@ public class Workflow {
             return null;
         }
 
-        return allStatus.get(status.getNextRef()).getLabel();
+        final int nextref = status.getNextRef();
+        if (nextref == -1) {
+            return null;
+        }
+
+        return allStatus.get(nextref).getLabel();
     }
 
     private Status getStatus(String label) {
+
         assert label != null;
 
         final Collection<Status> values = allStatus.values();
@@ -62,4 +69,18 @@ public class Workflow {
         return null;
     }
 
+    public String getNormalizedStatus(String label) {
+
+        if (label == null) {
+            throw new NullPointerException("A label is required.");
+        }
+
+        Status status = getStatus(label);
+        if (status != null) {
+            return status.getLabel();
+        }
+
+        return null;
+
+    }
 }

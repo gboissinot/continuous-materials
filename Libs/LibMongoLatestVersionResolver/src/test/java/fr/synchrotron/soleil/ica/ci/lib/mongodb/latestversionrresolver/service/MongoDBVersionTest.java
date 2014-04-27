@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class MongoDBVersionStrategyTest extends AbstractVersionStrategyTest {
+public class MongoDBVersionTest extends AbstractVersionTest {
 
     private static DB mongoDB;
 
@@ -42,10 +42,10 @@ public class MongoDBVersionStrategyTest extends AbstractVersionStrategyTest {
     }
 
     private static void loadMongoDBData(MongoCollection artifactsLatestCollection) throws IOException {
-        InputStream inputStream = MongoDBVersionStrategyTest.class.getResourceAsStream("artifacts.latest.data");
+        InputStream inputStream = MongoDBVersionTest.class.getResourceAsStream("artifacts.latest.data");
         final List<String> mongoDBDocs = IOUtils.readLines(inputStream);
         for (String mongoDBDoc : mongoDBDocs) {
-            if (mongoDBDoc != null) {
+            if (mongoDBDoc != null && !mongoDBDoc.trim().isEmpty()) {
                 artifactsLatestCollection.insert(mongoDBDoc);
             }
         }
@@ -63,40 +63,40 @@ public class MongoDBVersionStrategyTest extends AbstractVersionStrategyTest {
     }
 
     @Test
-    public void integrationStatus() {
+    public void latestNotManagedVersionOrStatus() {
+
+        Assert.assertEquals("X.Y.Z.build", resolveVersion("X.Y.Z.build"));
+        Assert.assertEquals("X.Y.Z.BUILD", resolveVersion("X.Y.Z.BUILD"));
+
         Assert.assertEquals("X.Y.Z.integration", resolveVersion("X.Y.Z.integration"));
         Assert.assertEquals("X.Y.Z.INTEGRATION", resolveVersion("X.Y.Z.INTEGRATION"));
-        Assert.assertEquals("1.7.INTEGRATION", resolveVersion("latest.integration"));
-        Assert.assertEquals("1.7.INTEGRATION", resolveVersion("latest.INTEGRATION"));
-    }
 
-    @Test
-    public void testStatus() {
-        Assert.assertEquals("X.Y.Z.test", resolveVersion("X.Y.Z.test"));
-        Assert.assertEquals("X.Y.Z.TEST", resolveVersion("X.Y.Z.TEST"));
-        Assert.assertEquals("1.6.TEST", resolveVersion("latest.test"));
-        Assert.assertEquals("1.6.TEST", resolveVersion("latest.TEST"));
-    }
-
-    @Test
-    public void releaseStatus() {
         Assert.assertEquals("X.Y.Z.release", resolveVersion("X.Y.Z.release"));
         Assert.assertEquals("X.Y.Z.RELEASE", resolveVersion("X.Y.Z.RELEASE"));
-        Assert.assertEquals("1.5.RELEASE", resolveVersion("latest.release"));
-        Assert.assertEquals("1.5.RELEASE", resolveVersion("latest.RELEASE"));
-    }
 
-    @Test
-    public void otherStatus() {
         Assert.assertEquals("X.Y.Z.anyMavenStatus", resolveVersion("X.Y.Z.anyMavenStatus"));
         Assert.assertEquals("X.Y.Z.ANYMAVENSTATUS", resolveVersion("X.Y.Z.ANYMAVENSTATUS"));
-        Assert.assertEquals("1.5.anyLevercaseStatus", resolveVersion("latest.anyLevercaseStatus"));
-        Assert.assertEquals("1.5.ANYUPPERCASESTATUS", resolveVersion("latest.ANYUPPERCASESTATUS"));
     }
 
     @Test
-    public void testArtifactIdWithNoIntegration() {
-        Assert.assertEquals("1.5.RELEASE", resolveVersion("testGroupId", "testArtifactIdWithNoIntegration", "latest.integration"));
+    public void latestBuildStatus() {
+        Assert.assertEquals("1.7.BUILD", resolveVersion("name1", "latest.build"));
+        Assert.assertEquals("1.6.INTEGRATION", resolveVersion("name2", "latest.build"));
+        Assert.assertEquals("1.5.RELEASE", resolveVersion("name3", "latest.build"));
+    }
+
+    @Test
+    public void latestIntegrationStatus() {
+        Assert.assertEquals("1.6.INTEGRATION", resolveVersion("name1", "latest.integration"));
+        Assert.assertEquals("1.6.INTEGRATION", resolveVersion("name2", "latest.integration"));
+        Assert.assertEquals("1.5.RELEASE", resolveVersion("name3", "latest.integration"));
+    }
+
+    @Test
+    public void latestReleaseStatus() {
+        Assert.assertEquals("1.5.RELEASE", resolveVersion("name1", "latest.release"));
+        Assert.assertEquals("1.5.RELEASE", resolveVersion("name2", "latest.release"));
+        Assert.assertEquals("1.5.RELEASE", resolveVersion("name3", "latest.release"));
     }
 
     static private class InMemoryMongoDBDataSource implements MongoDBDataSource {

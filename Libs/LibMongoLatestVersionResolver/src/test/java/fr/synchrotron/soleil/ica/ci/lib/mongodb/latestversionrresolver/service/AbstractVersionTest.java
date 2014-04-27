@@ -8,7 +8,7 @@ import org.junit.Assert;
 /**
  * @author Gregory Boissinot
  */
-public abstract class AbstractVersionStrategyTest {
+public abstract class AbstractVersionTest {
 
     protected static final String TEST_GROUPID = "testGroupId";
     protected static final String TEST_ARTIFACTID = "testArtifactId";
@@ -19,9 +19,13 @@ public abstract class AbstractVersionStrategyTest {
         return resolveVersion(TEST_GROUPID, TEST_ARTIFACTID, value);
     }
 
-    protected String resolveVersion(String groupId, String artifactId, String verison) {
+    protected String resolveVersion(String name, String value) {
+        return resolveVersion(TEST_GROUPID, name, value);
+    }
+
+    private String resolveVersion(String groupId, String artifactId, String verison) {
         MavenVersionResolverService mavenVersionResolverService
-                = new MavenVersionResolverService(getArtifactRepository());
+                = new MavenVersionResolverService(new ArtifactVersionResolverService(getArtifactRepository()));
         final MavenOutputArtifact mavenOutputArtifact =
                 mavenVersionResolverService.resolveArtifact(
                         buildMavenInputArtifact(groupId, artifactId, verison));

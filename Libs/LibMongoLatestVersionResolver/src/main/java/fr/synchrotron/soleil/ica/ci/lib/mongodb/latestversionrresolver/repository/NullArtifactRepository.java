@@ -13,12 +13,23 @@ public class NullArtifactRepository implements ArtifactRepository {
     }
 
     @Override
-    public String getLatestVersion(MavenInputArtifact mavenInputArtifact) {
+    public String getLatestVersion(String requestedOrg, String requestedName, String requestedType, String requestedStatus) {
 
-        assert (mavenInputArtifact != null) : ("A maven input artifact is required.");
-        String version = mavenInputArtifact.getVersion();
-        assert (version != null) : "A version for the input Maven artifact is required.";
-        assert (version.startsWith(MavenInputArtifact.LATEST_KEYWORD)) : "A version must start with latest. is required.";
+        if (requestedOrg == null) {
+            throw new NullPointerException("An organisation is required.");
+        }
+
+        if (requestedName == null) {
+            throw new NullPointerException("A name is required.");
+        }
+
+        if (requestedType == null) {
+            throw new NullPointerException("A type is required.");
+        }
+
+        if (requestedStatus == null) {
+            throw new NullPointerException("A status is required.");
+        }
 
         return null;
     }
