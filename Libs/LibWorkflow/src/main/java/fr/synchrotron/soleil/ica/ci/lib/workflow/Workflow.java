@@ -12,6 +12,7 @@ public class Workflow {
     private Map<Integer, Status> internalStatusMap = new HashMap<Integer, Status>();
     private String name;
     private String latestPromotedStatus;
+
     public Workflow(String name, List<String> orderedLabels) {
 
         if (name == null) {
