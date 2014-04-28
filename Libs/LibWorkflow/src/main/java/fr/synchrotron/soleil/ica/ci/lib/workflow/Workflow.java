@@ -10,31 +10,18 @@ public class Workflow {
     public static final Workflow DEFAULT_WORKFLOW_STATUS = new Workflow("DEFAULT_WORKFLOW", Arrays.asList("BUILD", "INTEGRATION", "RELEASE"));
 
     private Map<Integer, Status> internalStatusMap = new HashMap<Integer, Status>();
-    private class Status {
-
-        private int ref;
-        private String label;
-        private int nextRef;
-
-        Status(int ref, String label, int nextRef) {
-            this.ref = ref;
-            this.label = label;
-            this.nextRef = nextRef;
-        }
-
-        String getLabel() {
-            return label;
-        }
-
-        int getNextRef() {
-            return nextRef;
-        }
-    }
-
     private String name;
     private String latestPromotedStatus;
-
     public Workflow(String name, List<String> orderedLabels) {
+
+        if (name == null) {
+            throw new NullPointerException("A name is required.");
+        }
+
+        if (orderedLabels == null) {
+            throw new NullPointerException("An ordered list of label is required.");
+        }
+
         this.name = name;
         Map<Integer, Status> result = new HashMap<Integer, Status>();
         for (int k = 0; k < orderedLabels.size(); k++) {
@@ -105,5 +92,26 @@ public class Workflow {
 
     public String getName() {
         return name;
+    }
+
+    private class Status {
+
+        private int ref;
+        private String label;
+        private int nextRef;
+
+        Status(int ref, String label, int nextRef) {
+            this.ref = ref;
+            this.label = label;
+            this.nextRef = nextRef;
+        }
+
+        String getLabel() {
+            return label;
+        }
+
+        int getNextRef() {
+            return nextRef;
+        }
     }
 }
