@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.ci.lib.workflow;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
@@ -18,9 +19,26 @@ public class WorkflowTest {
         assertNull(workflow.getNormalizedStatus(null));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void testNullNextStatus() {
+        Workflow workflow = Workflow.DEFAULT_WORKFLOW_STATUS;
+        assertNull(workflow.getNextStatusLabel(null));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testConstructWorkFlowNullName() {
+        new Workflow(null, new ArrayList<String>());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testConstructWorkFlowNullStatusList() {
+        new Workflow("A Name", null);
+    }
+
     @Test
     public void testNormalizedStatus() {
         Workflow workflow = Workflow.DEFAULT_WORKFLOW_STATUS;
+        assertNull(workflow.getNormalizedStatus("UNKNOWN_STATUS"));
         assertEquals("BUILD", workflow.getNormalizedStatus("build"));
         assertEquals("BUILD", workflow.getNormalizedStatus("BUILD"));
         assertEquals("INTEGRATION", workflow.getNormalizedStatus("integration"));
