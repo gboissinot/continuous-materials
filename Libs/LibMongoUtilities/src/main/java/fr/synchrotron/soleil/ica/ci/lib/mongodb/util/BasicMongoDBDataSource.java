@@ -13,9 +13,9 @@ import java.util.List;
  */
 public class BasicMongoDBDataSource implements MongoDBDataSource {
 
-    private static final String DEFAULT_MONGODB_HOST = "localhost";
-    private static final int DEFAULT_MONGODB_PORT = 27017;
-    private static final String DEFAULT_MONGODB_DBNAME = "artifactRepository";
+    public static final String DEFAULT_MONGODB_HOST = "localhost";
+    public static final int DEFAULT_MONGODB_PORT = 27017;
+    public static final String DEFAULT_MONGODB_DBNAME = "artifactRepository";
 
     private MongoClient mongo;
     private String mongoDBName;
@@ -49,10 +49,9 @@ public class BasicMongoDBDataSource implements MongoDBDataSource {
         this.mongoDBName = mongoDBName;
     }
 
-    private void initInstances(List mongoDBInstances, String mongoDBName) {
-        List serverAddresses = new ArrayList();
-        for (int i = 0; i < mongoDBInstances.size(); i++) {
-            MongoDBInstance mongoDBInstance = (MongoDBInstance) mongoDBInstances.get(i);
+    private void initInstances(List<MongoDBInstance> mongoDBInstances, String mongoDBName) {
+        List<ServerAddress> serverAddresses = new ArrayList<ServerAddress>();
+        for (MongoDBInstance mongoDBInstance : mongoDBInstances) {
             try {
                 serverAddresses.add(new ServerAddress(mongoDBInstance.getHost(), mongoDBInstance.getPort()));
             } catch (UnknownHostException ue) {
