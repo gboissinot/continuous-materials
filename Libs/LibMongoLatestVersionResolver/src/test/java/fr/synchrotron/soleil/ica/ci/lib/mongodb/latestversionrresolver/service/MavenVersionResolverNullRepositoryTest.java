@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author Gregory Boissinot
  */
-public class NullVersionTest extends AbstractVersionTest {
+public class MavenVersionResolverNullRepositoryTest extends AbstractVersionTest {
 
     @Override
     protected ArtifactRepository getArtifactRepository() {

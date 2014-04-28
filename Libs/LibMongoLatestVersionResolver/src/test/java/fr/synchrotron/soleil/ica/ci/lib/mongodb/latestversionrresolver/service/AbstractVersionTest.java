@@ -10,25 +10,24 @@ import org.junit.Assert;
  */
 public abstract class AbstractVersionTest {
 
-    protected static final String TEST_GROUPID = "testGroupId";
-    protected static final String TEST_ARTIFACTID = "testArtifactId";
+    private MavenVersionResolverService mavenVersionResolverService;
+
+    protected AbstractVersionTest() {
+        mavenVersionResolverService = new MavenVersionResolverService(
+                new ArtifactVersionResolverService(getArtifactRepository()));
+    }
 
     protected abstract ArtifactRepository getArtifactRepository();
 
     protected String resolveVersion(String value) {
+        final String TEST_GROUPID = "testGroupId";
+        final String TEST_ARTIFACTID = "testArtifactId";
         return resolveVersion(TEST_GROUPID, TEST_ARTIFACTID, value);
     }
 
-    protected String resolveVersion(String name, String value) {
-        return resolveVersion(TEST_GROUPID, name, value);
-    }
-
-    private String resolveVersion(String groupId, String artifactId, String verison) {
-        MavenVersionResolverService mavenVersionResolverService
-                = new MavenVersionResolverService(new ArtifactVersionResolverService(getArtifactRepository()));
-        final MavenOutputArtifact mavenOutputArtifact =
-                mavenVersionResolverService.resolveArtifact(
-                        buildMavenInputArtifact(groupId, artifactId, verison));
+    protected String resolveVersion(String groupId, String artifactId, String verison) {
+        final MavenOutputArtifact mavenOutputArtifact = mavenVersionResolverService
+                .resolveArtifact(buildMavenInputArtifact(groupId, artifactId, verison));
         Assert.assertNotNull(mavenOutputArtifact);
         return mavenOutputArtifact.getVersion();
     }
