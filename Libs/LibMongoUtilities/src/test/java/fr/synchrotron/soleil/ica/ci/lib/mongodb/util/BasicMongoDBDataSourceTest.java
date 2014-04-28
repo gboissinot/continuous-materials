@@ -5,6 +5,8 @@ import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
 import org.junit.Test;
 
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +17,19 @@ import static junit.framework.Assert.assertNotNull;
  * @author Gregory Boissinot
  */
 public class BasicMongoDBDataSourceTest {
+
+    @Test(expected = MongoDBException.class)
+    public void testUnknownHost() {
+        new BasicMongoDBDataSource("unknownHost", 27001);
+    }
+
+    @Test(expected = MongoDBException.class)
+    public void testUnknownListHost() throws UnknownHostException {
+        List<MongoDBInstance> serverAddresses = new ArrayList<MongoDBInstance>();
+        serverAddresses.add(new MongoDBInstance("localhost", 27001));
+        serverAddresses.add(new MongoDBInstance("unknowHost", 27002));
+        new BasicMongoDBDataSource(serverAddresses);
+    }
 
     @Test
     public void testDefault() {
@@ -65,14 +80,32 @@ public class BasicMongoDBDataSourceTest {
 
     @Test
     public void testInstanceWithListMongoInstancesAsParameters() {
+        initInstanceWithListMongoInstancesAsParameters(null);
+    }
+
+    @Test
+    public void testInstanceWithListMongoInstancesAsParametersWithDbName() {
+        initInstanceWithListMongoInstancesAsParameters("myDbName");
+    }
+
+    private void initInstanceWithListMongoInstancesAsParameters(String dbName) {
         MongoDBInstance mongoDBInstance1 = new MongoDBInstance("localhost", 27001);
         MongoDBInstance mongoDBInstance2 = new MongoDBInstance("localhost", 27002);
-        final String dbName = "myDbName";
-        BasicMongoDBDataSource mongoDBDataSource =
-                new BasicMongoDBDataSource(Arrays.asList(mongoDBInstance1, mongoDBInstance2), dbName);
-        final DB mongoDB = mongoDBDataSource.getMongoDB();
-        assertNotNull(mongoDB);
-        assertEquals(dbName, mongoDB.getName());
+
+        DB mongoDB = null;
+        if (dbName == null) {
+            BasicMongoDBDataSource mongoDBDataSource =
+                    new BasicMongoDBDataSource(Arrays.asList(mongoDBInstance1, mongoDBInstance2));
+            mongoDB = mongoDBDataSource.getMongoDB();
+            assertNotNull(mongoDB);
+            assertEquals(BasicMongoDBDataSource.DEFAULT_MONGODB_DBNAME, mongoDB.getName());
+        } else {
+            BasicMongoDBDataSource mongoDBDataSource =
+                    new BasicMongoDBDataSource(Arrays.asList(mongoDBInstance1, mongoDBInstance2), dbName);
+            mongoDB = mongoDBDataSource.getMongoDB();
+            assertNotNull(mongoDB);
+            assertEquals(dbName, mongoDB.getName());
+        }
         final Mongo mongo = mongoDB.getMongo();
         assertNotNull(mongo);
 
