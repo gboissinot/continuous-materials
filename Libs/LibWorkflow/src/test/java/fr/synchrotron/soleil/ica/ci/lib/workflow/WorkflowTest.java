@@ -18,7 +18,8 @@ public class WorkflowTest {
         assertNull(workflow.getNormalizedStatus(null));
     }
 
-    public void testNormalizedStatus(String label) {
+    @Test
+    public void testNormalizedStatus() {
         Workflow workflow = Workflow.DEFAULT_WORKFLOW_STATUS;
         assertEquals("BUILD", workflow.getNormalizedStatus("build"));
         assertEquals("BUILD", workflow.getNormalizedStatus("BUILD"));
@@ -27,7 +28,6 @@ public class WorkflowTest {
         assertEquals("RELEASE", workflow.getNormalizedStatus("release"));
         assertEquals("RELEASE", workflow.getNormalizedStatus("RELEASE"));
     }
-
 
     @Test
     public void testBuildWorkflowOneElement() {
