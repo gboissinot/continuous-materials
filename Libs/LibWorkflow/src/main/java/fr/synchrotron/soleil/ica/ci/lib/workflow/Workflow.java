@@ -9,8 +9,29 @@ public class Workflow {
 
     public static final Workflow DEFAULT_WORKFLOW_STATUS = new Workflow("DEFAULT_WORKFLOW", Arrays.asList("BUILD", "INTEGRATION", "RELEASE"));
 
+    private Map<Integer, Status> internalStatusMap = new HashMap<Integer, Status>();
+    private class Status {
+
+        private int ref;
+        private String label;
+        private int nextRef;
+
+        Status(int ref, String label, int nextRef) {
+            this.ref = ref;
+            this.label = label;
+            this.nextRef = nextRef;
+        }
+
+        String getLabel() {
+            return label;
+        }
+
+        int getNextRef() {
+            return nextRef;
+        }
+    }
+
     private String name;
-    private Map<Integer, Status> allStatus = new HashMap<Integer, Status>();
     private String latestPromotedStatus;
 
     public Workflow(String name, List<String> orderedLabels) {
@@ -27,21 +48,7 @@ public class Workflow {
                 result.put(ref, new Status(ref, label, ref + 1));
             }
         }
-        allStatus = result;
-    }
-
-    public Status getNextStatusLabel(Status status) {
-
-        if (status == null) {
-            throw new NullPointerException("A status object is required.");
-        }
-
-        final int nextref = status.getNextRef();
-        if (nextref == -1) {
-            return null;
-        }
-
-        return allStatus.get(nextref);
+        internalStatusMap = result;
     }
 
     public String getNextStatusLabel(String statusLabel) {
@@ -60,21 +67,7 @@ public class Workflow {
             return null;
         }
 
-        return allStatus.get(nextref).getLabel();
-    }
-
-    private Status getStatus(String label) {
-
-        assert label != null;
-
-        final Collection<Status> values = allStatus.values();
-        for (Status status : values) {
-            if (label.equalsIgnoreCase(status.getLabel())) {
-                return status;
-            }
-        }
-
-        return null;
+        return internalStatusMap.get(nextref).getLabel();
     }
 
     public String getNormalizedStatus(String label) {
@@ -90,6 +83,20 @@ public class Workflow {
 
         return null;
 
+    }
+
+    private Status getStatus(String label) {
+
+        assert label != null;
+
+        final Collection<Status> values = internalStatusMap.values();
+        for (Status status : values) {
+            if (label.equalsIgnoreCase(status.getLabel())) {
+                return status;
+            }
+        }
+
+        return null;
     }
 
     public String getLatestPromotedStatus() {
