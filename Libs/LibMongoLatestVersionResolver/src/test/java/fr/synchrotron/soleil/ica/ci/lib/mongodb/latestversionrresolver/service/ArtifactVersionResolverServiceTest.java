@@ -1,11 +1,10 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service;
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.ArtifactRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.NullArtifactRepository;
 import fr.synchrotron.soleil.ica.ci.lib.workflow.Workflow;
 import org.junit.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Gregory Boissinot
@@ -17,34 +16,56 @@ public class ArtifactVersionResolverServiceTest {
         new ArtifactVersionResolverService(null);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void tesNullArtifactRepositoryConstructorTwoParameter() {
-        new ArtifactVersionResolverService(null, any(Workflow.class));
+    @Test
+    public void tesArtifactRepositoryConstructorOneParameter() {
+        new ArtifactVersionResolverService(new NullArtifactRepository());
+        assertTrue(true);
+    }
+
+    @Test
+    public void tesArtifactRepositoryConstructorTwoParameters() {
+        new ArtifactVersionResolverService(new NullArtifactRepository(), Workflow.DEFAULT_WORKFLOW_STATUS);
+        assertTrue(true);
     }
 
     @Test(expected = NullPointerException.class)
-    public void tesNullWorkflowConstructorTwoParameter() {
-        new ArtifactVersionResolverService(any(ArtifactRepository.class), null);
+    public void tesNullWorkflowConstructorTwoParameters() {
+        new ArtifactVersionResolverService(new NullArtifactRepository(), null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getLastVersionStatusWithOrgNull() {
+        ArtifactVersionResolverService resolverService =
+                new ArtifactVersionResolverService(new NullArtifactRepository(), Workflow.DEFAULT_WORKFLOW_STATUS);
+        resolverService.getLatestVersion(null, "aName", "aStatus");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getLastVersionStatusWithNameNull() {
+        ArtifactVersionResolverService resolverService =
+                new ArtifactVersionResolverService(new NullArtifactRepository(), Workflow.DEFAULT_WORKFLOW_STATUS);
+        resolverService.getLatestVersion("anOrg", null, "aStatus");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getLastVersionStatusWithStatusNull() {
+        ArtifactVersionResolverService resolverService =
+                new ArtifactVersionResolverService(new NullArtifactRepository(), Workflow.DEFAULT_WORKFLOW_STATUS);
+        resolverService.getLatestVersion("anOrg", "aName", null);
     }
 
     @Test(expected = NullPointerException.class)
     public void getLastVersionWithOrgNull() {
         ArtifactVersionResolverService resolverService =
-                new ArtifactVersionResolverService(any(ArtifactRepository.class), any(Workflow.class));
-        resolverService.getLatestVersion(null, anyString(), anyString());
+                new ArtifactVersionResolverService(new NullArtifactRepository(), Workflow.DEFAULT_WORKFLOW_STATUS);
+        resolverService.getLatestVersion(null, "aName");
     }
 
     @Test(expected = NullPointerException.class)
     public void getLastVersionWithNameNull() {
         ArtifactVersionResolverService resolverService =
-                new ArtifactVersionResolverService(any(ArtifactRepository.class), any(Workflow.class));
-        resolverService.getLatestVersion(anyString(), null, anyString());
-    }
-
-    public void getLastVersionWithStatusNull() {
-        ArtifactVersionResolverService resolverService =
-                new ArtifactVersionResolverService(any(ArtifactRepository.class), Workflow.DEFAULT_WORKFLOW_STATUS);
-        resolverService.getLatestVersion(anyString(), anyString(), null);
+                new ArtifactVersionResolverService(new NullArtifactRepository(), Workflow.DEFAULT_WORKFLOW_STATUS);
+        resolverService.getLatestVersion("anOrg", null);
     }
 
 }

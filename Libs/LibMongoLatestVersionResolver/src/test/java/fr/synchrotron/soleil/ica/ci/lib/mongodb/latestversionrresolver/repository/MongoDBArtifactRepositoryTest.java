@@ -1,21 +1,23 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository;
 
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.mongodb.MongoDBArtifactRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 /**
  * @author Gregory Boissinot
  */
-public class NullArtifactRepositoryTest {
+public class MongoDBArtifactRepositoryTest {
 
     private static ArtifactRepository artifactRepository;
 
     @BeforeClass
     public static void setup() {
-        artifactRepository = new NullArtifactRepository();
+        artifactRepository = new MongoDBArtifactRepository(Mockito.mock(MongoDBDataSource.class));
     }
 
     @Test
@@ -41,10 +43,5 @@ public class NullArtifactRepositoryTest {
     @Test(expected = NullPointerException.class)
     public void testNullStatus() {
         artifactRepository.getLatestVersion("anOrg", "aName", "aType", null);
-    }
-
-    @Test
-    public void testNullResult() {
-        assertNull(artifactRepository.getLatestVersion("anOrg", "aName", "aType", "aStatus"));
     }
 }

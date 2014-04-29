@@ -24,6 +24,7 @@ public class MongoDBArtifactRepository implements ArtifactRepository {
         return "MongoDB Repository";
     }
 
+    @Override
     public String getLatestVersion(String requestedOrg,
                                    String requestedName,
                                    String requestedType,

@@ -69,6 +69,11 @@ public class MavenVersionResolverMongoDBRepositoryTest extends AbstractVersionTe
         Assert.assertEquals("1.5.RELEASE", resolveVersion("org1", "name1", "latest.release"));
         Assert.assertEquals("1.5.RELEASE", resolveVersion("org2", "name2", "latest.release"));
         Assert.assertEquals("1.5.RELEASE", resolveVersion("org3", "name3", "latest.release"));
+
+        Assert.assertEquals("1.5.RELEASE", resolveVersion("org1", "name1", "latest"));
+        Assert.assertEquals("1.5.RELEASE", resolveVersion("org2", "name2", "latest"));
+        Assert.assertEquals("1.5.RELEASE", resolveVersion("org3", "name3", "latest"));
+
     }
 
 }
