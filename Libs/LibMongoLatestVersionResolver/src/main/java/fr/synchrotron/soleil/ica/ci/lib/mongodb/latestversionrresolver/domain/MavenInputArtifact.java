@@ -7,7 +7,6 @@ public class MavenInputArtifact {
 
     public static final String LATEST_KEYWORD = "latest";
     public static final String LATEST_STATUS_PATTERN = "latest.";
-    public static final String NO_STATUS = null;
 
     private final String groupId;
 

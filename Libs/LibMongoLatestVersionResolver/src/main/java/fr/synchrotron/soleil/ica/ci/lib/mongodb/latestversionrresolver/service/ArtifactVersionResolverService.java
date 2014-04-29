@@ -38,16 +38,37 @@ public class ArtifactVersionResolverService {
     }
 
     /**
-     * @param org    the artifact organisation
-     * @param name   the artifact name
-     * @param status the status, can be null if it is unknown by the client. In this
-     *               case, we get the most promoted status
+     * Gets the latest version
+     *
+     * @param org  the requested artifact organization
+     * @param name the requested artifact name
+     * @return the latest version for an existing artifact with its status, null otherwise
+     */
+    public String getLatestVersion(String org, String name) {
+
+        if (org == null) {
+            throw new NullPointerException("A requested organization is required.");
+        }
+
+        if (name == null) {
+            throw new NullPointerException("A requested name is required.");
+        }
+
+        return getLatestVersion(org, name, workflow.getLatestPromotedStatus());
+    }
+
+    /**
+     * Gets the latest version
+     *
+     * @param org    the requested artifact organization
+     * @param name   the requested artifact name
+     * @param status the requested artifact status
      * @return the latest version for an existing artifact with its status, null otherwise
      */
     public String getLatestVersion(String org, String name, String status) {
 
         if (org == null) {
-            throw new NullPointerException("A requested organisation is required.");
+            throw new NullPointerException("A requested organization is required.");
         }
 
         if (name == null) {
@@ -55,7 +76,7 @@ public class ArtifactVersionResolverService {
         }
 
         if (status == null) {
-            status = workflow.getLatestPromotedStatus();
+            throw new NullPointerException("A requested status is required.");
         }
 
         LOGGER.info(String.format("Using '%s worklow.", workflow.getName()));

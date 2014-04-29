@@ -65,8 +65,7 @@ public class MavenVersionResolverService {
                         mavenInputArtifact,
                         artifactVersionResolverService.getLatestVersion(
                                 mavenInputArtifact.getGroupId(),
-                                mavenInputArtifact.getArtifactId(),
-                                MavenInputArtifact.NO_STATUS)
+                                mavenInputArtifact.getArtifactId())
                 );
             }
 
@@ -89,6 +88,7 @@ public class MavenVersionResolverService {
     }
 
     private MavenOutputArtifact buildMavenOutputArtifact(MavenInputArtifact mavenInputArtifact, String resolvedVersion) {
+
         if (resolvedVersion != null) {
             return new MavenOutputArtifact(
                     mavenInputArtifact.getGroupId(),
