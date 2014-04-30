@@ -1,6 +1,5 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.mongodb;
 
-import com.mongodb.*;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.ArtifactRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 

@@ -7,7 +7,7 @@ import org.vertx.java.core.json.JsonObject;
  */
 public class ObjectMapper<T> {
 
-    public T map(JsonObject  jsonObject){
+    public T map(JsonObject jsonObject) {
         return null;
 
     }

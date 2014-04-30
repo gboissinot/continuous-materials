@@ -1,11 +1,13 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependencyExclusion;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildContext;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildTool;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.maven.MavenProjectInfo;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Model;
 
 import java.util.ArrayList;
@@ -30,12 +32,12 @@ public class ArtifactDocumentLoaderService {
                         model.getName(),
                         statusVersion.version,
                         statusVersion.status);
-
-        final List dependencies = model.getDependencies();
+        artifactDocument.setModules(model.getModules());
+        final List<Dependency> dependencies = model.getDependencies();
         if (dependencies != null) {
             List<ArtifactDependency> artifactDependencies = new ArrayList<ArtifactDependency>();
-            for (Object dependencyObject : dependencies) {
-                Dependency dependency = (Dependency) dependencyObject;
+            for (Dependency dependencyObject : dependencies) {
+                Dependency dependency = dependencyObject;
                 //We can't determine here the right dependency due to it require a runtime
                 // maven context
                 ArtifactDependency artifactDependency =
@@ -43,7 +45,12 @@ public class ArtifactDocumentLoaderService {
                                 dependency.getGroupId(),
                                 dependency.getArtifactId(),
                                 dependency.getScope());
-
+                List<Exclusion> exclusions = dependency.getExclusions();
+                List<ArtifactDependencyExclusion> artifactDependencyExclusions = new ArrayList<ArtifactDependencyExclusion>();
+                for (Exclusion exclusion : exclusions) {
+                    artifactDependencyExclusions.add(new ArtifactDependencyExclusion(exclusion.getGroupId(), exclusion.getArtifactId()));
+                }
+                artifactDependency.setExclusions(artifactDependencyExclusions);
                 artifactDependencies.add(artifactDependency);
             }
             artifactDocument.setDependencies(artifactDependencies);

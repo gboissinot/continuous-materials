@@ -195,6 +195,7 @@ public class ArtifactDocument {
     public void setBuildContext(BuildContext buildContext) {
         this.buildContext = buildContext;
     }
+
     public List<String> getModules() {
         return modules;
     }

@@ -9,6 +9,13 @@
     <name>maven-versionresolver</name>
     <description>Maven Version Resolver</description>
 
+    <inceptionYear>2014</inceptionYear>
+
+    <organization>
+        <name>myOrg</name>
+        <url>http://url</url>
+    </organization>
+
     <properties>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
@@ -76,6 +83,12 @@
             <groupId>fr.synchrotron.soleil.ica.ci.lib</groupId>
             <artifactId>mongodb-util</artifactId>
             <version>${mongodb-util.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mongodb</groupId>
+                    <artifactId>mongo-java-driver</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>

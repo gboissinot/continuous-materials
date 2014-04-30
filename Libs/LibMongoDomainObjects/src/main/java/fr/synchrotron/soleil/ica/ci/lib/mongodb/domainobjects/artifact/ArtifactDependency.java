@@ -17,7 +17,7 @@ public class ArtifactDependency {
 
     private String scope;
 
-        private List<ArtifactDependencyExclusion>  exclusions;
+    private List<ArtifactDependencyExclusion> exclusions;
 
     public ArtifactDependency() {
     }

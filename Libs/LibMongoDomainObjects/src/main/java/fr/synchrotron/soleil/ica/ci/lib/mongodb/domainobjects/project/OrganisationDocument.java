@@ -32,21 +32,21 @@ public class OrganisationDocument {
     }
 
     /**
-     * Get the URL to the organization's home page.
-     *
-     * @return String
-     */
-    public String getUrl() {
-        return this.url;
-    }
-
-    /**
      * Set the full name of the organization.
      *
      * @param name
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Get the URL to the organization's home page.
+     *
+     * @return String
+     */
+    public String getUrl() {
+        return this.url;
     }
 
     /**

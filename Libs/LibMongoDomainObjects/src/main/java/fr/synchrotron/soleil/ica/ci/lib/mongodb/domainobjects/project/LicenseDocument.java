@@ -54,6 +54,15 @@ public class LicenseDocument {
     }
 
     /**
+     * Set addendum information pertaining to this license.
+     *
+     * @param comments
+     */
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    /**
      * Get the primary method by which this project may be
      * distributed.
      * <dl>
@@ -69,33 +78,6 @@ public class LicenseDocument {
      */
     public String getDistribution() {
         return this.distribution;
-    }
-
-    /**
-     * Get the full legal name of the license.
-     *
-     * @return String
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Get the official url for the license text.
-     *
-     * @return String
-     */
-    public String getUrl() {
-        return this.url;
-    }
-
-    /**
-     * Set addendum information pertaining to this license.
-     *
-     * @param comments
-     */
-    public void setComments(String comments) {
-        this.comments = comments;
     }
 
     /**
@@ -117,12 +99,30 @@ public class LicenseDocument {
     } //-- void setDistribution( String )
 
     /**
+     * Get the full legal name of the license.
+     *
+     * @return String
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
      * Set the full legal name of the license.
      *
      * @param name
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Get the official url for the license text.
+     *
+     * @return String
+     */
+    public String getUrl() {
+        return this.url;
     }
 
     /**

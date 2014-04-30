@@ -1,10 +1,10 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.LicenseDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.OrganisationDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
-import org.apache.maven.model.Developer;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Scm;
+import org.apache.maven.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,18 @@ public class ProjectDocumentLoaderService {
 
         ProjectDocument projectDocument = new ProjectDocument(model.getGroupId(), model.getArtifactId());
         projectDocument.setDescription(model.getDescription());
+        projectDocument.setInceptionYear(model.getInceptionYear());
+        Organization org = model.getOrganization();
+        if (org != null) {
+            projectDocument.setOrganisation(new OrganisationDocument(org.getName(), org.getUrl()));
+        }
+
+        List<License> licences = model.getLicenses();
+        List<LicenseDocument> licenseDocuments = new ArrayList<LicenseDocument>();
+        for (License licence : licences) {
+            licenseDocuments.add(new LicenseDocument(licence.getName(), licence.getUrl(), licence.getDistribution(), licence.getComments()));
+        }
+        projectDocument.setLicences(licenseDocuments);
 
         List developers = model.getDevelopers();
         List<DeveloperDocument> developerDocuments = new ArrayList<DeveloperDocument>();

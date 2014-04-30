@@ -17,7 +17,7 @@ public class ArtifactDependencyExclusion {
     public ArtifactDependencyExclusion() {
     }
 
-    public ArtifactDependencyExclusion(String groupId, String artifactId ) {
+    public ArtifactDependencyExclusion(String groupId, String artifactId) {
         this.groupId = groupId;
         this.artifactId = artifactId;
     }
@@ -32,21 +32,21 @@ public class ArtifactDependencyExclusion {
     }
 
     /**
-     * Get the group ID of the project to exclude.
-     *
-     * @return String
-     */
-    public String getGroupId() {
-        return this.groupId;
-    }
-
-    /**
      * Set the artifact ID of the project to exclude.
      *
      * @param artifactId
      */
     public void setArtifactId(String artifactId) {
         this.artifactId = artifactId;
+    }
+
+    /**
+     * Get the group ID of the project to exclude.
+     *
+     * @return String
+     */
+    public String getGroupId() {
+        return this.groupId;
     }
 
     /**

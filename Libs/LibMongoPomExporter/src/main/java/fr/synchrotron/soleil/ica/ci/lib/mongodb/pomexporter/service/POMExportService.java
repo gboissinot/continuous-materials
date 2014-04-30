@@ -1,24 +1,25 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependencyExclusion;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildContext;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildTool;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.maven.MavenProjectInfo;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.LicenseDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.OrganisationDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.exception.POMExporterException;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Developer;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Scm;
+import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,12 +72,12 @@ public class POMExportService {
 
         //-- Populate form ArtifactDocument
 
-        final ArtifactDocument aritfactDocument = pomDocument.getAritfactDocument();
-        pomModel.setGroupId(aritfactDocument.getKey().getOrg());
-        pomModel.setArtifactId(aritfactDocument.getKey().getName());
-        pomModel.setVersion(aritfactDocument.getKey().getVersion() + "." + aritfactDocument.getKey().getStatus());
-
-        final List<ArtifactDependency> dependencies = aritfactDocument.getDependencies();
+        final ArtifactDocument artifactDocument = pomDocument.getAritfactDocument();
+        pomModel.setGroupId(artifactDocument.getKey().getOrg());
+        pomModel.setArtifactId(artifactDocument.getKey().getName());
+        pomModel.setVersion(artifactDocument.getKey().getVersion() + "." + artifactDocument.getKey().getStatus());
+        pomModel.setModules(artifactDocument.getModules());
+        final List<ArtifactDependency> dependencies = artifactDocument.getDependencies();
         if (dependencies != null) {
             for (ArtifactDependency artifactDependency : dependencies) {
                 Dependency dependency = new Dependency();
@@ -86,11 +87,20 @@ public class POMExportService {
                 dependency.setVersion(artifactDependency.getVersion());
                 dependency.setScope(artifactDependency.getScope());
                 pomModel.addDependency(dependency);
+                List<ArtifactDependencyExclusion> artifactDependencyExclusions = artifactDependency.getExclusions();
+                List<Exclusion> exclusions = new ArrayList<Exclusion>();
+                for (ArtifactDependencyExclusion artifactDependencyExclusion : artifactDependencyExclusions) {
+                    Exclusion ex = new Exclusion();
+                    ex.setGroupId(artifactDependencyExclusion.getGroupId());
+                    ex.setArtifactId(artifactDependencyExclusion.getArtifactId());
+                    exclusions.add(ex);
+                }
+                dependency.setExclusions(exclusions);
             }
         }
 
         //Extract Maven specifities
-        final BuildContext buildContext = aritfactDocument.getBuildContext();
+        final BuildContext buildContext = artifactDocument.getBuildContext();
         if (buildContext != null) {
             final BuildTool buildTool = buildContext.getBuildTool();
             if (buildTool != null) {
@@ -101,11 +111,22 @@ public class POMExportService {
             }
         }
 
-        //-- Populate form ProjectDocument
+        //-- Populate from ProjectDocument
         final ProjectDocument projectDocument = pomDocument.getProjectDocument();
         pomModel.setDescription(projectDocument.getDescription());
+        pomModel.setInceptionYear(projectDocument.getInceptionYear());
+
+        OrganisationDocument organisationDocument = projectDocument.getOrganisation();
+        if (organisationDocument != null) {
+            Organization organization = new Organization();
+            organization.setUrl(organisationDocument.getUrl());
+            organization.setName(organisationDocument.getName());
+            pomModel.setOrganization(organization);
+        }
+
 
         final List<DeveloperDocument> developers = projectDocument.getDevelopers();
+        List<Developer> developersMaven = new ArrayList<Developer>();
         if (developers != null) {
             for (DeveloperDocument developerDocument : developers) {
                 Developer developer = new Developer();
@@ -118,8 +139,25 @@ public class POMExportService {
                 developer.setOrganizationUrl(developerDocument.getOrganizationUrl());
                 developer.setTimezone(developerDocument.getTimezone());
                 //TODO Missing properties
+                developersMaven.add(developer);
             }
         }
+        pomModel.setDevelopers(developersMaven);
+
+        // Licence
+        List<LicenseDocument> licenses = projectDocument.getLicences();
+        List<License> licencesMaven = new ArrayList<License>();
+        if (licenses != null) {
+            for (LicenseDocument license : licenses) {
+                License licenseMaven = new License();
+                licenseMaven.setName(license.getName());
+                licenseMaven.setUrl(license.getUrl());
+                licenseMaven.setDistribution(license.getDistribution());
+                licenseMaven.setComments(license.getComments());
+                licencesMaven.add(licenseMaven);
+            }
+        }
+        pomModel.setLicenses(licencesMaven);
 
         final String scmConnection = projectDocument.getScmConnection();
         if (scmConnection != null) {
