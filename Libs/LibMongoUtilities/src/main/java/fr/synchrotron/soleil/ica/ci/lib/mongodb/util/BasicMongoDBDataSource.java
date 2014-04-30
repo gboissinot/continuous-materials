@@ -48,6 +48,7 @@ public class BasicMongoDBDataSource implements MongoDBDataSource {
     }
 
     private void init(String mongoHost, int mongoPort, String mongoDBName) {
+        checkParameters(mongoHost, mongoPort, mongoDBName);
         try {
             mongo = new MongoClient(mongoHost, mongoPort);
         } catch (UnknownHostException ue) {
@@ -60,13 +61,35 @@ public class BasicMongoDBDataSource implements MongoDBDataSource {
         List<ServerAddress> serverAddresses = new ArrayList<ServerAddress>();
         for (MongoDBInstance mongoDBInstance : mongoDBInstances) {
             try {
-                serverAddresses.add(new ServerAddress(mongoDBInstance.getHost(), mongoDBInstance.getPort()));
+                final String mongoHost = mongoDBInstance.getHost();
+                final int mongoPort = mongoDBInstance.getPort();
+                checkParameters(mongoHost, mongoPort, mongoDBName);
+                serverAddresses.add(new ServerAddress(mongoHost, mongoPort));
             } catch (UnknownHostException ue) {
                 throw new MongoDBException(ue);
             }
         }
         mongo = new MongoClient(serverAddresses);
         this.mongoDBName = mongoDBName;
+    }
+
+    private void checkParameters(Object... parameters) {
+
+        if (parameters.length == 0) {
+            return;
+        }
+
+        for (Object parameter : parameters) {
+            if (parameter == null) {
+                throw new NullPointerException("All parameters are requited");
+            }
+
+            if (parameter instanceof Number) {
+                if (parameter.equals(-1)) {
+                    throw new NullPointerException("All parameters are requited");
+                }
+            }
+        }
     }
 
     public DB getMongoDB() {
