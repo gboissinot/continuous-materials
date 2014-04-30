@@ -1,5 +1,6 @@
 package fr.synchrotron.soleil.ica.msvervice.management;
 
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoConfigLoader;
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMExportHandler;
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMImportHandler;
 import fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomexporter.POMExporterWorkerVerticle;
@@ -14,7 +15,6 @@ import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -24,8 +24,6 @@ import java.util.Properties;
 public class HttpEndpointManager extends Verticle {
 
     public static final long SEND_MS_TIMEOUT = 10 * 1000l; // in ms
-
-    private static final String MONGODB_PROPERTIES_FILEPATH = "/infra.properties";
 
     @Override
     public void start() {
@@ -93,7 +91,7 @@ public class HttpEndpointManager extends Verticle {
 
     private JsonObject createConfig() {
         final JsonObject config = container.config();
-        Properties properties = loadInfraFile(MONGODB_PROPERTIES_FILEPATH);
+        Properties properties = new MongoConfigLoader().loadInfraFile(MongoConfigLoader.MONGODB_DEFAULT_PROPERTIES_FILEPATH);
         for (Map.Entry<Object, Object> objectObjectEntry : properties.entrySet()) {
             String propKey = (String) objectObjectEntry.getKey();
             if (!config.containsField(propKey)) {
@@ -104,13 +102,4 @@ public class HttpEndpointManager extends Verticle {
         return config;
     }
 
-    private Properties loadInfraFile(String propertiedFilePath) {
-        Properties properties = new Properties();
-        try {
-            properties.load(this.getClass().getResourceAsStream(propertiedFilePath));
-            return properties;
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
-    }
 }

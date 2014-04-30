@@ -2,7 +2,7 @@ initscript {
     dependencies {
         classpath files('lib/LibMongoLatestVersionResolver.jar')
         classpath files('lib/LibMongoUtilities.jar')
-        classpath files('lib/mongo-java-driver-2.11.3.jar')
+        classpath files('lib/mongo-java-driver.jar')
         classpath files('lib/LibWorkflow.jar')
     }
 }
@@ -10,11 +10,7 @@ initscript {
 
 apply plugin: LatestDependencyPlugin
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.domain.MavenInputArtifact
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.mongodb.MongoDBArtifactRepository
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolverService
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.ArtifactVersionResolverService
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource
+import fr.synchrotron.soleil.ica.tools.gradle.distrib.MavenVersionResolver;
 
 class LatestDependencyPlugin implements Plugin<Gradle> {
 
@@ -29,7 +25,8 @@ class LatestDependencyPlugin implements Plugin<Gradle> {
                         if (requestedVersion.startsWith("latest")) {
                             def group = details.requested.group
                             def name = details.requested.name
-                            def latestVersion = getLatestVersion(group, name, requestedVersion)
+                            MavenVersionResolver resolver = new MavenVersionResolver();
+                            def latestVersion = resolver.getLatestVersion(group, name, requestedVersion)
                             logger.lifecycle("Resolved latest dependency $group:$name:$requestedVersion to $latestVersion \n")
                             details.useVersion latestVersion
                         }
@@ -37,14 +34,4 @@ class LatestDependencyPlugin implements Plugin<Gradle> {
             }
         }
     }
-
-
-    private String getLatestVersion(String group, String name, String version) {
-        MavenVersionResolverService resolverService =
-                new MavenVersionResolverService(new ArtifactVersionResolverService(new MongoDBArtifactRepository(
-                new BasicMongoDBDataSource("172.16.5.7", 27001, "repo"))));
-        MavenInputArtifact mavenInputArtifact = new MavenInputArtifact(group, name, version);
-        return resolverService.getLatestArtifact(mavenInputArtifact.getGroupId(), mavenInputArtifact.getArtifactId());
-    }
-
 }

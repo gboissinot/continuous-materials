@@ -1,4 +1,4 @@
-apply plugin: 'base'
+apply plugin: 'java'
 
 defaultTasks 'distInitDir'
 
@@ -9,7 +9,12 @@ ext {
 
 configurations {
     initDir
+
+    compile {
+        extendsFrom initDir
+    }
 }
+
 
 dependencies {
     initDir project(':Libs/LibMongoLatestVersionResolver')
@@ -17,8 +22,9 @@ dependencies {
     initDir "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
 }
 
-task buildInitDir(type: Copy) {
+task buildInitDir(type: Copy, dependsOn: classes) {
     into("$buildDir/init.d")
+    from sourceSets.main.output.classesDir
     from('src/init.d') {
         include "**/*.gradle"
     }
