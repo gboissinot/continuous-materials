@@ -1,5 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact;
 
+import java.util.List;
+
 /**
  * @author Gregory Boissinot
  */
@@ -14,6 +16,8 @@ public class ArtifactDependency {
     private String status;
 
     private String scope;
+
+        private List<ArtifactDependencyExclusion>  exclusions;
 
     public ArtifactDependency() {
     }
@@ -71,5 +75,13 @@ public class ArtifactDependency {
 
     public void setScope(String scope) {
         this.scope = scope;
+    }
+
+    public List<ArtifactDependencyExclusion> getExclusions() {
+        return exclusions;
+    }
+
+    public void setExclusions(List<ArtifactDependencyExclusion> exclusions) {
+        this.exclusions = exclusions;
     }
 }

@@ -18,6 +18,9 @@ public class ProjectDocument {
     private String description;
     private String scmConnection;
     private String language;
+    private List<LicenseDocument> licences;
+    private String inceptionYear;
+    private OrganisationDocument organisation;
 
     public ProjectDocument() {
     }
@@ -78,4 +81,29 @@ public class ProjectDocument {
     public void setLanguage(String language) {
         this.language = language;
     }
+
+    public List<LicenseDocument> getLicences() {
+        return licences;
+    }
+
+    public void setLicences(List<LicenseDocument> licences) {
+        this.licences = licences;
+    }
+
+    public String getInceptionYear() {
+        return inceptionYear;
+    }
+
+    public void setInceptionYear(String inceptionYear) {
+        this.inceptionYear = inceptionYear;
+    }
+
+    public OrganisationDocument getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(OrganisationDocument organisation) {
+        this.organisation = organisation;
+    }
+
 }

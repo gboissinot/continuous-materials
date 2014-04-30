@@ -36,6 +36,7 @@ public class ArtifactDocument {
     private ArtifactDocumentForC cLanguage;
     private List<ArtifactDependency> dependencies;
     private BuildContext buildContext;
+    private List<String> modules;
 
     public ArtifactDocument() {
     }
@@ -193,5 +194,12 @@ public class ArtifactDocument {
 
     public void setBuildContext(BuildContext buildContext) {
         this.buildContext = buildContext;
+    }
+    public List<String> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<String> modules) {
+        this.modules = modules;
     }
 }
