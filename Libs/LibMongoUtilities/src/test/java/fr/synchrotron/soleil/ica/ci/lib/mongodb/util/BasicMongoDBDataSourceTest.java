@@ -3,6 +3,7 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.util;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.UnknownHostException;
@@ -19,11 +20,13 @@ import static junit.framework.Assert.assertNotNull;
 public class BasicMongoDBDataSourceTest {
 
     @Test(expected = MongoDBException.class)
+    @Ignore
     public void testUnknownHost() {
         new BasicMongoDBDataSource("unknownHost", 27001);
     }
 
     @Test(expected = MongoDBException.class)
+    @Ignore
     public void testUnknownListHost() throws UnknownHostException {
         List<MongoDBInstance> serverAddresses = new ArrayList<MongoDBInstance>();
         serverAddresses.add(new MongoDBInstance("localhost", 27001));
