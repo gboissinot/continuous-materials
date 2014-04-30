@@ -5,15 +5,8 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.util;
  */
 public class MongoDBException extends RuntimeException {
 
-    public MongoDBException() {
-    }
-
-    public MongoDBException(String s) {
-        super(s);
-    }
-
-    public MongoDBException(String s, Throwable throwable) {
-        super(s, throwable);
+    public MongoDBException(String message) {
+        super(message);
     }
 
     public MongoDBException(Throwable throwable) {

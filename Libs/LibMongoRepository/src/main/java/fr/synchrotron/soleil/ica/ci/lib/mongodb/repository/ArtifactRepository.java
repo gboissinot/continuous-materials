@@ -19,12 +19,10 @@ public class ArtifactRepository extends AbstractRepository {
         super(mongoDBDataSource);
     }
 
-    public ArtifactDocument findArtifactDocument(String org, String name, String version, String status) {
+    public ArtifactDocument findArtifactDocument(ArtifactDocumentKey artifactDocumentKey) {
 
         MongoCollection artifacts = jongo.getCollection(ArtifactDocument.MONGO_ARTIFACTS_COLLECTION_NAME);
-
-        ArtifactDocumentKey queryObject = new ArtifactDocumentKey(org, name, version, status);
-        String query = getStringQuery(queryObject);
+        String query = getStringQuery(artifactDocumentKey);
 
         final Iterable<ArtifactDocument> artifactDocuments = artifacts.find(query).as(ArtifactDocument.class);
         final Iterator<ArtifactDocument> artifactDocumentIterator = artifactDocuments.iterator();

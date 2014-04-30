@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildContext;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.BuildTool;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
@@ -34,30 +35,26 @@ public class POMExportService {
         this.pomDocumentRepository = pomDocumentRepository;
     }
 
-    public void exportPomFile(Writer writer, String org, String name, String version, String status) throws POMExporterException {
+    public void exportPomFile(Writer writer, ArtifactDocumentKey artifactDocumentKey) throws POMExporterException {
 
         if (writer == null) {
             throw new NullPointerException("An writer element is required.");
         }
 
-        if (org == null) {
-            throw new NullPointerException("An org element is required.");
+        if (artifactDocumentKey == null) {
+            throw new NullPointerException("A key artifact is required.");
         }
 
-        if (name == null) {
-            throw new NullPointerException("An name element is required.");
-        }
-
-        if (version == null) {
-            throw new NullPointerException("An version element is required.");
-        }
-
-        if (status == null) {
-            throw new NullPointerException("An status element is required.");
+        if (!artifactDocumentKey.isValid()) {
+            throw new NullPointerException("All key artifact document elements must be set.");
         }
 
         final MavenXpp3Writer mavenXpp3Writer = new MavenXpp3Writer();
-        Model pomModel = getMavenModel(org, name, version, status);
+        Model pomModel = getMavenModel(
+                artifactDocumentKey.getOrg(),
+                artifactDocumentKey.getName(),
+                artifactDocumentKey.getVersion(),
+                artifactDocumentKey.getStatus());
         try {
             mavenXpp3Writer.write(writer, pomModel);
         } catch (IOException ioe) {

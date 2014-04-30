@@ -11,16 +11,17 @@ import org.vertx.java.core.http.HttpServerRequest;
 /**
  * @author Gregory Boissinot
  */
-public class POMImportHandler extends AbstractHandler {
-
+public class POMImportHandler implements Handler<HttpServerRequest> {
 
     private EventBus eventBus;
+    private MessageUtilities messageUtilities;
 
     public POMImportHandler(EventBus eventBus) {
         if (eventBus == null) {
             throw new NullPointerException("A eventBus object is required.");
         }
         this.eventBus = eventBus;
+        this.messageUtilities = new MessageUtilities();
     }
 
     @Override
@@ -44,7 +45,7 @@ public class POMImportHandler extends AbstractHandler {
                                    eventBus.sendWithTimeout("pom.importer", pomContent, HttpEndpointManager.SEND_MS_TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
                                        @Override
                                        public void handle(AsyncResult<Message<String>> replyMessage) {
-                                           buildStringReplyMessage(replyMessage, request);
+                                           messageUtilities.buildStringReplyMessage(replyMessage, request);
                                        }
                                    });
                                }

@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.DB;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ObjectMapperUtilities;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBException;
 import org.jongo.Jongo;
@@ -22,13 +23,16 @@ public abstract class AbstractRepository {
     }
 
     protected String getStringQuery(Object queryObject) {
-        ObjectMapper objectMapper = new ObjectMapper();
+
+        ObjectMapperUtilities objectMapperUtilities = new ObjectMapperUtilities();
+        final ObjectMapper objectMapper = objectMapperUtilities.getObjectMapper();
         StringWriter stringWriter = new StringWriter();
         try {
             objectMapper.writeValue(stringWriter, queryObject);
         } catch (IOException ioe) {
             throw new MongoDBException(ioe);
         }
+
         return stringWriter.toString();
     }
 

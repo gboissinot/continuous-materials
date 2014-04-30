@@ -30,7 +30,7 @@ public class POMHandleResponseClient extends HandleResponseClient {
     public void handle(HttpClientResponse clientResponse) {
 
         int statusCode = clientResponse.statusCode();
-        if (statusCode == 404) {
+        if (statusCode == HttpResponseStatus.NOT_FOUND.code()) {
             request.response().setStatusCode(statusCode);
             request.response().end();
             return;

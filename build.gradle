@@ -4,6 +4,7 @@ project.ext {
     mavenCoreVersion = '2.1.0'
     mongoJavaDriverVerison = '2.11.3'
     jongoVersion = '1.0'
+    jacksonVersion = '2.2.3'
     gsonVersion = '2.2.4'
     log4jVersion = '1.7.6'
     junitVersion = '4.11'
@@ -11,7 +12,7 @@ project.ext {
     xmlunitVersion = '1.3'
     mockitoVersion = '1.9.5'
     commonsioVersion = '2.4'
-    vertxVersion = '2.1RC1'
+    vertxVersion = '2.1RC3'
     springVersion = '3.2.4.RELEASE'
     utils4jVersion = '0.7.0'
 }
@@ -45,6 +46,19 @@ configure(subprojects.findAll { it.name.startsWith('Services/TaskVerticle') }) {
     dependencies {
         compile "io.vertx:vertx-core:$vertxVersion"
         compile "io.vertx:vertx-platform:$vertxVersion"
+    }
+}
+
+project(':Libs/LibMongoDomainObjects') {
+    dependencies {
+        compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    }
+}
+
+project(':Libs/LibMongoUtilities') {
+    dependencies {
+        compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
     }
 }
 
@@ -98,14 +112,9 @@ project(':Libs/LibMongoPomExporter') {
     }
 }
 
-project(':Libs/LibMongoUtilities') {
+project(':Libs/LibMongoLatestVersionResolver') {
     dependencies {
-        compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
-    }
-}
-
-project(':Libs/LibMongoLatestMavenVersionResolver') {
-    dependencies {
+        compile project(':Libs/LibWorkflow')
         compile project(':Libs/LibMongoUtilities')
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"
@@ -136,7 +145,7 @@ project(':Libs/LibMongoJenkinsJobsGenerator') {
 
 project(':Services/MsVertxModuleMavenRepoProxy') {
     dependencies {
-        compile project(':Libs/LibMongoLatestMavenVersionResolver')
+        compile project(':Libs/LibMongoLatestVersionResolver')
         compile "org.springframework:spring-core:$springVersion"
         compile "org.springframework:spring-context:$springVersion"
         compile "org.apache.maven:maven-core:$mavenCoreVersion"
@@ -157,15 +166,25 @@ project(':Confs') {
     }
 }
 
+project(':Services/LibVertxUtilities') {
+    dependencies {
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+        compile project(':Libs/LibMongoUtilities')
+    }
+}
+
 project(':Services/TaskVerticlePOMImporter') {
     dependencies {
         compile project(':Libs/LibMongoPomImporter')
+        compile project(':Services/LibVertxUtilities')
     }
 }
 
 project(':Services/TaskVerticlePOMExporter') {
     dependencies {
         compile project(':Libs/LibMongoPomExporter')
+        compile project(':Services/LibVertxUtilities')
     }
 }
 

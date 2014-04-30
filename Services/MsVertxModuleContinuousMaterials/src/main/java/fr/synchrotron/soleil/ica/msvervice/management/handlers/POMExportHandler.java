@@ -14,17 +14,18 @@ import java.util.Set;
 /**
  * @author Gregory Boissinot
  */
-public class POMExportHandler extends AbstractHandler {
+public class POMExportHandler implements Handler<HttpServerRequest> {
 
     private EventBus eventBus;
+    private MessageUtilities messageUtilities;
 
     public POMExportHandler(EventBus eventBus) {
         if (eventBus == null) {
             throw new NullPointerException("A eventBus object is required.");
         }
         this.eventBus = eventBus;
+        this.messageUtilities = new MessageUtilities();
     }
-
 
     @Override
     public void handle(final HttpServerRequest request) {
@@ -38,7 +39,6 @@ public class POMExportHandler extends AbstractHandler {
         request.dataHandler(new Handler<Buffer>() {
             @Override
             public void handle(Buffer data) {
-
                 final JsonObject jsonObject = new JsonObject(data.toString());
                 final Set<String> fieldNames = jsonObject.getFieldNames();
                 for (String fieldName : fieldNames) {
@@ -53,7 +53,7 @@ public class POMExportHandler extends AbstractHandler {
                 eventBus.sendWithTimeout("pom.exporter", pomIdObject, HttpEndpointManager.SEND_MS_TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
                     @Override
                     public void handle(AsyncResult<Message<String>> replyMessage) {
-                        buildStringReplyMessage(replyMessage, request);
+                        messageUtilities.buildStringReplyMessage(replyMessage, request);
                     }
                 });
             }

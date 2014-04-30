@@ -1,8 +1,11 @@
 package fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomexporter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service.POMExportService;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.ObjectMapperUtilities;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.MongoDBUtilities;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
@@ -16,36 +19,35 @@ import java.io.StringWriter;
  */
 public class POMExporterWorkerVerticle extends Verticle {
 
+    private MongoDBUtilities mongoDBUtilities;
+
+    public POMExporterWorkerVerticle() {
+        this.mongoDBUtilities = new MongoDBUtilities();
+    }
+
     @Override
     public void start() {
 
         final POMExportService pomExportService =
-                new POMExportService(new POMDocumentRepository(getBasicMongoDBDataSource(container.config())));
+                new POMExportService(new POMDocumentRepository(mongoDBUtilities.getBasicMongoDBDataSource(container.config())));
         final EventBus eventBus = vertx.eventBus();
         eventBus.registerHandler("pom.exporter", new Handler<Message>() {
             @Override
             public void handle(Message message) {
                 try {
                     JsonObject pomIdObject = (JsonObject) message.body();
-                    String org = pomIdObject.getString("org");
-                    String name = pomIdObject.getString("name");
-                    String version = pomIdObject.getString("version");
-                    String status = pomIdObject.getString("status");
+                    ObjectMapperUtilities objectMapperUtilities = new ObjectMapperUtilities();
+                    final ObjectMapper objectMapper = objectMapperUtilities.getObjectMapper();
+                    final ArtifactDocumentKey artifactDocumentKey = objectMapper.convertValue(pomIdObject.toMap(), ArtifactDocumentKey.class);
                     StringWriter stringWriter = new StringWriter();
-                    pomExportService.exportPomFile(stringWriter, org, name, version, status);
+                    pomExportService.exportPomFile(stringWriter, artifactDocumentKey);
                     message.reply(stringWriter.toString());
                 } catch (Throwable e) {
-                    message.reply(e.getMessage());
+                    message.fail(500, e.getMessage());
                 }
             }
         });
     }
 
-    private BasicMongoDBDataSource getBasicMongoDBDataSource(JsonObject config) {
-        return new BasicMongoDBDataSource(
-                config.getString("mongo.host"),
-                Integer.parseInt(config.getString("mongo.port")),
-                config.getString("mongo.dbname"));
-    }
 
 }

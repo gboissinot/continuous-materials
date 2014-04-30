@@ -12,7 +12,7 @@ configurations {
 }
 
 dependencies {
-    initDir project(':Libs/LibMongoLatestMavenVersionResolver')
+    initDir project(':Libs/LibMongoLatestVersionResolver')
     initDir project(':Libs/LibMongoUtilities')
     initDir "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
 }

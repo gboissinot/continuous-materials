@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.repoproxy.service;
 
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.ArtifactRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.ArtifactVersionResolverService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolverService;
 
 /**
@@ -17,7 +18,7 @@ public class MavenParentVersionResolver {
 
     public String resolveParentVersion(String parentGroupId, String parentArtifactId) {
         MavenVersionResolverService versionResolverService
-                = new MavenVersionResolverService(artifactRepository);
+                = new MavenVersionResolverService(new ArtifactVersionResolverService(artifactRepository));
         return versionResolverService.getLatestArtifact(parentGroupId, parentArtifactId);
     }
 }

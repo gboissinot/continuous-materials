@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service;
 
 import com.github.fakemongo.Fongo;
 import com.mongodb.DB;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.PomReaderService;
@@ -68,7 +69,7 @@ public class POMExportServiceTest {
 
 
         pomImportService.importPomFile(inputPomFile);
-        pomExportService.exportPomFile(writer, org, name, version, status);
+        pomExportService.exportPomFile(writer, new ArtifactDocumentKey(org, name, version, status));
 
         final String outputPomContent = writer.toString();
         assertNotNull(outputPomContent);

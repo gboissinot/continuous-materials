@@ -1,8 +1,0 @@
-Upload de POM
-curl -X POST http://localhost:8080/pom/ -d @pom.xml -v
-
-curl -v -X GET http://localhost:8080/pom/?org=fr.synchrotron.soleil.ica.ci.lib&name=maven-versionresolver&status=INTEGRATION&version=1.0.1-SNAPSHOT
-
-MongoDB
-db.projects.findOne()
-db.artifacts.findOne()
