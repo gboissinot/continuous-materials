@@ -1,8 +1,9 @@
 initscript {
     dependencies {
-        classpath files('lib/LibMongoLatestMavenVersionResolver-1.0.0.jar')
+        classpath files('lib/LibMongoLatestVersionResolver.jar')
         classpath files('lib/LibMongoUtilities.jar')
         classpath files('lib/mongo-java-driver-2.11.3.jar')
+        classpath files('lib/LibWorkflow.jar')
     }
 }
 
