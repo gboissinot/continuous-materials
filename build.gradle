@@ -197,31 +197,6 @@ project(':Services/MsVertxModuleContinuousMaterials') {
         compile project(':Services/TaskVerticlePOMExporter')
         compile project(':Confs')
     }
-
-    //sourceSets.main.resources.srcDir "$rootDir/Confs/Mongo"
-}
-
-project(':Services/MsVertxMavenProjectMongoImporter') {
-    dependencies {
-        compile project(':Libs/LibMongoUtilities')
-        compile("org.apache.maven:maven-core:$mavenCoreVersion") {
-            exclude group: "org.slf4j"
-        }
-        compile("io.vertx:vertx-core:$vertxVersion") {
-            exclude module: "slf4j-api"
-        }
-        compile "io.vertx:vertx-platform:$vertxVersion"
-        compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
-        compile "com.google.code.gson:gson:$gsonVersion"
-        compile "log4j:log4j:1.2.17"
-        compile "org.slf4j:slf4j-api:$log4jVersion"
-        compile "org.slf4j:slf4j-log4j12:$log4jVersion"
-
-        testCompile "org.jongo:jongo:$jongoVersion"
-        testCompile "junit:junit:$junitVersion"
-        testCompile "com.github.fakemongo:fongo:$fongoVersion"
-
-    }
 }
 
 
