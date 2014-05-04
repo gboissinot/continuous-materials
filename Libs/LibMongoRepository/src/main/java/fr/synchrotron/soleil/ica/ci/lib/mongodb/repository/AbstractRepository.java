@@ -13,16 +13,16 @@ import java.io.StringWriter;
 /**
  * @author Gregory Boissinot
  */
-public abstract class AbstractRepository {
+abstract class AbstractRepository {
 
     protected Jongo jongo;
 
-    public AbstractRepository(MongoDBDataSource mongoDBDataSource) {
+    AbstractRepository(MongoDBDataSource mongoDBDataSource) {
         DB mongoDB = mongoDBDataSource.getMongoDB();
         jongo = new Jongo(mongoDB);
     }
 
-    protected String getStringQuery(Object queryObject) {
+    String getStringQuery(Object queryObject) {
 
         ObjectMapperUtilities objectMapperUtilities = new ObjectMapperUtilities();
         final ObjectMapper objectMapper = objectMapperUtilities.getObjectMapper();
