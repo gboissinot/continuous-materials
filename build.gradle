@@ -6,12 +6,12 @@ project.ext {
     jongoVersion = '1.0'
     jacksonVersion = '2.2.3'
     gsonVersion = '2.2.4'
-    log4jVersion = '1.7.6'
+    log4jVersion = '1.2.7'
+    slf4jVersion = '1.7.6'
     junitVersion = '4.11'
     fongoVersion = '1.3.2'
     xmlunitVersion = '1.3'
     mockitoVersion = '1.9.5'
-    commonsioVersion = '2.4'
     vertxVersion = '2.1RC3'
     springVersion = '3.2.4.RELEASE'
     utils4jVersion = '0.7.0'
@@ -88,9 +88,9 @@ project(':Libs/LibMongoPomImporter') {
         }
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison",
                 "org.jongo:jongo:$jongoVersion",
-                "log4j:log4j:1.2.17",
-                "org.slf4j:slf4j-api:$log4jVersion",
-                "org.slf4j:slf4j-log4j12:$log4jVersion"
+                "log4j:log4j:$log4jVersion",
+                "org.slf4j:slf4j-api:$slf4jVersion",
+                "org.slf4j:slf4j-log4j12:$slf4jVersion"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"
         testCompile "com.google.code.gson:gson:$gsonVersion"
 
@@ -102,17 +102,17 @@ project(':Libs/LibMongoPomExporter') {
         compile project(':Libs/LibMongoDomainObjects')
         compile project(':Libs/LibMongoUtilities')
         compile project(':Libs/LibMongoRepository')
-        compile("org.apache.maven:maven-core:2.1.0") {
+        compile("org.apache.maven:maven-core:$mavenCoreVersion") {
             exclude group: "org.slf4j"
         }
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
-        compile "org.slf4j:slf4j-log4j12:$log4jVersion"
-        compile "org.slf4j:jul-to-slf4j:$log4jVersion"
+        compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+        compile "org.slf4j:jul-to-slf4j:$slf4jVersion"
         compile "org.jongo:jongo:$jongoVersion"
-        compile "commons-lang:commons-lang:2.6"
+        compile "commons-lang:commons-lang:$commonsLangVersion"
 
         testCompile project(':Libs/LibMongoPomImporter')
-        testCompile "commons-io:commons-io:$commonsioVersion"
+        testCompile "commons-io:commons-io:$commonsIoVersion"
         testCompile "xmlunit:xmlunit:$xmlunitVersion"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"
         testCompile "com.google.code.gson:gson:$gsonVersion"
@@ -125,10 +125,10 @@ project(':Libs/LibMongoLatestVersionResolver') {
         compile project(':Libs/LibMongoUtilities')
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
         testCompile "com.github.fakemongo:fongo:$fongoVersion"
-        testCompile "org.slf4j:slf4j-log4j12:$log4jVersion"
-        testCompile "org.slf4j:jul-to-slf4j:$log4jVersion"
+        testCompile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+        testCompile "org.slf4j:jul-to-slf4j:$slf4jVersion"
         testCompile "org.jongo:jongo:$jongoVersion"
-        testCompile "commons-io:commons-io:$commonsioVersion"
+        testCompile "commons-io:commons-io:$commonsIoVersion"
         testCompile "junit:junit:$junitVersion"
         testCompile "org.mockito:mockito-all:$mockitoVersion"
     }
@@ -157,10 +157,10 @@ project(':Services/MsVertxModuleMavenRepoProxy') {
         compile "org.springframework:spring-context:$springVersion"
         compile "org.apache.maven:maven-core:$mavenCoreVersion"
         compile "org.fuin:utils4j:$utils4jVersion"
-        compile "commons-io:commons-io:$commonsioVersion"
+        compile "commons-io:commons-io:$commonsIoVersion"
         compile "io.vertx:vertx-core:$vertxVersion"
         compile "io.vertx:vertx-platform:$vertxVersion"
-        compile "org.slf4j:slf4j-log4j12:1.6.1"
+        compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
     }
 }
 
