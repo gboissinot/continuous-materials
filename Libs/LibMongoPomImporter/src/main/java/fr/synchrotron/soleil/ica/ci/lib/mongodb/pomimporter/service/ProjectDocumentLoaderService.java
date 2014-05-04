@@ -4,6 +4,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.Devel
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.LicenseDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.OrganisationDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.Dictionary;
 import org.apache.maven.model.*;
 
 import java.util.ArrayList;
@@ -13,6 +14,15 @@ import java.util.List;
  * @author Gregory Boissinot
  */
 public class ProjectDocumentLoaderService {
+
+    private Dictionary dictionary;
+
+    ProjectDocumentLoaderService(Dictionary dictionary) {
+        if (dictionary == null) {
+            throw new NullPointerException("You must provide an input dictionary.");
+        }
+        this.dictionary = dictionary;
+    }
 
     ProjectDocument populateProjectDocument(Model model) {
 
@@ -54,13 +64,17 @@ public class ProjectDocumentLoaderService {
         final Scm scm = model.getScm();
         if (scm != null) {
             final String connection = scm.getConnection();
-            final String extractMavenScmUrl = extractMavenScmUrl(connection);
+            final String extractMavenScmUrl = extractMavenScmUrl(resolve(connection));
             if (extractMavenScmUrl != null) {
-                projectDocument.setScmConnection(extractMavenScmUrl);
+                projectDocument.setScmConnection(resolve(extractMavenScmUrl));
             }
         }
 
         return projectDocument;
+    }
+
+    private String resolve(String value) {
+        return dictionary.resolve(value);
     }
 
     private String extractMavenScmUrl(String mavenScmUrl) {

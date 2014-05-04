@@ -8,6 +8,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactD
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.DeveloperDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocumentKey;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.NoDictionary;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ArtifactRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ProjectRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
@@ -42,7 +43,7 @@ public class POMImportServiceTest {
         projectRepository = new ProjectRepository(mongoDBDataSource);
         artifactRepository = new ArtifactRepository(mongoDBDataSource);
 
-        pomImportService = new POMImportService(mongoDBDataSource);
+        pomImportService = new POMImportService(new NoDictionary(), mongoDBDataSource);
     }
 
     @After

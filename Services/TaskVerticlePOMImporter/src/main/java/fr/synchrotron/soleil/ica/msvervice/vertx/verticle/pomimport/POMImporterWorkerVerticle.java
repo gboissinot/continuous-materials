@@ -1,6 +1,7 @@
 package fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomimport;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.SoleilDictionary;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.MongoDBUtilities;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -22,7 +23,9 @@ public class POMImporterWorkerVerticle extends Verticle {
     public void start() {
 
         final POMImportService pomImportService =
-                new POMImportService(mongoDBUtilities.getBasicMongoDBDataSource(container.config()));
+                new POMImportService(
+                        new SoleilDictionary(),
+                        mongoDBUtilities.getBasicMongoDBDataSource(container.config()));
         final EventBus eventBus = vertx.eventBus();
         eventBus.registerHandler("pom.importer", new Handler<Message>() {
             @Override

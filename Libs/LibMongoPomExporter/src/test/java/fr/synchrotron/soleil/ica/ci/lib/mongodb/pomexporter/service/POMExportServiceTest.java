@@ -6,6 +6,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactD
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.PomReaderService;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.NoDictionary;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.maven.model.Dependency;
@@ -42,7 +43,7 @@ public class POMExportServiceTest {
         mongoDB = fongo.getDB("repo");
         jongo = new Jongo(mongoDB);
         final InMemoryMongoDBDataSource mongoDBDataSource = new InMemoryMongoDBDataSource();
-        pomImportService = new POMImportService(mongoDBDataSource);
+        pomImportService = new POMImportService(new NoDictionary(), mongoDBDataSource);
         pomExportService = new POMExportService(new POMDocumentRepository(mongoDBDataSource));
     }
 
