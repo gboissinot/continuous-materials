@@ -1,9 +1,9 @@
 package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.exception.POMImporterException;
+import fr.synchrotron.soleil.ica.ci.lib.util.ConfigLoader;
 import org.apache.commons.lang.text.StrSubstitutor;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -20,7 +20,8 @@ public abstract class Dictionary {
         final String dictionaryFilePath = getDictionaryFilePath();
         if (dictionaryFilePath != null) {
             try {
-                Properties properties = loadFile(dictionaryFilePath);
+                ConfigLoader configLoader = new ConfigLoader();
+                Properties properties = configLoader.loadPropertiesFile(dictionaryFilePath);
                 for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                     content.put((String) entry.getKey(), (String) entry.getValue());
                 }
@@ -38,13 +39,4 @@ public abstract class Dictionary {
 
     public abstract String getDictionaryFilePath();
 
-    private Properties loadFile(String propertiedFilePath) {
-        Properties properties = new Properties();
-        try {
-            properties.load(this.getClass().getResourceAsStream(propertiedFilePath));
-            return properties;
-        } catch (IOException ioe) {
-            throw new POMImporterException(ioe);
-        }
-    }
 }
