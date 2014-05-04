@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class ProjectDocumentLoaderService {
+class ProjectDocumentLoaderService {
 
     private Dictionary dictionary;
 
@@ -24,6 +24,7 @@ public class ProjectDocumentLoaderService {
         this.dictionary = dictionary;
     }
 
+    @SuppressWarnings("unchecked")
     ProjectDocument populateProjectDocument(Model model) {
 
         if (model == null) {

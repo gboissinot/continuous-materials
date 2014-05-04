@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service;
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependency;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDependencyExclusion;
@@ -11,9 +11,6 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ext.maven
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.LicenseDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.OrganisationDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.exception.POMExporterException;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 
@@ -165,7 +162,6 @@ public class POMExportService {
             scm.setConnection(scmConnection);
             pomModel.setScm(scm);
         }
-
 
         return pomModel;
     }

@@ -1,7 +1,6 @@
-package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository;
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain.POMDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ArtifactRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ProjectRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
@@ -27,6 +26,5 @@ public class POMDocumentRepository {
 
         return pomDocumentResult;
     }
-
 
 }

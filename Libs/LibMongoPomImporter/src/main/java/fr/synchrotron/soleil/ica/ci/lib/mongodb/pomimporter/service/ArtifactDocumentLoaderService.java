@@ -16,10 +16,10 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class ArtifactDocumentLoaderService {
+class ArtifactDocumentLoaderService {
 
-
-    public ArtifactDocument populateArtifactDocument(Model model) {
+    @SuppressWarnings("unchecked")
+    ArtifactDocument populateArtifactDocument(Model model) {
 
         if (model == null) {
             throw new NullPointerException("A Maven Model is required.");
@@ -36,10 +36,7 @@ public class ArtifactDocumentLoaderService {
         final List<Dependency> dependencies = model.getDependencies();
         if (dependencies != null) {
             List<ArtifactDependency> artifactDependencies = new ArrayList<ArtifactDependency>();
-            for (Dependency dependencyObject : dependencies) {
-                Dependency dependency = dependencyObject;
-                //We can't determine here the right dependency due to it require a runtime
-                // maven context
+            for (Dependency dependency : dependencies) {
                 ArtifactDependency artifactDependency =
                         new ArtifactDependency(
                                 dependency.getGroupId(),
@@ -93,16 +90,5 @@ public class ArtifactDocumentLoaderService {
     private class StatusVersion {
         String version;
         String status;
-
-        private StatusVersion() {
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public String getStatus() {
-            return status;
-        }
     }
 }

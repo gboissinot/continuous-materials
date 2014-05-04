@@ -15,6 +15,8 @@ project.ext {
     vertxVersion = '2.1RC3'
     springVersion = '3.2.4.RELEASE'
     utils4jVersion = '0.7.0'
+    commonsLangVersion = '2.6'
+    commonsIoVersion = '2.4'
 }
 
 subprojects {
@@ -79,7 +81,8 @@ project(':Libs/LibMongoPomImporter') {
         compile project(':Libs/LibMongoDomainObjects')
         compile project(':Libs/LibMongoUtilities')
         compile project(':Libs/LibMongoRepository')
-        compile "commons-lang:commons-lang:2.6"
+        compile "commons-lang:commons-lang:$commonsLangVersion"
+        compile "commons-io:commons-io:$commonsIoVersion"
         compile("org.apache.maven:maven-core:$mavenCoreVersion") {
             exclude group: "org.slf4j"
         }

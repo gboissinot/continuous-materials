@@ -7,6 +7,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.D
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ArtifactRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.repository.ProjectRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoDBDataSource;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Model;
 
 import java.io.*;
@@ -32,7 +33,6 @@ public class POMImportService {
         this.artifactRepository = new ArtifactRepository(mongoDBDataSource);
     }
 
-
     public void importPomFile(String pomContent) {
         if (pomContent == null) {
             throw new NullPointerException("A POM File Content is required.");
@@ -53,13 +53,7 @@ public class POMImportService {
         } catch (FileNotFoundException fne) {
             throw new POMImporterException(fne);
         } finally {
-            if (fileReader != null) {
-                try {
-                    fileReader.close();
-                } catch (IOException ioe) {
-                    throw new POMImporterException(ioe);
-                }
-            }
+            IOUtils.closeQuietly(fileReader);
         }
     }
 

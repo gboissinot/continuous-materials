@@ -3,7 +3,8 @@ package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.service;
 import com.github.fakemongo.Fongo;
 import com.mongodb.DB;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.repository.POMDocumentRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.POMDocumentRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.POMExportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.PomReaderService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.NoDictionary;
@@ -57,6 +58,7 @@ public class POMExportServiceTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testExport() throws IOException, URISyntaxException, SAXException {
 
         //TEST DATA

@@ -1,14 +1,12 @@
-package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter.domain;
-
+package fr.synchrotron.soleil.ica.ci.lib.mongodb.pomexporter;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.project.ProjectDocument;
 
-
 /**
  * @author Gregory Boissinot
  */
-public class POMDocument {
+class POMDocument {
 
     private ArtifactDocument aritfactDocument;
 
