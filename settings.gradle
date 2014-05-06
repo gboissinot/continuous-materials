@@ -10,11 +10,7 @@ include 'Confs',
         'Libs/LibMongoPomExporter',
         'Libs/LibMongoJenkinsJobsGenerator',
         'Libs/LibVertxUtilities',
-
-        'Services/ModuleVertxLegacyMavenProxy',
-
-        'Services/TaskVerticlePOMImporter',
-        'Services/TaskVerticlePOMExporter',
-        'Services/MsVertxModuleContinuousMaterials',
-
+        'Services/ModVertxLegacyMavenProxy',
+        'Services/ModVertxMavenMetadata',
+        'Services/ModVertxDorm',
         'Tools/GradleDistribution'

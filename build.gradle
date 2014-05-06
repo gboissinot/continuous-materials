@@ -150,6 +150,13 @@ project(':Libs/LibMongoJenkinsJobsGenerator') {
     }
 }
 
+project(':Libs/LibVertxUtilities') {
+    dependencies {
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+        compile project(':Libs/LibMongoUtilities')
+    }
+}
 
 project(':Confs') {
     sourceSets {
@@ -165,10 +172,10 @@ project(':Confs') {
     }
 }
 
-project(':Services/ModuleVertxLegacyMavenProxy') {
+project(':Services/ModVertxLegacyMavenProxy') {
     dependencies {
-        compile files(project(':Confs')).sourceSets.mongo.resources.srcDirs
-        compile files(project(':Confs')).sourceSets.legacyMavenProxy.resources.srcDirs
+        compile files(project(':Confs').sourceSets.mongo.resources.srcDirs)
+        compile files(project(':Confs').sourceSets.legacyMavenProxy.resources.srcDirs)
         compile project(':Libs/LibMongoLatestVersionResolver')
         compile "org.springframework:spring-core:$springVersion"
         compile "org.springframework:spring-context:$springVersion"
@@ -181,35 +188,24 @@ project(':Services/ModuleVertxLegacyMavenProxy') {
     }
 }
 
-project(':Libs/LibVertxUtilities') {
-    dependencies {
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
-        compile project(':Libs/LibMongoUtilities')
-    }
-}
-
-project(':Services/TaskVerticlePOMImporter') {
+project(':Services/ModVertxMavenMetadata') {
     dependencies {
         compile project(':Libs/LibMongoPomImporter')
-        compile project(':Libs/LibVertxUtilities')
-    }
-}
-
-project(':Services/TaskVerticlePOMExporter') {
-    dependencies {
         compile project(':Libs/LibMongoPomExporter')
         compile project(':Libs/LibVertxUtilities')
     }
 }
 
-project(':Services/MsVertxModuleContinuousMaterials') {
+project(':Services/ModVertxDorm') {
     dependencies {
-        compile files(project(':Confs')).sourceSets.mongo.resources.srcDirs
+        compile files(project(':Confs').sourceSets.mongo.resources.srcDirs)
+
+        compile project(':Libs/LibMongoPomImporter')
+        compile project(':Libs/LibMongoPomExporter')
+        compile project(':Libs/LibVertxUtilities')
+
         compile "io.vertx:vertx-core:$vertxVersion"
         compile "io.vertx:vertx-platform:$vertxVersion"
-        compile project(':Services/TaskVerticlePOMImporter')
-        compile project(':Services/TaskVerticlePOMExporter')
     }
 }
 
