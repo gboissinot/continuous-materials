@@ -4,5 +4,6 @@
     "licenses": ["MIT license"],
     "author": "Gregory Boissinot",
     "developers": ["Gregory Boissinot"],
-    "keywords": ["maven", "pom", "endpoint"]
+    "keywords": ["maven", "pom", "endpoint"],
+    "deploys": "fr.synchrotron.soleil~mod-mavenmetadata~1.0.0"
 }

@@ -40,3 +40,4 @@ task fatJar(type: JavaExec, dependsOn: modZip, description: 'Creates a fat execu
     systemProperties = ["vertx.mods": "build/mods"]
     args = ['fatjar', moduleName, '-d', 'build/libs']
 }
+

@@ -23,6 +23,7 @@ subprojects {
 
     apply plugin: 'java'
 
+
     group = 'fr.synchrotron.soleil.ica.ci.lib'
     version = '1.0.0'
 
@@ -40,8 +41,22 @@ subprojects {
     }
 }
 
-configure(subprojects.findAll { it.name.startsWith('Services/MsVertxModule') }) {
+configure(subprojects.findAll { it.name.startsWith('Services/ModVertx') }) {
     apply from: "$rootDir/vertx.gradle"
+
+    apply plugin: 'maven-publish'
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId modname
+                pom.withXml {
+                    asNode().appendNode('description', 'A demonstration of maven POM customization')
+                }
+                artifact(modZip)
+            }
+        }
+    }
 }
 
 configure(subprojects.findAll { it.name.startsWith('Services/TaskVerticle') }) {
@@ -208,8 +223,6 @@ project(':Services/ModVertxDorm') {
         compile "io.vertx:vertx-platform:$vertxVersion"
     }
 }
-
-
 
 
 
