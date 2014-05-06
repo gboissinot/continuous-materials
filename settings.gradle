@@ -9,8 +9,8 @@ include 'Confs',
         'Libs/LibMongoPomImporter',
         'Libs/LibMongoPomExporter',
         'Libs/LibMongoJenkinsJobsGenerator',
+        'Libs/LibVertxUtilities',
 
-        'Services/LibVertxUtilities',
         'Services/ModuleVertxLegacyMavenProxy',
 
         'Services/TaskVerticlePOMImporter',

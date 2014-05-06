@@ -181,7 +181,7 @@ project(':Services/ModuleVertxLegacyMavenProxy') {
     }
 }
 
-project(':Services/LibVertxUtilities') {
+project(':Libs/LibVertxUtilities') {
     dependencies {
         compile "io.vertx:vertx-core:$vertxVersion"
         compile "io.vertx:vertx-platform:$vertxVersion"
@@ -192,14 +192,14 @@ project(':Services/LibVertxUtilities') {
 project(':Services/TaskVerticlePOMImporter') {
     dependencies {
         compile project(':Libs/LibMongoPomImporter')
-        compile project(':Services/LibVertxUtilities')
+        compile project(':Libs/LibVertxUtilities')
     }
 }
 
 project(':Services/TaskVerticlePOMExporter') {
     dependencies {
         compile project(':Libs/LibMongoPomExporter')
-        compile project(':Services/LibVertxUtilities')
+        compile project(':Libs/LibVertxUtilities')
     }
 }
 
