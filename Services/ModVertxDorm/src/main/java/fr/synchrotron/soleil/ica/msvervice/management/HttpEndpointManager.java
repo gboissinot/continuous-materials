@@ -4,6 +4,8 @@ import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMExportHandler;
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMImportHandler;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.VertxConfigLoader;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.vertx.java.core.AsyncResult;
+import org.vertx.java.core.AsyncResultHandler;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -24,19 +26,17 @@ public class HttpEndpointManager extends Verticle {
         try {
             final EventBus eventBus = vertx.eventBus();
 
-//            //-- Deploy Required Verticle
-//            final AsyncResultHandler<String> asyncResultHandler = new AsyncResultHandler<String>() {
-//                @Override
-//                public void handle(AsyncResult<String> asyncResult) {
-//                    onVerticleLoaded(asyncResult);
-//                }
-//            };
-//
+            final AsyncResultHandler<String> asyncResultHandler = new AsyncResultHandler<String>() {
+                @Override
+                public void handle(AsyncResult<String> asyncResult) {
+                    onLoaded(asyncResult);
+                }
+            };
+
             final VertxConfigLoader vertxConfigLoader = new VertxConfigLoader();
             final JsonObject config = vertxConfigLoader.createConfig(container.config());
-
             //Deploy mod-mavenmetadata (a runnable module and nested module)
-            container.deployModule("fr.synchrotron.soleil~mod-mavenmetadata~1.0.0", container.config(), 1);
+            container.deployModule("fr.synchrotron.soleil~mod-mavenmetadata~1.0.0", config, 1, asyncResultHandler);
 
             RouteMatcher routeMatcher = new RouteMatcher();
 
@@ -74,10 +74,10 @@ public class HttpEndpointManager extends Verticle {
         return port;
     }
 
-//    private void onVerticleLoaded(AsyncResult<String> asyncResult) {
-//        if (!asyncResult.succeeded()) {
-//            container.logger().info(asyncResult.cause());
-//        }
-//    }
+    private void onLoaded(AsyncResult<String> asyncResult) {
+        if (!asyncResult.succeeded()) {
+            container.logger().info(asyncResult.cause());
+        }
+    }
 
 }
