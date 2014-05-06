@@ -14,4 +14,5 @@ public class MongoDBUtilities {
                 Integer.parseInt(config.getString("mongo.port")),
                 config.getString("mongo.dbname"));
     }
+
 }

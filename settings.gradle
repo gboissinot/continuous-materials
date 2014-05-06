@@ -11,7 +11,8 @@ include 'Confs',
         'Libs/LibMongoJenkinsJobsGenerator',
 
         'Services/LibVertxUtilities',
-        'Services/MsVertxModuleMavenRepoProxy',
+        'Services/ModuleVertxLegacyMavenProxy',
+
         'Services/TaskVerticlePOMImporter',
         'Services/TaskVerticlePOMExporter',
         'Services/MsVertxModuleContinuousMaterials',

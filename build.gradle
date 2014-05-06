@@ -150,8 +150,25 @@ project(':Libs/LibMongoJenkinsJobsGenerator') {
     }
 }
 
-project(':Services/MsVertxModuleMavenRepoProxy') {
+
+project(':Confs') {
+    sourceSets {
+        mongo {
+            resources.srcDirs 'Mongo'
+        }
+        dorm {
+            resources.srcDirs 'Vertx/DORM'
+        }
+        legacyMavenProxy {
+            resources.srcDirs 'Vertx/LegacyMavenProxy'
+        }
+    }
+}
+
+project(':Services/ModuleVertxLegacyMavenProxy') {
     dependencies {
+        compile files(project(':Confs')).sourceSets.mongo.resources.srcDirs
+        compile files(project(':Confs')).sourceSets.legacyMavenProxy.resources.srcDirs
         compile project(':Libs/LibMongoLatestVersionResolver')
         compile "org.springframework:spring-core:$springVersion"
         compile "org.springframework:spring-context:$springVersion"
@@ -161,15 +178,6 @@ project(':Services/MsVertxModuleMavenRepoProxy') {
         compile "io.vertx:vertx-core:$vertxVersion"
         compile "io.vertx:vertx-platform:$vertxVersion"
         compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
-    }
-}
-
-
-project(':Confs') {
-    sourceSets {
-        main {
-            resources.srcDir 'Mongo'
-        }
     }
 }
 
@@ -197,11 +205,11 @@ project(':Services/TaskVerticlePOMExporter') {
 
 project(':Services/MsVertxModuleContinuousMaterials') {
     dependencies {
+        compile files(project(':Confs')).sourceSets.mongo.resources.srcDirs
         compile "io.vertx:vertx-core:$vertxVersion"
         compile "io.vertx:vertx-platform:$vertxVersion"
         compile project(':Services/TaskVerticlePOMImporter')
         compile project(':Services/TaskVerticlePOMExporter')
-        compile project(':Confs')
     }
 }
 

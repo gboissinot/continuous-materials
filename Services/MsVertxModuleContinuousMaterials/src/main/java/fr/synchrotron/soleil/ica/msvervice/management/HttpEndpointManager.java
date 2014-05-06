@@ -1,8 +1,8 @@
 package fr.synchrotron.soleil.ica.msvervice.management;
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoConfigLoader;
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMExportHandler;
 import fr.synchrotron.soleil.ica.msvervice.management.handlers.POMImportHandler;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.VertxConfigLoader;
 import fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomexporter.POMExporterWorkerVerticle;
 import fr.synchrotron.soleil.ica.msvervice.vertx.verticle.pomimport.POMImporterWorkerVerticle;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -14,9 +14,6 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
-
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author Gregory Boissinot
@@ -39,13 +36,14 @@ public class HttpEndpointManager extends Verticle {
                 }
             };
 
-            final JsonObject jsonObject = createConfig();
+            final VertxConfigLoader vertxConfigLoader = new VertxConfigLoader();
+            final JsonObject config = vertxConfigLoader.createConfig(container.config());
             container.deployWorkerVerticle(
                     POMImporterWorkerVerticle.class.getCanonicalName(),
-                    jsonObject, 1, true, asyncResultHandler);
+                    config, 1, true, asyncResultHandler);
             container.deployWorkerVerticle(
                     POMExporterWorkerVerticle.class.getCanonicalName(),
-                    jsonObject, 1, true, asyncResultHandler);
+                    config, 1, true, asyncResultHandler);
 
             RouteMatcher routeMatcher = new RouteMatcher();
 
@@ -87,19 +85,6 @@ public class HttpEndpointManager extends Verticle {
         if (!asyncResult.succeeded()) {
             container.logger().info(asyncResult.cause());
         }
-    }
-
-    private JsonObject createConfig() {
-        final JsonObject config = container.config();
-        Properties properties = new MongoConfigLoader().loadInfraFile(MongoConfigLoader.MONGODB_DEFAULT_PROPERTIES_FILEPATH);
-        for (Map.Entry<Object, Object> objectObjectEntry : properties.entrySet()) {
-            String propKey = (String) objectObjectEntry.getKey();
-            if (!config.containsField(propKey)) {
-                String propValue = (String) objectObjectEntry.getValue();
-                config.putString(propKey, propValue);
-            }
-        }
-        return config;
     }
 
 }
