@@ -1,11 +1,8 @@
 package fr.synchrotron.soleil.ica.msvervice.management.handlers;
 
-import fr.synchrotron.soleil.ica.msvervice.management.HttpEndpointManager;
-import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.EventBus;
-import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 
 /**
@@ -21,7 +18,7 @@ public class POMImportHandler implements Handler<HttpServerRequest> {
             throw new NullPointerException("A eventBus object is required.");
         }
         this.eventBus = eventBus;
-        this.messageUtilities = new MessageUtilities();
+        this.messageUtilities = new MessageUtilities(eventBus);
     }
 
     @Override
@@ -42,12 +39,7 @@ public class POMImportHandler implements Handler<HttpServerRequest> {
         request.endHandler(new Handler<Void>() {
                                @Override
                                public void handle(Void event) {
-                                   eventBus.sendWithTimeout("pom.importer", pomContent, HttpEndpointManager.SEND_MS_TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
-                                       @Override
-                                       public void handle(AsyncResult<Message<String>> replyMessage) {
-                                           messageUtilities.buildStringReplyMessage(replyMessage, request);
-                                       }
-                                   });
+                                   messageUtilities.sendReply("pom.importer", pomContent.toString(), request);
                                }
                            }
         );

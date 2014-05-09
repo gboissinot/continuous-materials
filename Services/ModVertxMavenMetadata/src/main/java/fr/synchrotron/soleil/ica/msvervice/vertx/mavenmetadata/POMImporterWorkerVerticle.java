@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.msvervice.vertx.mavenmetadata;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.SoleilDictionary;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.ActionMessageManagement;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.MongoDBUtilities;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -31,7 +32,9 @@ public class POMImporterWorkerVerticle extends Verticle {
             @Override
             public void handle(Message message) {
                 try {
-                    pomImportService.importPomFile(String.valueOf(message.body()));
+                    ActionMessageManagement actionMessageManagement = new ActionMessageManagement();
+                    String pomContent = actionMessageManagement.getStringDocument("pom.importer", message);
+                    pomImportService.importPomFile(pomContent);
                     message.reply("POM file inserted in Metadata Registry.");
                 } catch (Throwable e) {
                     message.fail(500, e.getMessage());

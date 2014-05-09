@@ -18,7 +18,6 @@ import org.vertx.java.platform.Verticle;
  */
 public class HttpEndpointManager extends Verticle {
 
-    public static final long SEND_MS_TIMEOUT = 10 * 1000l; // in ms
 
     @Override
     public void start() {

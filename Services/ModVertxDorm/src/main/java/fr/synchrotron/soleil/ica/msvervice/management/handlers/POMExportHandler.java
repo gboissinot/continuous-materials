@@ -1,15 +1,10 @@
 package fr.synchrotron.soleil.ica.msvervice.management.handlers;
 
-import fr.synchrotron.soleil.ica.msvervice.management.HttpEndpointManager;
-import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.EventBus;
-import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonObject;
-
-import java.util.Set;
 
 /**
  * @author Gregory Boissinot
@@ -24,7 +19,7 @@ public class POMExportHandler implements Handler<HttpServerRequest> {
             throw new NullPointerException("A eventBus object is required.");
         }
         this.eventBus = eventBus;
-        this.messageUtilities = new MessageUtilities();
+        this.messageUtilities = new MessageUtilities(eventBus);
     }
 
     @Override
@@ -34,31 +29,20 @@ public class POMExportHandler implements Handler<HttpServerRequest> {
             throw new NullPointerException("A request object is required.");
         }
 
-        final JsonObject pomIdObject = new JsonObject();
-
+        final Buffer pomInfo = new Buffer(0);
         request.dataHandler(new Handler<Buffer>() {
             @Override
-            public void handle(Buffer data) {
-                final JsonObject jsonObject = new JsonObject(data.toString());
-                final Set<String> fieldNames = jsonObject.getFieldNames();
-                for (String fieldName : fieldNames) {
-                    pomIdObject.putString(fieldName, jsonObject.getString(fieldName));
-                }
+            public void handle(Buffer buffer) {
+                pomInfo.appendBuffer(buffer);
             }
         });
 
         request.endHandler(new Handler<Void>() {
             @Override
             public void handle(Void event) {
-                eventBus.sendWithTimeout("pom.exporter", pomIdObject, HttpEndpointManager.SEND_MS_TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
-                    @Override
-                    public void handle(AsyncResult<Message<String>> replyMessage) {
-                        messageUtilities.buildStringReplyMessage(replyMessage, request);
-                    }
-                });
+                messageUtilities.sendReply("pom.exporter", new JsonObject(pomInfo.toString()), request);
             }
         });
-
 
     }
 }
