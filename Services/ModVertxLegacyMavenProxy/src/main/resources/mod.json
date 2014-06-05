@@ -1,10 +1,9 @@
 {
-    "main": "fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.HttpArtifactProxyEndpoint",
+    "main": "fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.DeployerVerticle",
     "description": "An HTTP Legacy Maven proxy",
     "licenses": ["MIT license"],
     "author": "Gregory Boissinot",
     "developers": ["Gregory Boissinot"],
     "keywords": ["maven", "proxy", "legacy"],
     "homepage": "https://github.com/synchrotron-soleil-ica/continuous-materials",
-    "worker": true
 }

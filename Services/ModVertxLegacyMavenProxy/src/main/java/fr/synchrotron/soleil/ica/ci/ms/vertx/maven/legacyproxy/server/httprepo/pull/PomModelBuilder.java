@@ -1,8 +1,13 @@
-package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.service;
+package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.pull;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.ArtifactRepository;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.ArtifactVersionResolverService;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolverService;
 import org.apache.maven.model.*;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +18,7 @@ import java.util.Properties;
  */
 public class PomModelBuilder {
 
-    private ArtifactRepository artifactRepository;
+    private final ArtifactRepository artifactRepository;
 
     public PomModelBuilder(ArtifactRepository artifactRepository) {
         this.artifactRepository = artifactRepository;
@@ -21,16 +26,26 @@ public class PomModelBuilder {
 
     public Model getModelWithResolvedParent(String originalPomContent) {
 
-        PomModelRetriever modelRetriever = new PomModelRetriever();
         StringReader pomReader = new StringReader(originalPomContent);
-        final Model model = modelRetriever.getModel(pomReader);
+
+        final MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
+        Model model = null;
+        try {
+            model = mavenXpp3Reader.read(pomReader);
+        } catch (IOException xe) {
+            new RuntimeException(xe);
+        } catch (XmlPullParserException xe) {
+            new RuntimeException(xe);
+        }
+
         pomReader.close();
 
 
         final Parent parent = model.getParent();
         if (parent != null && "RELEASE".equals(parent.getVersion())) {
-            MavenParentVersionResolver versionResolver = new MavenParentVersionResolver(artifactRepository);
-            final String resolvedParentVersion = versionResolver.resolveParentVersion(parent.getGroupId(), parent.getArtifactId());
+            MavenVersionResolverService versionResolverService
+                    = new MavenVersionResolverService(new ArtifactVersionResolverService(artifactRepository));
+            final String resolvedParentVersion = versionResolverService.getLatestArtifact(parent.getGroupId(), parent.getArtifactId());
             parent.setVersion(resolvedParentVersion);
         }
 

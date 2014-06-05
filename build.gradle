@@ -13,7 +13,6 @@ project.ext {
     xmlunitVersion = '1.3'
     mockitoVersion = '1.9.5'
     vertxVersion = '2.1RC3'
-    springVersion = '3.2.4.RELEASE'
     utils4jVersion = '0.7.0'
     commonsLangVersion = '2.6'
     commonsIoVersion = '2.4'
@@ -192,8 +191,7 @@ project(':Services/ModVertxLegacyMavenProxy') {
         compile files(project(':Confs').sourceSets.mongo.resources.srcDirs)
         compile files(project(':Confs').sourceSets.legacyMavenProxy.resources.srcDirs)
         compile project(':Libs/LibMongoLatestVersionResolver')
-        compile "org.springframework:spring-core:$springVersion"
-        compile "org.springframework:spring-context:$springVersion"
+        compile project(':Libs/LibMongoPomImporter')
         compile "org.apache.maven:maven-core:$mavenCoreVersion"
         compile "org.fuin:utils4j:$utils4jVersion"
         compile "commons-io:commons-io:$commonsIoVersion"
