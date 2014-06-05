@@ -1,0 +1,18 @@
+{
+    "port": 8090,
+    "repo.get": {
+        "repoHost": "localhost",
+        "repoPort": 8081,
+        "repoURIPath": "/nexus/content/groups/public/"
+    },
+    "repo.put": {
+        "repoHost": "localhost",
+        "repoPort": 8081,
+        "repoURIPath": "/nexus/content/repositories/snapshots/"
+    },
+    "mongo": {
+        "mongoHost": "127.0.0.1",
+        "mongoPort": 27017,
+        "mongoDbName": "repo"
+    }
+}
