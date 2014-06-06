@@ -1,5 +1,4 @@
-include 'Libs/LibUtilities',
-        'Libs/LibWorkflow',
+include 'Libs/LibWorkflow',
         'Libs/LibMongoDomainObjects',
         'Libs/LibMongoUtilities',
         'Libs/LibMongoRepository',

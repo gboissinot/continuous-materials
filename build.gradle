@@ -74,7 +74,6 @@ project(':Libs/LibMongoDomainObjects') {
 
 project(':Libs/LibMongoUtilities') {
     dependencies {
-        compile project(':Libs/LibUtilities')
         compile "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
     }
 }
@@ -91,7 +90,6 @@ project(':Libs/LibMongoRepository') {
 
 project(':Libs/LibMongoPomImporter') {
     dependencies {
-        compile project(':Libs/LibUtilities')
         compile project(':Libs/LibMongoDomainObjects')
         compile project(':Libs/LibMongoUtilities')
         compile project(':Libs/LibMongoRepository')

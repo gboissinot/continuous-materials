@@ -4,7 +4,6 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repositor
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.ArtifactVersionResolverService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolverService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoConfigLoader;
 
 import java.util.Map;
 
@@ -20,7 +19,6 @@ public class MavenVersionResolver {
     }
 
     public String getLatestVersion(String group, String name) {
-        MongoConfigLoader mongoConfigLoader = new MongoConfigLoader();
         final BasicMongoDBDataSource mongoDBDatasource = new BasicMongoDBDataSource(configMongo);
         final MongoDBArtifactRepository artifactRepository = new MongoDBArtifactRepository(mongoDBDatasource);
         final ArtifactVersionResolverService artifactVersionResolverService = new ArtifactVersionResolverService(artifactRepository);
