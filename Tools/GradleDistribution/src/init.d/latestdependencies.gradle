@@ -10,7 +10,7 @@ initscript {
 
 apply plugin: LatestDependencyPlugin
 
-import fr.synchrotron.soleil.ica.tools.gradle.distrib.MavenVersionResolver;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolver;
 
 class LatestDependencyPlugin implements Plugin<Gradle> {
 
