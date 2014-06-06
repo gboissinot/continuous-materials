@@ -13,6 +13,7 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.streams.Pump;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Gregory Boissinot
@@ -26,6 +27,8 @@ public class HttpArtifactPushHandler {
         this.vertxDomainObject = vertxDomainObject;
         this.httpArtifactCaller = httpArtifactCaller;
     }
+
+    private ConcurrentHashMap<Integer, StringBuilder> pomStorage = new ConcurrentHashMap<Integer, StringBuilder>();
 
     public void handle(final HttpServerRequest request) {
 
@@ -45,13 +48,8 @@ public class HttpArtifactPushHandler {
                         request.response().end();
                     }
                 });
-
-                if (statusCode == HttpResponseStatus.NOT_MODIFIED.code()
-                        || statusCode == HttpResponseStatus.OK.code()) {
-                    //Send result to original client
-                    Pump.createPump(clientResponse, request.response().setChunked(true)).start();
-                }
             }
+            //}
         });
 
         final MultiMap headers = request.headers();
@@ -62,15 +60,21 @@ public class HttpArtifactPushHandler {
             }
         }
 
+        final String contentLengthHeader = headers.get("Content-Length");
+        if (contentLengthHeader != null) {
+            clientRequest.putHeader("Content-Length", contentLengthHeader);
+        }
+
         request.dataHandler(new Handler<Buffer>() {
             @Override
             public void handle(Buffer data) {
-                clientRequest.putHeader("Content-Length", String.valueOf(data.getBytes().length));
                 clientRequest.write(data);
-
-                //Also Track
-                if (path.endsWith(".pom")) {
-                    vertxDomainObject.getVertx().eventBus().send("pom.track", data.toString());
+                int requestId = request.path().hashCode();
+                StringBuilder content = pomStorage.get(requestId);
+                if (content == null) {
+                    pomStorage.put(requestId, new StringBuilder(data.toString()));
+                } else {
+                    pomStorage.put(requestId, content.append(data.toString()));
                 }
             }
         });
@@ -79,6 +83,12 @@ public class HttpArtifactPushHandler {
             @Override
             public void handle(Void event) {
                 clientRequest.end();
+
+                if (path.endsWith(".pom")) {
+                    int code = request.path().hashCode();
+                    StringBuilder content = pomStorage.get(code);
+                    vertxDomainObject.getVertx().eventBus().send("pom.track", content.toString());
+                }
             }
         });
 
