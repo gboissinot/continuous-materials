@@ -92,13 +92,5 @@ public class HttpArtifactPushHandler {
                 }
             }
         });
-
     }
-
-
-    private putRemoteRepo(){
-
-    }
-
-
 }
