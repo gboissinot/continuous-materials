@@ -25,8 +25,10 @@ class LatestDependencyPlugin implements Plugin<Gradle> {
                         if (requestedVersion.startsWith("latest")) {
                             def group = details.requested.group
                             def name = details.requested.name
+                            println "getting "+group+ name+ "-"+ requestedVersion
                             MavenVersionResolverService resolver = new MavenVersionResolverService();
-                            def latestVersion = resolver.getLatestVersion(group, name, requestedVersion)
+                            println "resolver "+resolver
+                            def latestVersion = resolver.getLatestArtifact(group, name)
                             logger.lifecycle("Resolved latest dependency $group:$name:$requestedVersion to $latestVersion \n")
                             details.useVersion latestVersion
                         }
