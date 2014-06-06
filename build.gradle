@@ -22,7 +22,6 @@ subprojects {
 
     apply plugin: 'java'
 
-
     group = 'fr.synchrotron.soleil.ica.ci.lib'
     version = '1.0.0'
 
@@ -45,10 +44,10 @@ configure(subprojects.findAll { it.name.startsWith('Services/ModVertx') }) {
 
     apply plugin: 'maven-publish'
 
-//    dependencies {
-//        compile "io.vertx:vertx-core:$vertxVersion"
-//        compile "io.vertx:vertx-platform:$vertxVersion"
-//    }
+    dependencies {
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+    }
 
     publishing {
         publications {
@@ -173,20 +172,6 @@ project(':Libs/LibVertxUtilities') {
     }
 }
 
-project(':Confs') {
-    sourceSets {
-        mongo {
-            resources.srcDirs 'Mongo'
-        }
-        dorm {
-            resources.srcDirs 'Vertx/DORM'
-        }
-        legacyMavenProxy {
-            resources.srcDirs 'Vertx/LegacyMavenProxy'
-        }
-    }
-}
-
 project(':Services/ModVertxLegacyMavenProxy') {
     dependencies {
         compile project(':Libs/LibMongoLatestVersionResolver')
@@ -195,32 +180,8 @@ project(':Services/ModVertxLegacyMavenProxy') {
         compile "org.fuin:utils4j:$utils4jVersion"
         compile "commons-io:commons-io:$commonsIoVersion"
         compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
-
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
     }
 }
-
-//project(':Services/ModVertxMavenMetadata') {
-//    dependencies {
-//        compile project(':Libs/LibMongoPomImporter')
-//        compile project(':Libs/LibMongoPomExporter')
-//        compile project(':Libs/LibVertxUtilities')
-//    }
-//}
-//
-//project(':Services/ModVertxDorm') {
-//    dependencies {
-//        compile files(project(':Confs').sourceSets.mongo.resources.srcDirs)
-//
-//        compile project(':Libs/LibMongoPomImporter')
-//        compile project(':Libs/LibMongoPomExporter')
-//        compile project(':Libs/LibVertxUtilities')
-//
-//        compile "io.vertx:vertx-core:$vertxVersion"
-//        compile "io.vertx:vertx-platform:$vertxVersion"
-//    }
-//}
 
 
 

@@ -6,17 +6,22 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.M
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.MongoConfigLoader;
 
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * @author Gregory Boissinot
  */
 public class MavenVersionResolver {
 
+    private Map<String, String> configMongo;
+
+    public MavenVersionResolver(Map<String, String> configMongo) {
+        this.configMongo = configMongo;
+    }
+
     public String getLatestVersion(String group, String name) {
         MongoConfigLoader mongoConfigLoader = new MongoConfigLoader();
-        final Properties loadInfraFile = mongoConfigLoader.loadInfraFile(MongoConfigLoader.MONGODB_DEFAULT_PROPERTIES_FILEPATH);
-        final BasicMongoDBDataSource mongoDBDatasource = new BasicMongoDBDataSource(loadInfraFile);
+        final BasicMongoDBDataSource mongoDBDatasource = new BasicMongoDBDataSource(configMongo);
         final MongoDBArtifactRepository artifactRepository = new MongoDBArtifactRepository(mongoDBDatasource);
         final ArtifactVersionResolverService artifactVersionResolverService = new ArtifactVersionResolverService(artifactRepository);
         MavenVersionResolverService resolverService = new MavenVersionResolverService(artifactVersionResolverService);

@@ -1,3 +1,0 @@
-curl -H "Content-Type:application/xml" -X POST http://localhost:8080/pom/import -d @pom.xml -v
-
-curl -H "Content-Type:application/json" -X POST http://localhost:8080/pom/export -d '{"org":"fr.synchrotron.soleil.ica.ci.lib", "name":"maven-versionresolver","status":"INTEGRATION","version":"1.0.1"}' -v

@@ -1,6 +1,0 @@
-{
-    "port": 8090,
-    "repo.http.host": "repo1.maven.org",
-    "repo.http.port": 80,
-    "repo.uri.path": "/maven2/"
-}

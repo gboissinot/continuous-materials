@@ -1,2 +1,0 @@
-main class:org.vertx.java.platform.impl.cli.Starter
-program parameters:run fr.synchrotron.soleil.ica.msvervice.management.HttpEndpointManager -conf /Users/gregory/Dev/Soleil/continuous-materials/Confs/Vertx/DORM/conf.json

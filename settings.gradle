@@ -1,5 +1,4 @@
-include 'Confs',
-        'Libs/LibUtilities',
+include 'Libs/LibUtilities',
         'Libs/LibWorkflow',
         'Libs/LibMongoDomainObjects',
         'Libs/LibMongoUtilities',
@@ -11,6 +10,4 @@ include 'Confs',
         'Libs/LibMongoJenkinsJobsGenerator',
         'Libs/LibVertxUtilities',
         'Services/ModVertxLegacyMavenProxy',
-//        'Services/ModVertxMavenMetadata',
-//        'Services/ModVertxDorm',
         'Tools/GradleDistribution'

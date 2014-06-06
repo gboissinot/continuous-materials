@@ -9,6 +9,12 @@ initscript {
 }
 
 
+def configMongo = [
+        mongoHost: '127.0.0.1',
+        mongoPort: 27017,
+        mongoDbName: 'repo'
+]
+
 apply plugin: LatestDependencyPlugin
 
 import fr.synchrotron.soleil.ica.tools.gradle.distrib.MavenVersionResolver;
@@ -26,9 +32,9 @@ class LatestDependencyPlugin implements Plugin<Gradle> {
                         if (requestedVersion.startsWith("latest")) {
                             def group = details.requested.group
                             def name = details.requested.name
-                            println "getting "+group+ name+ "-"+ requestedVersion
-                            MavenVersionResolver resolver = new MavenVersionResolver();
-                            println "resolver "+resolver
+                            println "getting " + group + name + "-" + requestedVersion
+                            MavenVersionResolver resolver = new MavenVersionResolver(configMongo);
+                            println "resolver " + resolver
                             def latestVersion = resolver.getLatestVersion(group, name)
                             logger.lifecycle("Resolved latest dependency $group:$name:$requestedVersion to $latestVersion \n")
                             details.useVersion latestVersion

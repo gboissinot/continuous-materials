@@ -1,9 +1,0 @@
-{
-    "main": "fr.synchrotron.soleil.ica.msvervice.management.HttpEndpointManager",
-    "description": "An HTTP Maven Descriptor Endpoint",
-    "licenses": ["MIT license"],
-    "author": "Gregory Boissinot",
-    "developers": ["Gregory Boissinot"],
-    "keywords": ["maven", "pom", "endpoint"],
-    "deploys": "fr.synchrotron.soleil~mod-mavenmetadata~1.0.0"
-}

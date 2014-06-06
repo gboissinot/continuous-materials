@@ -7,6 +7,7 @@ import com.mongodb.ServerAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -37,6 +38,12 @@ public class BasicMongoDBDataSource implements MongoDBDataSource {
         init(properties.getProperty("mongo.host"),
                 Integer.parseInt(properties.getProperty("mongo.port")),
                 properties.getProperty("mongo.dbname"));
+    }
+
+    public BasicMongoDBDataSource(Map<String, String> properties) {
+        init(properties.get("mongoHost"),
+                Integer.parseInt(properties.get("mongoPort")),
+                properties.get(" mongoDbName"));
     }
 
     public BasicMongoDBDataSource(List mongoDBInstances) {

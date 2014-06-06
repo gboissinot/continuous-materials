@@ -9,18 +9,15 @@ ext {
 
 configurations {
     initDir
-
     compile {
         extendsFrom initDir
     }
 }
 
-
 dependencies {
     initDir project(':Libs/LibMongoLatestVersionResolver')
     initDir project(':Libs/LibMongoUtilities')
     initDir "org.mongodb:mongo-java-driver:$mongoJavaDriverVerison"
-    initDir  files(project(':Confs').sourceSets.mongo.resources.srcDirs)
 }
 
 task buildInitDir(type: Copy, dependsOn: jar) {
