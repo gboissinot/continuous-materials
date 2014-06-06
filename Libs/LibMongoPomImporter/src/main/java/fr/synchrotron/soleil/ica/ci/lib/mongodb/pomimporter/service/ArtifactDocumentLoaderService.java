@@ -29,7 +29,7 @@ class ArtifactDocumentLoaderService {
         ArtifactDocument artifactDocument =
                 new ArtifactDocument(
                         model.getGroupId(),
-                        model.getName(),
+                        model.getArtifactId(),
                         statusVersion.version,
                         statusVersion.status);
         artifactDocument.setModules(model.getModules());
