@@ -10,7 +10,7 @@ initscript {
 
 apply plugin: LatestDependencyPlugin
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolver;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolverService;
 
 class LatestDependencyPlugin implements Plugin<Gradle> {
 
@@ -25,7 +25,7 @@ class LatestDependencyPlugin implements Plugin<Gradle> {
                         if (requestedVersion.startsWith("latest")) {
                             def group = details.requested.group
                             def name = details.requested.name
-                            MavenVersionResolver resolver = new MavenVersionResolver();
+                            MavenVersionResolverService resolver = new MavenVersionResolverService();
                             def latestVersion = resolver.getLatestVersion(group, name, requestedVersion)
                             logger.lifecycle("Resolved latest dependency $group:$name:$requestedVersion to $latestVersion \n")
                             details.useVersion latestVersion
