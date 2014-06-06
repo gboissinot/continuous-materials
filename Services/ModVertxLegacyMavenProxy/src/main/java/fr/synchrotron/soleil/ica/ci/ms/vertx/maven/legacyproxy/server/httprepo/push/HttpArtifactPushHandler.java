@@ -3,9 +3,12 @@ package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.
 import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.HttpArtifactCaller;
 import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.VertxDomainObject;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.vertx.java.core.AsyncResult;
+import org.vertx.java.core.AsyncResultHandler;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.buffer.Buffer;
+import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
@@ -82,8 +85,6 @@ public class HttpArtifactPushHandler {
         request.endHandler(new Handler<Void>() {
             @Override
             public void handle(Void event) {
-                clientRequest.end();
-
                 if (path.endsWith(".pom")) {
                     int code = request.path().hashCode();
                     StringBuilder content = pomStorage.get(code);
@@ -91,6 +92,11 @@ public class HttpArtifactPushHandler {
                 }
             }
         });
+
+    }
+
+
+    private putRemoteRepo(){
 
     }
 
