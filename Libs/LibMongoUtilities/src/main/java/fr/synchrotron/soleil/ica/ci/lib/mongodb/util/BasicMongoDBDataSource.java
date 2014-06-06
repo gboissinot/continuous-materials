@@ -40,10 +40,10 @@ public class BasicMongoDBDataSource implements MongoDBDataSource {
                 properties.getProperty("mongo.dbname"));
     }
 
-    public BasicMongoDBDataSource(Map<String, String> properties) {
-        init(properties.get("mongoHost"),
-                Integer.parseInt(properties.get("mongoPort")),
-                properties.get(" mongoDbName"));
+    public BasicMongoDBDataSource(Map<String, String> map) {
+        init(map.get("mongoHost"),
+                Integer.parseInt(map.get("mongoPort")),
+                map.get("mongoDbName"));
     }
 
     public BasicMongoDBDataSource(List mongoDBInstances) {
