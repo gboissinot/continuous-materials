@@ -45,10 +45,10 @@ configure(subprojects.findAll { it.name.startsWith('Services/ModVertx') }) {
 
     apply plugin: 'maven-publish'
 
-    dependencies {
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
-    }
+//    dependencies {
+//        compile "io.vertx:vertx-core:$vertxVersion"
+//        compile "io.vertx:vertx-platform:$vertxVersion"
+//    }
 
     publishing {
         publications {
@@ -195,6 +195,9 @@ project(':Services/ModVertxLegacyMavenProxy') {
         compile "org.fuin:utils4j:$utils4jVersion"
         compile "commons-io:commons-io:$commonsIoVersion"
         compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
     }
 }
 

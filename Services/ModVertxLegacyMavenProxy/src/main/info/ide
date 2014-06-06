@@ -1,5 +1,5 @@
 main class:org.vertx.java.platform.impl.cli.Starter
 program parameters:
 run
-run fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.DeployerVerticle -conf config.json
+run fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.DeployerVerticle -conf C:\Dev\continuous-materials\Services\ModVertxLegacyMavenProxy\config.json
 -Dorg.vertx.logger-delegate-factory-class-name=org.vertx.java.core.logging.impl.Log4jLogDelegateFactory

@@ -6,7 +6,7 @@ import java.util.Properties;
 /**
  * @author Gregory Boissinot
  */
-public class ConfigLoader {
+    public class ConfigLoader {
 
     public Properties loadPropertiesFile(String propertiedFilePath) {
         Properties properties = new Properties();

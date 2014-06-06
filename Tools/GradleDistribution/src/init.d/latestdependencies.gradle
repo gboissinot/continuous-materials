@@ -4,13 +4,14 @@ initscript {
         classpath files('lib/LibMongoUtilities.jar')
         classpath files('lib/mongo-java-driver.jar')
         classpath files('lib/LibWorkflow.jar')
+        classpath files('lib/tooling-classes.jar')
     }
 }
 
 
 apply plugin: LatestDependencyPlugin
 
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.MavenVersionResolverService;
+import fr.synchrotron.soleil.ica.tools.gradle.distrib.MavenVersionResolver;
 
 class LatestDependencyPlugin implements Plugin<Gradle> {
 
@@ -26,9 +27,9 @@ class LatestDependencyPlugin implements Plugin<Gradle> {
                             def group = details.requested.group
                             def name = details.requested.name
                             println "getting "+group+ name+ "-"+ requestedVersion
-                            MavenVersionResolverService resolver = new MavenVersionResolverService();
+                            MavenVersionResolver resolver = new MavenVersionResolver();
                             println "resolver "+resolver
-                            def latestVersion = resolver.getLatestArtifact(group, name)
+                            def latestVersion = resolver.getLatestVersion(group, name)
                             logger.lifecycle("Resolved latest dependency $group:$name:$requestedVersion to $latestVersion \n")
                             details.useVersion latestVersion
                         }
