@@ -11,6 +11,6 @@ include 'Confs',
         'Libs/LibMongoJenkinsJobsGenerator',
         'Libs/LibVertxUtilities',
         'Services/ModVertxLegacyMavenProxy',
-        'Services/ModVertxMavenMetadata',
-        'Services/ModVertxDorm',
+//        'Services/ModVertxMavenMetadata',
+//        'Services/ModVertxDorm',
         'Tools/GradleDistribution'

@@ -45,6 +45,11 @@ configure(subprojects.findAll { it.name.startsWith('Services/ModVertx') }) {
 
     apply plugin: 'maven-publish'
 
+    dependencies {
+        compile "io.vertx:vertx-core:$vertxVersion"
+        compile "io.vertx:vertx-platform:$vertxVersion"
+    }
+
     publishing {
         publications {
             mavenJava(MavenPublication) {
@@ -56,14 +61,10 @@ configure(subprojects.findAll { it.name.startsWith('Services/ModVertx') }) {
             }
         }
     }
+
+    build.dependsOn fatJar    
 }
 
-configure(subprojects.findAll { it.name.startsWith('Services/TaskVerticle') }) {
-    dependencies {
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
-    }
-}
 
 project(':Libs/LibMongoDomainObjects') {
     dependencies {
@@ -188,39 +189,35 @@ project(':Confs') {
 
 project(':Services/ModVertxLegacyMavenProxy') {
     dependencies {
-        compile files(project(':Confs').sourceSets.mongo.resources.srcDirs)
-        compile files(project(':Confs').sourceSets.legacyMavenProxy.resources.srcDirs)
         compile project(':Libs/LibMongoLatestVersionResolver')
         compile project(':Libs/LibMongoPomImporter')
         compile "org.apache.maven:maven-core:$mavenCoreVersion"
         compile "org.fuin:utils4j:$utils4jVersion"
         compile "commons-io:commons-io:$commonsIoVersion"
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
         compile "org.slf4j:slf4j-log4j12:$slf4jVersion"
     }
 }
 
-project(':Services/ModVertxMavenMetadata') {
-    dependencies {
-        compile project(':Libs/LibMongoPomImporter')
-        compile project(':Libs/LibMongoPomExporter')
-        compile project(':Libs/LibVertxUtilities')
-    }
-}
-
-project(':Services/ModVertxDorm') {
-    dependencies {
-        compile files(project(':Confs').sourceSets.mongo.resources.srcDirs)
-
-        compile project(':Libs/LibMongoPomImporter')
-        compile project(':Libs/LibMongoPomExporter')
-        compile project(':Libs/LibVertxUtilities')
-
-        compile "io.vertx:vertx-core:$vertxVersion"
-        compile "io.vertx:vertx-platform:$vertxVersion"
-    }
-}
+//project(':Services/ModVertxMavenMetadata') {
+//    dependencies {
+//        compile project(':Libs/LibMongoPomImporter')
+//        compile project(':Libs/LibMongoPomExporter')
+//        compile project(':Libs/LibVertxUtilities')
+//    }
+//}
+//
+//project(':Services/ModVertxDorm') {
+//    dependencies {
+//        compile files(project(':Confs').sourceSets.mongo.resources.srcDirs)
+//
+//        compile project(':Libs/LibMongoPomImporter')
+//        compile project(':Libs/LibMongoPomExporter')
+//        compile project(':Libs/LibVertxUtilities')
+//
+//        compile "io.vertx:vertx-core:$vertxVersion"
+//        compile "io.vertx:vertx-platform:$vertxVersion"
+//    }
+//}
 
 
 
