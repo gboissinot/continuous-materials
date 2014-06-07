@@ -1,6 +1,6 @@
 {
-    "main": "fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.DeployerVerticle",
-    "description": "An HTTP Legacy Maven proxy",
+    "main": "fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.DeployerVerticle",
+    "description": "An HTTP Maven proxy to legacy Maven Repository",
     "licenses": ["MIT license"],
     "author": "Gregory Boissinot",
     "developers": ["Gregory Boissinot"],

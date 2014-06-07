@@ -1,6 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.pull.HttpArtifactPullHandler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull.HttpArtifactPullHandler;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push.HttpArtifactPushHandler;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;

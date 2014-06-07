@@ -1,14 +1,12 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push;
 
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.HttpArtifactCaller;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.VertxDomainObject;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientRequest;
-import org.vertx.java.core.http.HttpClientResponse;
-import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.*;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,9 +55,9 @@ public class HttpArtifactPushHandler {
             }
         }
 
-        final String contentLengthHeader = headers.get("Content-Length");
+        final String contentLengthHeader = headers.get(HttpHeaders.CONTENT_LENGTH);
         if (contentLengthHeader != null) {
-            clientRequest.putHeader("Content-Length", contentLengthHeader);
+            clientRequest.putHeader(HttpHeaders.CONTENT_LENGTH, contentLengthHeader);
         }
 
         request.dataHandler(new Handler<Buffer>() {
@@ -82,7 +80,7 @@ public class HttpArtifactPushHandler {
                 if (path.endsWith(".pom")) {
                     int code = request.path().hashCode();
                     StringBuilder content = pomStorage.get(code);
-                    vertxDomainObject.getVertx().eventBus().send("pom.track", content.toString());
+                    vertxDomainObject.getVertx().eventBus().send(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM, content.toString());
                 }
             }
         });

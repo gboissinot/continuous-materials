@@ -16,11 +16,11 @@ import java.util.Properties;
 /**
  * @author Gregory Boissinot
  */
-public class PomModelBuilder {
+public class LegacyPomContentFixer {
 
     private final ArtifactRepository artifactRepository;
 
-    public PomModelBuilder(ArtifactRepository artifactRepository) {
+    public LegacyPomContentFixer(ArtifactRepository artifactRepository) {
         this.artifactRepository = artifactRepository;
     }
 

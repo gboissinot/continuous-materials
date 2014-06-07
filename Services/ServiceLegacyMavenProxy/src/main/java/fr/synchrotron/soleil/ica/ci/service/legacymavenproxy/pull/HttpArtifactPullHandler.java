@@ -1,6 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull;
 
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.HttpArtifactCaller;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.VertxDomainObject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
@@ -8,10 +9,7 @@ import org.vertx.java.core.AsyncResultHandler;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientRequest;
-import org.vertx.java.core.http.HttpClientResponse;
-import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.*;
 import org.vertx.java.core.streams.Pump;
 
 /**
@@ -73,13 +71,13 @@ public class HttpArtifactPullHandler {
                     clientResponse.bodyHandler(new Handler<Buffer>() {
                         @Override
                         public void handle(Buffer data) {
-                            vertxDomainObject.getVertx().eventBus().sendWithTimeout("pom.fix", data.toString(), Integer.MAX_VALUE, new AsyncResultHandler<Message<String>>() {
+                            vertxDomainObject.getVertx().eventBus().sendWithTimeout(ServiceAddressRegistry.EB_ADDRESS_FIXLEGACYPOM_SERVICE, data.toString(), Integer.MAX_VALUE, new AsyncResultHandler<Message<String>>() {
                                 @Override
                                 public void handle(AsyncResult<Message<String>> asyncResult) {
                                     if (asyncResult.succeeded()) {
                                         final Message<String> pomResultMessage = asyncResult.result();
                                         final String pomResultContent = pomResultMessage.body();
-                                        request.response().putHeader("Content-Length", String.valueOf(pomResultContent.getBytes().length));
+                                        request.response().putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(pomResultContent.getBytes().length));
                                         request.response().end(pomResultContent);
                                     } else {
                                         request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
