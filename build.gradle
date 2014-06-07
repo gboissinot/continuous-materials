@@ -39,7 +39,7 @@ subprojects {
     }
 }
 
-configure(subprojects.findAll { it.name.startsWith('Services/ModVertx') }) {
+configure(subprojects.findAll { it.name.startsWith('Services/Service') }) {
     apply from: "$rootDir/vertx.gradle"
 
     apply plugin: 'maven-publish'
@@ -170,7 +170,7 @@ project(':Libs/LibVertxUtilities') {
     }
 }
 
-project(':Services/ModVertxLegacyMavenProxy') {
+project(':Services/ServiceLegacyMavenProxy') {
     dependencies {
         compile project(':Libs/LibMongoLatestVersionResolver')
         compile project(':Libs/LibMongoPomImporter')
