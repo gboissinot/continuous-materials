@@ -12,32 +12,28 @@ import org.vertx.java.core.eventbus.Message;
  */
 public class TrackPOMWorkerVerticle extends BusModBase {
 
+    private static final String EB_ADDRESS = "pom.track";
+
     @Override
     public void start() {
 
         super.start();
-
         final String mongoHost = getMandatoryStringConfig("mongoHost");
         final Integer mongoPort = getMandatoryIntConfig("mongoPort");
         final String mongoDbName = getMandatoryStringConfig("mongoDbName");
+        final POMImportService pomImportService =
+                new POMImportService(new SoleilDictionary(), new BasicMongoDBDataSource(mongoHost, mongoPort, mongoDbName));
 
-        //TODO EXTRACT Verticle Address
-        eb.registerHandler("pom.track", new Handler<Message<String>>() {
+        eb.registerHandler(EB_ADDRESS, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
                 try {
-
-                    POMImportService pomImportService =
-                            new POMImportService(new SoleilDictionary(), new BasicMongoDBDataSource(mongoHost, mongoPort, mongoDbName));
                     pomImportService.importPomFile(message.body());
-
                     message.reply(true);
-
                 } catch (Throwable e) {
                     //TODO BUILD ERROR MESSAGE
                     message.reply(e.getMessage());
                 }
-
             }
         });
     }
