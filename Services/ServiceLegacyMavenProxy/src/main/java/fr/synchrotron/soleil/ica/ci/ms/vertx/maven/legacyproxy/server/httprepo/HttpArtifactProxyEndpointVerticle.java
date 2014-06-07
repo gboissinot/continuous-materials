@@ -17,6 +17,8 @@ import org.vertx.java.platform.Verticle;
 
 public class HttpArtifactProxyEndpointVerticle extends Verticle {
 
+     private static final String PROXY_PATH = "/legacyMavenProxy";
+
     @Override
     public void start() {
 
@@ -46,7 +48,7 @@ public class HttpArtifactProxyEndpointVerticle extends Verticle {
             final VertxDomainObject vertxDomainObject = new VertxDomainObject(vertx, container.logger());
 
             RouteMatcher routeMatcher = new RouteMatcher();
-            routeMatcher.allWithRegEx("/maven/.*", new Handler<HttpServerRequest>() {
+            routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
                 @Override
                 public void handle(HttpServerRequest request) {
                     try {
