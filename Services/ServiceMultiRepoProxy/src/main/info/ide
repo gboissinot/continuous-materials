@@ -1,0 +1,2 @@
+main class:org.vertx.java.platform.impl.cli.Starter
+run fr.synchrotron.soleil.ica.ci.service.multirepoproxy.RepoProxyHttpEndpointVerticle -conf /Users/gregory/Dev/Soleil/continuous-materials/Services/ServiceMultiRepoProxy/template_config.json
