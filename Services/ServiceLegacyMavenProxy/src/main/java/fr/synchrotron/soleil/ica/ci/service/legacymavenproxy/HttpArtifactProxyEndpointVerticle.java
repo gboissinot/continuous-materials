@@ -17,7 +17,7 @@ import org.vertx.java.platform.Verticle;
 
 public class HttpArtifactProxyEndpointVerticle extends Verticle {
 
-    private static final String PROXY_PATH = "/legacyMavenProxy";
+    public static final String PROXY_PATH = "/legacyMavenProxy";
 
     @Override
     public void start() {
