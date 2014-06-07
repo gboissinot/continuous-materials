@@ -9,4 +9,6 @@ include 'Libs/LibWorkflow',
         'Libs/LibMongoJenkinsJobsGenerator',
         'Libs/LibVertxUtilities',
         'Services/ServiceLegacyMavenProxy',
+        'Services/ServiceDORMProxy',
+        'Services/ServiceMultiRepoProxy',
         'Tools/GradleDistribution'
