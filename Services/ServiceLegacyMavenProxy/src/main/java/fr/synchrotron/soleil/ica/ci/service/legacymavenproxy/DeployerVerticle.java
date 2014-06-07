@@ -1,8 +1,7 @@
-package fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server;
+package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.HttpArtifactProxyEndpointVerticle;
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.pull.FixLegacyPOMWorkerVerticle;
-import fr.synchrotron.soleil.ica.ci.ms.vertx.maven.legacyproxy.server.httprepo.push.TrackPOMWorkerVerticle;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull.FixLegacyPOMWorkerVerticle;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push.TrackPOMWorkerVerticle;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
