@@ -33,7 +33,7 @@ public class HttpArtifactCaller {
 
     public String buildRequestPath(final HttpServerRequest request) {
 
-        final String prefix = "/maven";
+        final String prefix = HttpArtifactProxyEndpointVerticle.PROXY_PATH;
         String artifactPath = request.path().substring(prefix.length() + 1);
         return repoURIPath.endsWith("/") ? (repoURIPath + artifactPath) : (repoURIPath + "/" + artifactPath);
     }
