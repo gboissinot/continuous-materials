@@ -1,0 +1,2 @@
+- Make a Worker Log Verticle to log all requests
+- Make log in MongoDB optional and transaction with push in remote repository
