@@ -43,7 +43,7 @@ public class ProxyRequestHandler implements Handler<HttpServerRequest> {
         vertxHttpClient.setHost(repositoryInfo.getHost()).setPort(repositoryInfo.getPort());
 
         final String repoURIPath = repositoryInfo.getUri();
-        HttpClientRequest vertxRequest = vertxHttpClient.get(buildRequestPath(request, repoURIPath), new Handler<HttpClientResponse>() {
+        HttpClientRequest vertxRequest = vertxHttpClient.head(buildRequestPath(request, repoURIPath), new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
 
@@ -58,7 +58,18 @@ public class ProxyRequestHandler implements Handler<HttpServerRequest> {
                     }
 
                 } else if (HttpResponseStatus.OK.code() == clientResponse.statusCode()) {
-                    makeGetRepoRequest(request, vertxHttpClient, repoURIPath);
+                    final String method = request.method();
+                    if ("HEAD".equals(method)) {
+                        request.response().setStatusCode(clientResponse.statusCode());
+                        request.response().headers().add(clientResponse.headers());
+                        clientResponse.endHandler(new Handler<Void>() {
+                            public void handle(Void event) {
+                                request.response().end();
+                            }
+                        });
+                    } else {
+                        makeGetRepoRequest(request, vertxHttpClient, repoURIPath);
+                    }
                 } else {
                     request.response().setStatusCode(clientResponse.statusCode());
                     request.response().setStatusMessage(clientResponse.statusMessage());
