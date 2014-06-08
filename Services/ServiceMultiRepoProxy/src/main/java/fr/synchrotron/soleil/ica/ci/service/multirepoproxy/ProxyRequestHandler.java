@@ -47,13 +47,8 @@ public class ProxyRequestHandler implements Handler<HttpServerRequest> {
             @Override
             public void handle(HttpClientResponse clientResponse) {
 
-                clientResponse.endHandler(new Handler<Void>() {
-                    public void handle(Void event) {
-                        //request.response().end();
-                    }
-                });
-
-                if (HttpResponseStatus.NOT_FOUND.code() == clientResponse.statusCode()) {
+                if (HttpResponseStatus.NOT_FOUND.code() == clientResponse.statusCode()
+                        || HttpResponseStatus.MOVED_PERMANENTLY.code() == clientResponse.statusCode()) {
                     if (repositoryScanner.isLastRepo(repoIndex)) {
                         request.response().setStatusCode(clientResponse.statusCode());
                         request.response().setStatusMessage("Artifact NOT FOUND");
