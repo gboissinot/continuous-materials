@@ -1,6 +1,9 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
+import io.netty.handler.codec.http.HttpResponseStatus;
+import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServer;
+import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -28,7 +31,18 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
 
         final HttpServer httpServer = vertx.createHttpServer();
         RouteMatcher routeMatcher = new RouteMatcher();
-        routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new ProxyRequestHandler(vertx, repos));
+        routeMatcher.headWithRegEx(PROXY_PATH + "/.*", new ProxyRequestHandler(vertx, repos));
+        routeMatcher.getWithRegEx(PROXY_PATH + "/.*", new ProxyRequestHandler(vertx, repos));
+
+
+        routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(HttpServerRequest request) {
+                request.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code());
+                request.response().end();
+            }
+        });
+
         httpServer.requestHandler(routeMatcher);
         httpServer.listen(port);
 
