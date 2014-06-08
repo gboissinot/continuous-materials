@@ -1,0 +1,9 @@
+{
+    "main": "fr.synchrotron.soleil.ica.ci.service.multirepoproxy.RepoProxyHttpEndpointVerticle",
+    "description": "A Multi HTTP Maven proxy to several Maven repositories",
+    "licenses": ["MIT license"],
+    "author": "Gregory Boissinot",
+    "developers": ["Gregory Boissinot"],
+    "keywords": ["maven", "proxy", "multi"],
+    "homepage": "https://github.com/synchrotron-soleil-ica/continuous-materials"
+}
