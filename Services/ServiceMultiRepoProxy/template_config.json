@@ -2,20 +2,19 @@
     "port": 8091,
     "repositories": [
         {
-            "repository2": {
-                "host": "repo1.maven.org",
-                "port": "80",
-                "uri": "/maven2"
-            }
-        },
-        {
             "repository1": {
                 "host": "google.fr",
                 "port": "80",
                 "uri": "/maven2"
             }
         },
-
+        {
+            "repository2": {
+                "host": "repo1.maven.org",
+                "port": "80",
+                "uri": "/maven2"
+            }
+        },
         {
             "repository3": {
                 "host": "repo1.maven.repo/maven2",
