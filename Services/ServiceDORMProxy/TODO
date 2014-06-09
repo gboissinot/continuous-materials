@@ -1,0 +1,6 @@
+- Put in MongoDB
+- Ignore .sha1 and .md5
+
+- GET MongoDB --> export
+- GET jar --> sendFile
+
