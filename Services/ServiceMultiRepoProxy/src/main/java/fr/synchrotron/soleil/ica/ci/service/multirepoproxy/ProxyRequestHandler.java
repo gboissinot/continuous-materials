@@ -61,7 +61,7 @@ public class ProxyRequestHandler implements Handler<HttpServerRequest> {
                     final String method = request.method();
                     if ("HEAD".equals(method)) {
                         request.response().setStatusCode(clientResponse.statusCode());
-                        request.response().headers().add(clientResponse.headers());
+                        request.response().headers().set(clientResponse.headers());
                         clientResponse.endHandler(new Handler<Void>() {
                             public void handle(Void event) {
                                 request.response().end();
