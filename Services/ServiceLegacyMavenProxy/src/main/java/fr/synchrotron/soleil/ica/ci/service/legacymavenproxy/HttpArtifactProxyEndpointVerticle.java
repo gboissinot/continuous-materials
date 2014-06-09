@@ -54,7 +54,6 @@ public class HttpArtifactProxyEndpointVerticle extends Verticle {
                     try {
                         final String method = request.method();
                         if (HttpMethod.GET.name().equals(method) || HttpMethod.HEAD.name().equals(method)) {
-
                             HttpArtifactPullHandler httpArtifactPullHandler =
                                     new HttpArtifactPullHandler(vertxDomainObject, httpArtifactCallerGET);
                             httpArtifactPullHandler.handle(request);
@@ -74,6 +73,16 @@ public class HttpArtifactProxyEndpointVerticle extends Verticle {
                     }
                 }
             });
+
+
+            routeMatcher.noMatch(new Handler<HttpServerRequest>() {
+                @Override
+                public void handle(HttpServerRequest request) {
+                    request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
+                    request.response().end();
+                }
+            });
+
             httpServer.requestHandler(routeMatcher);
             httpServer.listen(port);
 
