@@ -38,7 +38,15 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest request) {
-                request.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code());
+                request.response().setStatusCode(HttpResponseStatus.METHOD_NOT_ALLOWED.code());
+                request.response().end();
+            }
+        });
+
+        routeMatcher.noMatch(new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(HttpServerRequest request) {
+                request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
                 request.response().end();
             }
         });
