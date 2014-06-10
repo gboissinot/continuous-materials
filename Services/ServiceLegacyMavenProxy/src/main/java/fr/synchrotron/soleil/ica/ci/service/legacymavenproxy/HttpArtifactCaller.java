@@ -13,10 +13,13 @@ public class HttpArtifactCaller {
     private final String repoHost;
     private final int repoPort;
     private final String repoURIPath;
+    private String serverProxyPath;
 
     public HttpArtifactCaller(Vertx vertx,
+                              String serverProxyPath,
                               String repoHost, int repoPort, String repoURIPath) {
         this.vertx = vertx;
+        this.serverProxyPath = serverProxyPath;
         this.repoHost = repoHost;
         this.repoPort = repoPort;
         this.repoURIPath = repoURIPath;
@@ -32,13 +35,11 @@ public class HttpArtifactCaller {
     }
 
     public String buildRequestPath(final HttpServerRequest request) {
-
-        final String prefix = HttpArtifactProxyEndpointVerticle.PROXY_PATH;
-        String artifactPath = request.path().substring(prefix.length() + 1);
+        String artifactPath = request.path().substring(serverProxyPath.length() + 1);
         return repoURIPath.endsWith("/") ? (repoURIPath + artifactPath) : (repoURIPath + "/" + artifactPath);
     }
 
-    public HttpClient getPClient() {
+    public HttpClient getVertxHttpClient() {
         return getVertx().createHttpClient()
                 .setHost(repoHost)
                 .setPort(repoPort)

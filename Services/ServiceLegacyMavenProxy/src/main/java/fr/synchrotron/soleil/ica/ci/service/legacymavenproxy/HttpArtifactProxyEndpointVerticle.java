@@ -30,13 +30,13 @@ public class HttpArtifactProxyEndpointVerticle extends Verticle {
         final String repoHostGET = get.getString("repoHost");
         final int repoPortGET = get.getInteger("repoPort");
         final String repoURIPathGET = get.getString("repoURIPath");
-        final HttpArtifactCaller httpArtifactCallerGET = new HttpArtifactCaller(vertx, repoHostGET, repoPortGET, repoURIPathGET);
+        final HttpArtifactCaller httpArtifactCallerGET = new HttpArtifactCaller(vertx, PROXY_PATH, repoHostGET, repoPortGET, repoURIPathGET);
 
         final JsonObject put = config.getObject("repo.put");
         final String repoHostPUT = put.getString("repoHost");
         final int repoPortPUT = put.getInteger("repoPort");
         final String repoURIPathPUT = put.getString("repoURIPath");
-        final HttpArtifactCaller httpArtifactCallerPUT = new HttpArtifactCaller(vertx, repoHostPUT, repoPortPUT, repoURIPathPUT);
+        final HttpArtifactCaller httpArtifactCallerPUT = new HttpArtifactCaller(vertx, PROXY_PATH, repoHostPUT, repoPortPUT, repoURIPathPUT);
 
         HttpServer httpServer = null;
         try {

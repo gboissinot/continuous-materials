@@ -14,13 +14,13 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class ProxyRequestHandler implements Handler<HttpServerRequest> {
+public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
 
     private final Vertx vertx;
 
     private final RepositoryScanner repositoryScanner;
 
-    public ProxyRequestHandler(Vertx vertx, List<RepositoryObject> repos) {
+    public ProxyRequestPullHandler(Vertx vertx, List<RepositoryObject> repos) {
         this.vertx = vertx;
 
         if (repos == null || repos.size() == 0) {

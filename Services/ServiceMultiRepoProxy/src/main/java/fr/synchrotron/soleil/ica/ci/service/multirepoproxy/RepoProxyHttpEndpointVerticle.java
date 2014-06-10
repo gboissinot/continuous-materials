@@ -30,11 +30,16 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         final List<RepositoryObject> repos = buildRepoUrls(repositories);
 
         final HttpServer httpServer = vertx.createHttpServer();
+
         RouteMatcher routeMatcher = new RouteMatcher();
-        routeMatcher.headWithRegEx(PROXY_PATH + "/.*", new ProxyRequestHandler(vertx, repos));
-        routeMatcher.getWithRegEx(PROXY_PATH + "/.*", new ProxyRequestHandler(vertx, repos));
+        routeMatcher.headWithRegEx(PROXY_PATH + "/.*", new ProxyRequestPullHandler(vertx, repos));
+        routeMatcher.getWithRegEx(PROXY_PATH + "/.*", new ProxyRequestPullHandler(vertx, repos));
+
+        RepositoryObject repositoryObject = null;
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*", new ProxyRequestPushHandler(vertx, repositoryObject));
 
 
+        //Other than HEAD, GET or PUT and POST
         routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest request) {
@@ -43,6 +48,7 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
             }
         });
 
+        //No match pattern
         routeMatcher.noMatch(new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest request) {

@@ -1,8 +1,9 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull;
 
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.HttpArtifactCaller;
+
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.VertxDomainObject;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.HttpArtifactCaller;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.AsyncResultHandler;
@@ -29,7 +30,7 @@ public class HttpArtifactPullHandler {
 
     public void handle(final HttpServerRequest request) {
 
-        final HttpClient pClient = httpArtifactCaller.getPClient();
+        final HttpClient pClient = httpArtifactCaller.getVertxHttpClient();
         final String path = httpArtifactCaller.buildRequestPath(request);
         vertxDomainObject.getLogger().info("[Vert.x] - Requesting to download " + path);
 
