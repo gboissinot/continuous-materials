@@ -22,8 +22,6 @@ public class HttpArtifactProxyEndpointVerticle extends Verticle {
     @Override
     public void start() {
 
-        super.start();
-
         final JsonObject config = container.config();
 
         final int port = config.getInteger("port");

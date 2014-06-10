@@ -23,7 +23,7 @@ public class TrackPOMWorkerVerticle extends BusModBase {
         final POMImportService pomImportService =
                 new POMImportService(new SoleilDictionary(), new BasicMongoDBDataSource(mongoHost, mongoPort, mongoDbName));
 
-        eb.registerHandler(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM, new Handler<Message<String>>() {
+        eb.registerHandler(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
                 try {

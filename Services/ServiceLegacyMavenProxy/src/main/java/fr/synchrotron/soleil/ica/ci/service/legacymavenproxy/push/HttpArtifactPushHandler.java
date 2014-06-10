@@ -8,6 +8,7 @@ import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +19,7 @@ public class HttpArtifactPushHandler {
 
     private final VertxDomainObject vertxDomainObject;
     private final HttpArtifactCaller httpArtifactCaller;
-    private ConcurrentHashMap<Integer, StringBuilder> pomStorage = new ConcurrentHashMap<Integer, StringBuilder>();
+    private Map<Integer, StringBuilder> pomStorage = new HashMap<Integer, StringBuilder>();
 
     public HttpArtifactPushHandler(VertxDomainObject vertxDomainObject, HttpArtifactCaller httpArtifactCaller) {
         this.vertxDomainObject = vertxDomainObject;
@@ -80,7 +81,7 @@ public class HttpArtifactPushHandler {
                 if (path.endsWith(".pom")) {
                     int code = request.path().hashCode();
                     StringBuilder content = pomStorage.get(code);
-                    vertxDomainObject.getVertx().eventBus().send(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM, content.toString());
+                    vertxDomainObject.getVertx().eventBus().send(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, content.toString());
                 }
             }
         });
