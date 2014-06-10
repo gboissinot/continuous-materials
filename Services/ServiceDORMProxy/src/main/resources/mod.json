@@ -1,0 +1,9 @@
+{
+    "main": "fr.synchrotron.soleil.ica.ci.service.dormproxy.DeployerVerticle",
+    "description": "DORM Proxy",
+    "licenses": ["MIT license"],
+    "author": "Gregory Boissinot",
+    "developers": ["Gregory Boissinot"],
+    "keywords": ["dorm", "proxy", "maven"],
+    "homepage": "https://github.com/synchrotron-soleil-ica/continuous-materials"
+}
