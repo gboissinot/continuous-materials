@@ -1,27 +1,21 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Gregory Boissinot
  */
 public class RepositoryScanner {
 
-    private Map<Integer, RepositoryObject> repos = new HashMap<Integer, RepositoryObject>();
+    private List<RepositoryObject> repos = new ArrayList<RepositoryObject>();
 
     public RepositoryScanner(List<RepositoryObject> repoList) {
         if (repoList == null) {
             throw new NullPointerException("A list of repo is required.");
         }
 
-        int k = 0;
-        for (RepositoryObject repo : repoList) {
-            repos.put(k, repo);
-            k++;
-        }
-
+        this.repos = repoList;
     }
 
     public boolean isLastRepo(int index) {

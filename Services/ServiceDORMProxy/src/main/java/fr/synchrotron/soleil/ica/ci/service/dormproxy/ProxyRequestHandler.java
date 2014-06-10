@@ -120,7 +120,7 @@ public class ProxyRequestHandler implements Handler<HttpServerRequest> {
                 vertx.fileSystem().mkdir(uploadedDirectory.getPath(), true, new AsyncResultHandler<Void>() {
                     @Override
                     public void handle(AsyncResult<Void> asyncResult) {
-                        if (!asyncResult.succeeded()) {
+                        if (asyncResult.failed()) {
                             throw new RuntimeException(asyncResult.cause());
                         }
                     }

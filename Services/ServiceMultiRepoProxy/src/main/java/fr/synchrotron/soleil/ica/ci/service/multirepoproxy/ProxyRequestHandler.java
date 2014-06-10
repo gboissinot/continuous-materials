@@ -37,6 +37,13 @@ public class ProxyRequestHandler implements Handler<HttpServerRequest> {
     private void processRepo(final HttpServerRequest request,
                              final int repoIndex) {
 
+        if (repositoryScanner.isLastRepo(repoIndex)) {
+            request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
+            request.response().setStatusMessage("Artifact NOT FOUND");
+            request.response().end();
+            return;
+        }
+
         final RepositoryObject repositoryInfo = repositoryScanner.getRepoFromIndex(repoIndex);
 
         final HttpClient vertxHttpClient = vertx.createHttpClient();
@@ -47,37 +54,31 @@ public class ProxyRequestHandler implements Handler<HttpServerRequest> {
             @Override
             public void handle(HttpClientResponse clientResponse) {
 
-                if (HttpResponseStatus.NOT_FOUND.code() == clientResponse.statusCode()
-                        || HttpResponseStatus.MOVED_PERMANENTLY.code() == clientResponse.statusCode()) {
-                    if (repositoryScanner.isLastRepo(repoIndex)) {
-                        request.response().setStatusCode(clientResponse.statusCode());
-                        request.response().setStatusMessage("Artifact NOT FOUND");
-                        request.response().end();
-                    } else {
+                switch (clientResponse.statusCode()) {
+                    case 200:
+                        if ("HEAD".equals(request.method())) {
+                            request.response().setStatusCode(clientResponse.statusCode());
+                            request.response().headers().set(clientResponse.headers());
+                            clientResponse.endHandler(new Handler<Void>() {
+                                public void handle(Void event) {
+                                    request.response().end();
+                                }
+                            });
+                        } else {
+                            makeGetRepoRequest(request, vertxHttpClient, repoURIPath);
+                        }
+                        break;
+                    case 301:
+                    case 404:
                         processRepo(request, repositoryScanner.getNextIndex(repoIndex));
-                    }
-
-                } else if (HttpResponseStatus.OK.code() == clientResponse.statusCode()) {
-                    final String method = request.method();
-                    if ("HEAD".equals(method)) {
+                        break;
+                    default:
                         request.response().setStatusCode(clientResponse.statusCode());
-                        request.response().headers().set(clientResponse.headers());
-                        clientResponse.endHandler(new Handler<Void>() {
-                            public void handle(Void event) {
-                                request.response().end();
-                            }
-                        });
-                    } else {
-                        makeGetRepoRequest(request, vertxHttpClient, repoURIPath);
-                    }
-                } else {
-                    request.response().setStatusCode(clientResponse.statusCode());
-                    request.response().setStatusMessage(clientResponse.statusMessage());
-                    request.response().end();
+                        request.response().setStatusMessage(clientResponse.statusMessage());
+                        request.response().end();
+                        break;
                 }
             }
-
-
         });
 
         vertxRequest.exceptionHandler(new Handler<Throwable>() {
