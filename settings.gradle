@@ -8,7 +8,7 @@ include 'Libs/LibWorkflow',
         'Libs/LibMongoPomExporter',
         'Libs/LibMongoJenkinsJobsGenerator',
         'Libs/LibVertxUtilities',
-        'Services/ServiceLegacyMavenProxy',
+        'Services/ServiceLegacyMavenRepoProxy',
         'Services/ServiceDORMProxy',
         'Services/ServiceMultiRepoProxy',
         'Tools/GradleDistribution'

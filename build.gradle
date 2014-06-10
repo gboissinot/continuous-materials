@@ -170,7 +170,7 @@ project(':Libs/LibVertxUtilities') {
     }
 }
 
-project(':Services/ServiceLegacyMavenProxy') {
+project(':Services/ServiceLegacyMavenRepoProxy') {
     dependencies {
         compile project(':Libs/LibMongoLatestVersionResolver')
         compile project(':Libs/LibMongoPomImporter')

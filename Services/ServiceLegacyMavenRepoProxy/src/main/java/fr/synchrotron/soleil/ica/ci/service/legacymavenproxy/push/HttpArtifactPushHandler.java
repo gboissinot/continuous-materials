@@ -25,6 +25,8 @@ public class HttpArtifactPushHandler {
         this.httpArtifactCaller = httpArtifactCaller;
     }
 
+    //Separate POM ET JAR separement
+
     public void handle(final HttpServerRequest request) {
 
         final HttpClient pClient = httpArtifactCaller.getVertxHttpClient();
@@ -64,25 +66,36 @@ public class HttpArtifactPushHandler {
             @Override
             public void handle(Buffer data) {
                 clientRequest.write(data);
-                int requestId = request.path().hashCode();
-                StringBuilder content = pomStorage.get(requestId);
-                if (content == null) {
-                    pomStorage.put(requestId, new StringBuilder(data.toString()));
-                } else {
-                    pomStorage.put(requestId, content.append(data.toString()));
-                }
+//                int pathId = request.path().hashCode();
+//                StringBuilder content = pomStorage.get(pathId);
+//                if (content == null) {
+//                    pomStorage.put(pathId, new StringBuilder(data.toString()));
+//                } else {
+//                    pomStorage.put(pathId, content.append(data.toString()));
+//                }
             }
         });
 
-        request.endHandler(new Handler<Void>() {
-            @Override
-            public void handle(Void event) {
-                if (path.endsWith(".pom")) {
-                    int code = request.path().hashCode();
-                    StringBuilder content = pomStorage.get(code);
-                    vertxDomainObject.getVertx().eventBus().send(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, content.toString());
+
+        if (path.endsWith(".pom")) {
+            request.bodyHandler(new Handler<Buffer>() {
+                @Override
+                public void handle(Buffer data) {
+                    vertxDomainObject.getVertx().eventBus().send(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, data.toString());
                 }
-            }
-        });
+
+            });
+        }
+
+//        request.endHandler(new Handler<Void>() {
+//            @Override
+//            public void handle(Void event) {
+//                if (path.endsWith(".pom")) {
+//                    int code = request.path().hashCode();
+//                    StringBuilder content = pomStorage.get(code);
+//                    vertxDomainObject.getVertx().eventBus().send(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, content.toString());
+//                }
+//            }
+//        });
     }
 }
