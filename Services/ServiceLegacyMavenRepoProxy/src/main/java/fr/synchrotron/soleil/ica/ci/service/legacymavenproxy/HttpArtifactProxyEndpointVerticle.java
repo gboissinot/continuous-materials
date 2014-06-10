@@ -1,78 +1,69 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull.HttpArtifactPullHandler;
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push.HttpArtifactPushHandler;
-import io.netty.handler.codec.http.HttpMethod;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull.GETHandler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull.GETPOMHandler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push.PUTHandler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push.PUTPOMHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.platform.Verticle;
 
 /**
  * @author Gregory Boissinot
  */
 
-public class HttpArtifactProxyEndpointVerticle extends Verticle {
+public class HttpArtifactProxyEndpointVerticle extends BusModBase {
 
-    public static final String PROXY_PATH = "/legacyMavenProxy";
+
+    private void populateGETRouteMatcher(RouteMatcher routeMatcher, String proxyPath) {
+        final JsonObject getJsonObject = config.getObject("repo.get");
+        final String repoHostGET = getJsonObject.getString("repoHost");
+        final int repoPortGET = getJsonObject.getInteger("repoPort");
+        final String repoURIPathGET = getJsonObject.getString("repoURIPath");
+
+        final HttpClient vertxHttpClient = vertx.createHttpClient();
+        vertxHttpClient.setHost(repoHostGET).setPort(repoPortGET);
+        routeMatcher
+                .getWithRegEx(proxyPath + "/.*.pom", new GETPOMHandler(vertx, vertxHttpClient, proxyPath, repoHostGET, repoPortGET, repoURIPathGET))
+                .getWithRegEx(proxyPath + "/.*", new GETHandler(vertx, vertxHttpClient, proxyPath, repoHostGET, repoPortGET, repoURIPathGET));
+    }
+
+    private void populatePUTRouteMatcher(RouteMatcher routeMatcher, String proxyPath) {
+        final JsonObject putJsonObject = config.getObject("repo.put");
+        final String repoHostPUT = putJsonObject.getString("repoHost");
+        final int repoPortPUT = putJsonObject.getInteger("repoPort");
+        final String repoURIPathPUT = putJsonObject.getString("repoURIPath");
+
+        final HttpClient vertxHttpClient = vertx.createHttpClient();
+        vertxHttpClient.setHost(repoHostPUT).setPort(repoPortPUT);
+
+        routeMatcher
+                .putWithRegEx(proxyPath + "/.*.pom", new PUTPOMHandler(vertx, vertxHttpClient, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT))
+                .putWithRegEx(proxyPath + "/.*", new PUTHandler(vertx, vertxHttpClient, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT));
+    }
 
     @Override
     public void start() {
 
-        final JsonObject config = container.config();
+        super.start();
 
-        final int port = config.getInteger("port");
-
-        final JsonObject get = config.getObject("repo.get");
-        final String repoHostGET = get.getString("repoHost");
-        final int repoPortGET = get.getInteger("repoPort");
-        final String repoURIPathGET = get.getString("repoURIPath");
-        final HttpArtifactCaller httpArtifactCallerGET = new HttpArtifactCaller(vertx, PROXY_PATH, repoHostGET, repoPortGET, repoURIPathGET);
-
-        final JsonObject put = config.getObject("repo.put");
-        final String repoHostPUT = put.getString("repoHost");
-        final int repoPortPUT = put.getInteger("repoPort");
-        final String repoURIPathPUT = put.getString("repoURIPath");
-        final HttpArtifactCaller httpArtifactCallerPUT = new HttpArtifactCaller(vertx, PROXY_PATH, repoHostPUT, repoPortPUT, repoURIPathPUT);
-
+        final int port = getMandatoryIntConfig("proxyPort");
+        final String proxyPath = getMandatoryStringConfig("proxyPath");
         HttpServer httpServer = null;
         try {
-
-            httpServer = vertx.createHttpServer();
-
-            final VertxDomainObject vertxDomainObject = new VertxDomainObject(vertx, container.logger());
-
+            //--GET
             RouteMatcher routeMatcher = new RouteMatcher();
-            routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
-                @Override
-                public void handle(HttpServerRequest request) {
-                    try {
-                        final String method = request.method();
-                        if (HttpMethod.GET.name().equals(method) || HttpMethod.HEAD.name().equals(method)) {
-                            HttpArtifactPullHandler httpArtifactPullHandler =
-                                    new HttpArtifactPullHandler(vertxDomainObject, httpArtifactCallerGET);
-                            httpArtifactPullHandler.handle(request);
-                        } else if (HttpMethod.PUT.name().equals(method)) {
-                            HttpArtifactPushHandler httpArtifactPushHandler =
-                                    new HttpArtifactPushHandler(vertxDomainObject, httpArtifactCallerPUT);
-                            httpArtifactPushHandler.handle(request);
-                        } else {
-                            request.response().setStatusCode(HttpResponseStatus.METHOD_NOT_ALLOWED.code());
-                            request.response().setStatusMessage(String.format("%s method is not supported.", method));
-                            request.response().end();
-                        }
-                    } catch (Throwable e) {
-                        request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
-                        request.response().setStatusMessage(e.toString());
-                        request.response().end();
-                    }
-                }
-            });
+            populateGETRouteMatcher(routeMatcher, proxyPath);
 
+            //--PUT
+            populatePUTRouteMatcher(routeMatcher, proxyPath);
 
+            //-- NO MATCH
             routeMatcher.noMatch(new Handler<HttpServerRequest>() {
                 @Override
                 public void handle(HttpServerRequest request) {
@@ -81,6 +72,7 @@ public class HttpArtifactProxyEndpointVerticle extends Verticle {
                 }
             });
 
+            httpServer = vertx.createHttpServer();
             httpServer.requestHandler(routeMatcher);
             httpServer.listen(port);
 

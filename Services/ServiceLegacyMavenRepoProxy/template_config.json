@@ -1,9 +1,10 @@
 {
-    "port": 8090,
+    "proxyPath": "/legacyMavenRepoProxy",
+    "proxyPort": 8090,
     "repo.get": {
-        "repoHost": "localhost",
-        "repoPort": 8081,
-        "repoURIPath": "/nexus/content/groups/public/"
+        "repoHost": "repo1.maven.org",
+        "repoPort": 80,
+        "repoURIPath": "/maven2"
     },
     "repo.put": {
         "repoHost": "localhost",

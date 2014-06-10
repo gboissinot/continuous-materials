@@ -2,7 +2,6 @@ package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.NoDictionary;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.SoleilDictionary;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
 import org.vertx.java.busmods.BusModBase;
