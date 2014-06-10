@@ -11,7 +11,7 @@ import org.vertx.java.core.eventbus.Message;
 /**
  * @author Gregory Boissinot
  */
-public class TrackPOMWorkerVerticle extends BusModBase {
+public class TrackMetadataWorkerVerticle extends BusModBase {
 
     @Override
     public void start() {
