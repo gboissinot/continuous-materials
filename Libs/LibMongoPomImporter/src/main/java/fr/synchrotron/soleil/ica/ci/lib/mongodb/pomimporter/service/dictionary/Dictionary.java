@@ -4,6 +4,7 @@ import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.exception.POMImporte
 import org.apache.commons.lang.text.StrSubstitutor;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -44,7 +45,10 @@ public abstract class Dictionary {
         public Properties loadPropertiesFile(String propertiedFilePath) {
             Properties properties = new Properties();
             try {
-                properties.load(this.getClass().getResourceAsStream(propertiedFilePath));
+                final InputStream resourceAsStream = this.getClass().getResourceAsStream(propertiedFilePath);
+                if (resourceAsStream != null) {
+                    properties.load(resourceAsStream);
+                }
                 return properties;
             } catch (IOException ioe) {
                 throw new RuntimeException(ioe);

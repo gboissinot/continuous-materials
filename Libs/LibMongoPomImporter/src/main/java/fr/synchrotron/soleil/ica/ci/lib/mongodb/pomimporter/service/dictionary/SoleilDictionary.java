@@ -7,6 +7,6 @@ public class SoleilDictionary extends Dictionary {
 
     @Override
     public String getDictionaryFilePath() {
-        return "./soleil-dictionary.properties";
+        return "/soleil-dictionary.properties";
     }
 }
