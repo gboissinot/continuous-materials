@@ -1,7 +1,7 @@
 {
     "proxyPath": "/multiRepoProxy",
     "proxyPort": 8081,
-e    "repositories.get": [
+    "repositories.get": [
         {
             "repository1": {
                 "host": "google.fr",
