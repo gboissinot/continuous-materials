@@ -48,7 +48,7 @@ public class POMCache {
             crypt.update(pomContent.getBytes("UTF-8"));
 
             String sha1 = new BigInteger(1, crypt.digest()).toString(16);
-            String sha2 = DigestUtils.shaHex(pomContent.getBytes());
+            //String sha2 = DigestUtils.shaHex(pomContent.getBytes());
 
             final ConcurrentSharedMap<Object, Object> map = sharedData.getMap(KEY_CACHE_POM_SHA1);
             map.put(sha1Path, sha1);
