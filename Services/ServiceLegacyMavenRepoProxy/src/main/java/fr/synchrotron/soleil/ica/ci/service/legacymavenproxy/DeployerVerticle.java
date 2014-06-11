@@ -1,7 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull.FixLegacyPOMWorkerVerticle;
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push.TrackMetadataWorkerVerticle;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get.FixLegacyPOMWorkerVerticle;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.put.TrackMetadataWorkerVerticle;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 

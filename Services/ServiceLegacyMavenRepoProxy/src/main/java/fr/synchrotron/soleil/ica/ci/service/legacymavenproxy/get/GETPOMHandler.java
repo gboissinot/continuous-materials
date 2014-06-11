@@ -1,5 +1,6 @@
-package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull;
+package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get;
 
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.POMCache;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.GETHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -29,9 +30,18 @@ public class GETPOMHandler extends GETHandler {
         final String path = repositoryRequestBuilder.buildRequestPath(request);
         System.out.println("Download " + path);
 
+        final POMCache pomCache = new POMCache();
+        final String pomContent = pomCache.loadPomContentFromCache(vertx, path);
+        if (pomContent != null) {
+            request.response().setStatusCode(HttpResponseStatus.OK.code());
+            request.response().putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(pomContent.getBytes().length));
+            request.response().end(pomContent);
+            return;
+        }
+
         HttpClientRequest vertxHttpClientRequest = vertxHttpClient.get(path, new Handler<HttpClientResponse>() {
             @Override
-            public void handle(HttpClientResponse clientResponse) {
+            public void handle(final HttpClientResponse clientResponse) {
 
                 int statusCode = clientResponse.statusCode();
 
@@ -51,12 +61,25 @@ public class GETPOMHandler extends GETHandler {
                             public void handle(AsyncResult<Message<String>> asyncResult) {
                                 if (asyncResult.succeeded()) {
                                     final Message<String> pomResultMessage = asyncResult.result();
-                                    final String pomResultContent = pomResultMessage.body();
+                                    String pomResultContent = pomResultMessage.body();
                                     if (pomResultContent == null) {
                                         request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
                                         request.response().end();
                                     } else {
-                                        request.response().putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(pomResultContent.getBytes().length));
+
+                                        String returnedPomContent = asyncResult.result().body();
+
+                                        request.response().putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(returnedPomContent.getBytes().length));
+                                        request.response().putHeader(HttpHeaders.ETAG, clientResponse.headers().get(HttpHeaders.ETAG));
+                                        request.response().putHeader(HttpHeaders.LAST_MODIFIED, clientResponse.headers().get(HttpHeaders.LAST_MODIFIED));
+                                        request.response().putHeader(HttpHeaders.CONTENT_TYPE, clientResponse.headers().get(HttpHeaders.CONTENT_TYPE));
+                                        final String setCookie = clientResponse.headers().get(HttpHeaders.SET_COOKIE);
+                                        if (setCookie != null) {
+                                            request.response().headers().set(HttpHeaders.SET_COOKIE, repositoryRequestBuilder.getNewCookieContent(setCookie));
+                                        }
+
+                                        pomCache.putPomContent(vertx, path, returnedPomContent);
+
                                         request.response().end(pomResultContent);
                                     }
                                 } else {
@@ -68,7 +91,6 @@ public class GETPOMHandler extends GETHandler {
                         });
                     }
                 });
-
             }
         });
 
@@ -78,11 +100,7 @@ public class GETPOMHandler extends GETHandler {
             @Override
             public void handle(Throwable throwable) {
                 request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
-                StringBuilder errorMsg = new StringBuilder();
-                errorMsg.append("Exception from ").append(repositoryRequestBuilder.getRepositoryObject().getHost());
-                errorMsg.append("-->").append(throwable.toString());
-                errorMsg.append("\n");
-                request.response().end(errorMsg.toString());
+                request.response().end();
             }
         });
         vertxHttpClientRequest.end();

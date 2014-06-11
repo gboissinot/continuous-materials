@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public class ProxyRequestHandler implements Handler<HttpServerRequest> {
 
-
     private final Vertx vertx;
     private final String fsRepositoryRootDir;
 
@@ -44,7 +43,6 @@ public class ProxyRequestHandler implements Handler<HttpServerRequest> {
             request.response().end();
         }
     }
-
 
     private void uploadPomFile(final HttpServerRequest request, final String path) {
         request.dataHandler(new Handler<Buffer>() {

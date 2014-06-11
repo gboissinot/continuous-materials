@@ -3,10 +3,7 @@ package fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
-import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientRequest;
-import org.vertx.java.core.http.HttpClientResponse;
-import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.http.*;
 import org.vertx.java.core.streams.Pump;
 
 /**
@@ -45,6 +42,10 @@ public class GETHandler implements Handler<HttpServerRequest> {
                 request.response().setStatusMessage(clientResponse.statusMessage());
                 request.response().headers().set(clientResponse.headers());
                 request.response().setChunked(true);
+                final String setCookie = clientResponse.headers().get(HttpHeaders.SET_COOKIE);
+                if (setCookie != null) {
+                    request.response().headers().set(HttpHeaders.SET_COOKIE, repositoryRequestBuilder.getNewCookieContent(setCookie));
+                }
                 clientResponse.endHandler(new Handler<Void>() {
                     public void handle(Void event) {
                         request.response().end();
@@ -66,11 +67,7 @@ public class GETHandler implements Handler<HttpServerRequest> {
             @Override
             public void handle(Throwable throwable) {
                 request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
-                StringBuilder errorMsg = new StringBuilder();
-                errorMsg.append("Exception from ").append(repositoryRequestBuilder.getRepositoryObject().getUri());
-                errorMsg.append("-->").append(throwable.toString());
-                errorMsg.append("\n");
-                request.response().end(errorMsg.toString());
+                request.response().end();
             }
         });
         vertxHttpClientRequest.end();

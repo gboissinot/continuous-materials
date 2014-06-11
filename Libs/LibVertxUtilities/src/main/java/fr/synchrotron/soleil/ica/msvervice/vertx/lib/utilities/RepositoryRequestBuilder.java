@@ -20,10 +20,6 @@ public class RepositoryRequestBuilder {
         this.repositoryObject = new RepositoryObject(host, port, uri);
     }
 
-    public String getServerProxyPath() {
-        return serverProxyPath;
-    }
-
     public RepositoryObject getRepositoryObject() {
         return repositoryObject;
     }
@@ -32,6 +28,12 @@ public class RepositoryRequestBuilder {
         String artifactPath = request.path().substring(serverProxyPath.length() + 1);
         String repoURIPath = repositoryObject.getUri();
         return repoURIPath.endsWith("/") ? (repoURIPath + artifactPath) : (repoURIPath + "/" + artifactPath);
+    }
+
+    public String getNewCookieContent(String cookie) {
+        final String repositoryUri = repositoryObject.getUri();
+        final String startRepoPath = repositoryUri.substring(0, repositoryUri.indexOf("/", 1));
+        return cookie.replace(startRepoPath, serverProxyPath);
     }
 
 }

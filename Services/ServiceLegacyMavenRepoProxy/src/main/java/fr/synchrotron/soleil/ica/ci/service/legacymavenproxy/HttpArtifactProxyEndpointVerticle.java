@@ -1,7 +1,8 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull.GETPOMHandler;
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push.PUTPOMHandler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get.GETPOMHandler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get.GETPOMSha1Handler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.put.PUTPOMHandler;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.GETHandler;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.PUTHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -26,6 +27,7 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
 
         routeMatcher
                 .getWithRegEx(proxyPath + "/.*.pom", new GETPOMHandler(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET))
+                .getWithRegEx(proxyPath + "/.*.pom.sha1", new GETPOMSha1Handler(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET))
                 .getWithRegEx(proxyPath + "/.*", new GETHandler(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET));
     }
 

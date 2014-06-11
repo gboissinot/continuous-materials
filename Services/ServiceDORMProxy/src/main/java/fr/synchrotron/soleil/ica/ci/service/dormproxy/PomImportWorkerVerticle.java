@@ -1,7 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.dormproxy;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.NoDictionary;
+import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.SoleilDictionary;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;
 import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.Handler;
@@ -19,9 +19,9 @@ public class PomImportWorkerVerticle extends BusModBase {
         final String mongoHost = getMandatoryStringConfig("mongoHost");
         final Integer mongoPort = getMandatoryIntConfig("mongoPort");
         final String mongoDbName = getMandatoryStringConfig("mongoDbName");
-        final POMImportService pomImportService =
-                //TODO Use the Soleil Dictionnary
-                new POMImportService(new NoDictionary(), new BasicMongoDBDataSource(mongoHost, mongoPort, mongoDbName));
+        final POMImportService pomImportService = new POMImportService(
+                new SoleilDictionary(),
+                new BasicMongoDBDataSource(mongoHost, mongoPort, mongoDbName));
 
         eb.registerHandler(ServiceAddressRegistry.EB_ADDRESS_POMIMPORT_SERVICE, new Handler<Message<String>>() {
             @Override

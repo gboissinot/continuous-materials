@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull;
+package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.ArtifactRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.ArtifactVersionResolverService;
@@ -37,6 +37,7 @@ public class LegacyPomContentFixer {
         } catch (XmlPullParserException xe) {
             new RuntimeException(xe);
         }
+
 
         pomReader.close();
 

@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull;
+package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.mongodb.MongoDBArtifactRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.util.BasicMongoDBDataSource;

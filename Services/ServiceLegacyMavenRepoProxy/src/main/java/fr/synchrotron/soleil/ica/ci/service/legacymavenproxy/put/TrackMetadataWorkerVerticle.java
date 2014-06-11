@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push;
+package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.put;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.POMImportService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.pomimporter.service.dictionary.SoleilDictionary;
