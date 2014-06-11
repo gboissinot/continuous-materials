@@ -1,6 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.push;
 
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.RepositoryRequestBuilder;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryRequestBuilder;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
@@ -36,6 +36,7 @@ public class PUTHandler implements Handler<HttpServerRequest> {
         final String path = repositoryRequestBuilder.buildRequestPath(request);
         System.out.println("Upload " + path);
 
+        request.pause();
         final HttpClientRequest vertxHttpClientRequest = vertxHttpClient.put(path, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
@@ -73,6 +74,7 @@ public class PUTHandler implements Handler<HttpServerRequest> {
 
         final Pump pump = Pump.createPump(request, vertxHttpClientRequest);
         pump.start();
+        request.resume();
     }
 
 }

@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
+package fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities;
 
 import org.vertx.java.core.http.HttpServerRequest;
 

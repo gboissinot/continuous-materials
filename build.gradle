@@ -47,6 +47,7 @@ configure(subprojects.findAll { it.name.startsWith('Services/Service') }) {
     dependencies {
         compile "io.vertx:vertx-core:$vertxVersion"
         compile "io.vertx:vertx-platform:$vertxVersion"
+        compile project(':Libs/LibVertxUtilities')
     }
 
     publishing {
@@ -174,7 +175,6 @@ project(':Services/ServiceLegacyMavenRepoProxy') {
     dependencies {
         compile project(':Libs/LibMongoLatestVersionResolver')
         compile project(':Libs/LibMongoPomImporter')
-        compile project(':Libs/LibVertxUtilities')
         compile "org.apache.maven:maven-core:$mavenCoreVersion"
         compile "org.fuin:utils4j:$utils4jVersion"
         compile "commons-io:commons-io:$commonsIoVersion"
@@ -185,7 +185,6 @@ project(':Services/ServiceLegacyMavenRepoProxy') {
 project(':Services/ServiceDORMProxy') {
     dependencies {
         compile project(':Libs/LibMongoPomImporter')
-        compile project(':Libs/LibVertxUtilities')
     }
 }
 

@@ -1,0 +1,37 @@
+
+
+--- SNAPSHOT
+Download /maven2/org/codehaus/plexus/plexus/1.0.12/plexus-1.0.12.pom
+Download /maven2/org/codehaus/plexus/plexus/1.0.12/plexus-1.0.12.pom.sha1
+Download /maven2/org/codehaus/plexus/plexus/1.0.12/plexus-1.0.12.pom
+Download /maven2/org/codehaus/plexus/plexus/1.0.12/plexus-1.0.12.pom.sha1
+Download /maven2/org/codehaus/plexus/plexus-utils/1.5.6/plexus-utils-1.5.6.jar
+Download /maven2/org/codehaus/plexus/plexus-utils/1.5.6/plexus-utils-1.5.6.jar.sha1
+Download /maven2/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/maven-metadata.xml
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/mongodb-util-1.0.4-20140611.060331-1.jar
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/mongodb-util-1.0.4-20140611.060331-1.jar.sha1
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/mongodb-util-1.0.4-20140611.060331-1.jar.md5
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/mongodb-util-1.0.4-20140611.060331-1.pom
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/mongodb-util-1.0.4-20140611.060331-1.pom.sha1
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/mongodb-util-1.0.4-20140611.060331-1.pom.md5
+Download /maven2/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/maven-metadata.xml
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/maven-metadata.xml.sha1
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4-SNAPSHOT/maven-metadata.xml.md5
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml.sha1
+Upload /nexus/content/repositories/snapshots/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml.md5
+
+
+
+--- RELEASE
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4/mongodb-util-1.0.4.jar
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4/mongodb-util-1.0.4.jar.sha1
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4/mongodb-util-1.0.4.jar.md5
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4/mongodb-util-1.0.4.pom
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4/mongodb-util-1.0.4.pom.sha1
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.4/mongodb-util-1.0.4.pom.md5
+Download /maven2/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml.sha1
+Upload /nexus/content/repositories/releases/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml.md5

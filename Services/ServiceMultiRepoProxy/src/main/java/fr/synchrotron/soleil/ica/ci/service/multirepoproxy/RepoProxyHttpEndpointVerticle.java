@@ -18,29 +18,28 @@ import java.util.Map;
  */
 public class RepoProxyHttpEndpointVerticle extends Verticle {
 
-    public static final String PROXY_PATH = "/multiRepoProxy";
-
     @Override
     public void start() {
 
         final JsonObject config = container.config();
-
-        int port = config.getInteger("port");
+        final int port = config.getInteger("proxyPort");
+        final String proxyPath = config.getString("proxyPath");
         final JsonArray repositories = config.getArray("repositories");
+
         final List<RepositoryObject> repos = buildRepoUrls(repositories);
 
         final HttpServer httpServer = vertx.createHttpServer();
 
         RouteMatcher routeMatcher = new RouteMatcher();
-        routeMatcher.headWithRegEx(PROXY_PATH + "/.*", new ProxyRequestPullHandler(vertx, repos));
-        routeMatcher.getWithRegEx(PROXY_PATH + "/.*", new ProxyRequestPullHandler(vertx, repos));
+        routeMatcher.headWithRegEx(proxyPath + "/.*", new ProxyRequestPullHandler(vertx, repos));
+        routeMatcher.getWithRegEx(proxyPath + "/.*", new ProxyRequestPullHandler(vertx, repos));
 
         RepositoryObject repositoryObject = null;
-        routeMatcher.putWithRegEx(PROXY_PATH + "/.*", new ProxyRequestPushHandler(vertx, repositoryObject));
+        routeMatcher.putWithRegEx(proxyPath + "/.*", new ProxyRequestPushHandler(vertx, repositoryObject));
 
 
         //Other than HEAD, GET or PUT and POST
-        routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
+        routeMatcher.allWithRegEx(proxyPath + "/.*", new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest request) {
                 request.response().setStatusCode(HttpResponseStatus.METHOD_NOT_ALLOWED.code());

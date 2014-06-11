@@ -31,8 +31,10 @@ public class GETPOMHandler extends GETHandler {
 
                 int statusCode = clientResponse.statusCode();
 
-                if (statusCode == HttpResponseStatus.NOT_FOUND.code()) {
+                if (statusCode != HttpResponseStatus.NOT_MODIFIED.code()
+                        && statusCode != HttpResponseStatus.OK.code()) {
                     request.response().setStatusCode(statusCode);
+                    request.response().setStatusMessage(clientResponse.statusMessage());
                     request.response().end();
                     return;
                 }
@@ -66,7 +68,8 @@ public class GETPOMHandler extends GETHandler {
             }
         });
 
-        //vertxHttpClientRequest.headers().set(request.headers());
+        vertxHttpClientRequest.headers().set(request.headers());
+        vertxHttpClientRequest.headers().remove("Host");
         vertxHttpClientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {

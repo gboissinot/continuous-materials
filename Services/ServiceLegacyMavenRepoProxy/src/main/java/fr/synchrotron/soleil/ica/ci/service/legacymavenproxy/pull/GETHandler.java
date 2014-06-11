@@ -1,6 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull;
 
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.RepositoryRequestBuilder;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryRequestBuilder;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
@@ -28,7 +28,6 @@ public class GETHandler implements Handler<HttpServerRequest> {
         this.vertx = vertx;
         this.vertxHttpClient = vertxHttpClient;
         this.repositoryRequestBuilder = new RepositoryRequestBuilder(proxyPath, repoHost, repoPort, repoUri);
-        ;
     }
 
 
@@ -63,7 +62,8 @@ public class GETHandler implements Handler<HttpServerRequest> {
             }
         });
 
-        //vertxHttpClientRequest.headers().set(request.headers());
+        vertxHttpClientRequest.headers().set(request.headers());
+        vertxHttpClientRequest.headers().remove("Host");
         vertxHttpClientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {

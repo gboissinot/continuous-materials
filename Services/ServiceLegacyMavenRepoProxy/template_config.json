@@ -9,7 +9,7 @@
     "repo.put": {
         "repoHost": "localhost",
         "repoPort": 8081,
-        "repoURIPath": "/nexus/content/repositories/snapshots/"
+        "repoURIPath": "/nexus/content/repositories/releases/"
     },
     "mongo": {
         "mongoHost": "127.0.0.1",

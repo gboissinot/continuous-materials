@@ -1,5 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryRequestBuilder;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
@@ -19,6 +20,8 @@ public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
     private final Vertx vertx;
 
     private final RepositoryScanner repositoryScanner;
+
+    RepositoryRequestBuilder repositoryRequestBuilder=null;
 
     public ProxyRequestPullHandler(Vertx vertx, List<RepositoryObject> repos) {
         this.vertx = vertx;
@@ -50,7 +53,8 @@ public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
         vertxHttpClient.setHost(repositoryInfo.getHost()).setPort(repositoryInfo.getPort());
 
         final String repoURIPath = repositoryInfo.getUri();
-        HttpClientRequest vertxRequest = vertxHttpClient.head(buildRequestPath(request, repoURIPath), new Handler<HttpClientResponse>() {
+
+        HttpClientRequest vertxRequest = vertxHttpClient.head(repositoryRequestBuilder.buildRequestPath(request), new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
 
@@ -96,15 +100,9 @@ public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
         vertxRequest.end();
     }
 
-    private String buildRequestPath(final HttpServerRequest request, String repoURIPath) {
-        final String prefix = RepoProxyHttpEndpointVerticle.PROXY_PATH;
-        String artifactPath = request.path().substring(prefix.length() + 1);
-        return repoURIPath.endsWith("/") ? (repoURIPath + artifactPath) : (repoURIPath + "/" + artifactPath);
-    }
-
     private void makeGetRepoRequest(final HttpServerRequest request, final HttpClient vertxHttpClient, final String repoUri) {
 
-        HttpClientRequest vertxRequest = vertxHttpClient.get(buildRequestPath(request, repoUri), new Handler<HttpClientResponse>() {
+        HttpClientRequest vertxRequest = vertxHttpClient.get(repositoryRequestBuilder.buildRequestPath(request), new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
                 final int statusCode = clientResponse.statusCode();
