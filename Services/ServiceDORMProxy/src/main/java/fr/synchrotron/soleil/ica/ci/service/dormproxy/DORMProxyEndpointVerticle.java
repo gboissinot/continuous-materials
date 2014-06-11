@@ -19,16 +19,33 @@ public class DORMProxyEndpointVerticle extends BusModBase {
 
         super.start();
 
-
         final int port = getMandatoryIntConfig("httpPort");
         final String fsRepositoryRootDir = getMandatoryStringConfig("fs.repository.rootdir");
-
 
         final HttpServer httpServer = vertx.createHttpServer();
         RouteMatcher routeMatcher = new RouteMatcher();
 
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.jar", new BinaryHandler(vertx, fsRepositoryRootDir));
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.jar.sha1", new BinaryHandler(vertx, fsRepositoryRootDir));
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.jar.md5", new BinaryHandler(vertx, fsRepositoryRootDir));
 
-        routeMatcher.putWithRegEx(PROXY_PATH + "/.*", new ProxyRequestHandler(vertx, fsRepositoryRootDir));
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.pom", new PUTPOMHandler(vertx));
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.pom.sha1", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(HttpServerRequest request) {
+                request.response().setStatusCode(HttpResponseStatus.NO_CONTENT.code());
+                request.response().end();
+                ;
+            }
+        });
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.pom.md5", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(HttpServerRequest request) {
+                request.response().setStatusCode(HttpResponseStatus.NO_CONTENT.code());
+                request.response().end();
+                ;
+            }
+        });
 
         routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
             @Override
