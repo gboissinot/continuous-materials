@@ -31,8 +31,8 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         final JsonArray repositories = config.getArray("repositories.get");
         final List<RepositoryObject> repos = buildRepoUrls(repositories);
         RouteMatcher routeMatcher = new RouteMatcher();
-        routeMatcher.headWithRegEx(proxyPath + "/.*", new ProxyRequestPullHandler(vertx, proxyPath, repos));
-        routeMatcher.getWithRegEx(proxyPath + "/.*", new ProxyRequestPullHandler(vertx, proxyPath, repos));
+        routeMatcher.headWithRegEx(proxyPath + "/.*", new MutltiGETHandler(vertx, proxyPath, repos));
+        routeMatcher.getWithRegEx(proxyPath + "/.*", new MutltiGETHandler(vertx, proxyPath, repos));
 
         //PUT
         final JsonObject putJsonObject = config.getObject("repo.put");

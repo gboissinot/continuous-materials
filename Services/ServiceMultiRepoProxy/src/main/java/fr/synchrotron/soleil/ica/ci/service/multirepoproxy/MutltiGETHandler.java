@@ -16,13 +16,13 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
+public class MutltiGETHandler implements Handler<HttpServerRequest> {
 
     private final Vertx vertx;
     private final RepositoryScanner repositoryScanner;
     private final String proxyPath;
 
-    public ProxyRequestPullHandler(Vertx vertx, String proxyPath, List<RepositoryObject> repos) {
+    public MutltiGETHandler(Vertx vertx, String proxyPath, List<RepositoryObject> repos) {
         this.vertx = vertx;
 
         if (repos == null || repos.size() == 0) {
