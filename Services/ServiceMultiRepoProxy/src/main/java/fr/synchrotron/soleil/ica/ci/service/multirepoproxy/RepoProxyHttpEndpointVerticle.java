@@ -1,5 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.PUTHandler;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryObject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServer;
@@ -24,21 +26,23 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         final JsonObject config = container.config();
         final int port = config.getInteger("proxyPort");
         final String proxyPath = config.getString("proxyPath");
-        final JsonArray repositories = config.getArray("repositories");
 
+        //GET
+        final JsonArray repositories = config.getArray("repositories.get");
         final List<RepositoryObject> repos = buildRepoUrls(repositories);
-
-        final HttpServer httpServer = vertx.createHttpServer();
-
         RouteMatcher routeMatcher = new RouteMatcher();
-        routeMatcher.headWithRegEx(proxyPath + "/.*", new ProxyRequestPullHandler(vertx, repos));
-        routeMatcher.getWithRegEx(proxyPath + "/.*", new ProxyRequestPullHandler(vertx, repos));
+        routeMatcher.headWithRegEx(proxyPath + "/.*", new ProxyRequestPullHandler(vertx, proxyPath, repos));
+        routeMatcher.getWithRegEx(proxyPath + "/.*", new ProxyRequestPullHandler(vertx, proxyPath, repos));
 
-        RepositoryObject repositoryObject = null;
-        routeMatcher.putWithRegEx(proxyPath + "/.*", new ProxyRequestPushHandler(vertx, repositoryObject));
+        //PUT
+        final JsonObject putJsonObject = config.getObject("repo.put");
+        final String repoHostPUT = putJsonObject.getString("host");
+        final int repoPortPUT = putJsonObject.getInteger("port");
+        final String repoURIPathPUT = putJsonObject.getString("uri");
+        routeMatcher.putWithRegEx(proxyPath + "/.*", new PUTHandler(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT));
 
 
-        //Other than HEAD, GET or PUT and POST
+        //Other than HEAD, GET or PUT are not supported
         routeMatcher.allWithRegEx(proxyPath + "/.*", new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest request) {
@@ -56,13 +60,13 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
             }
         });
 
+        final HttpServer httpServer = vertx.createHttpServer();
         httpServer.requestHandler(routeMatcher);
         httpServer.listen(port);
 
         container.logger().info("Webserver proxy started, listening on port:" + port);
 
     }
-
 
     private List<RepositoryObject> buildRepoUrls(JsonArray repositories) {
         List<RepositoryObject> result = new ArrayList<RepositoryObject>();
@@ -71,11 +75,11 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
 
             final Map<String, Object> stringObjectMap = repositoryOject.toMap();
             for (Map.Entry<String, Object> stringObjectEntry : stringObjectMap.entrySet()) {
-                final Map<String, String> repoMap = (Map<String, String>) stringObjectEntry.getValue();
-                result.add(new RepositoryObject(repoMap.get("host"), Integer.parseInt(repoMap.get("port")), repoMap.get("uri")));
+                final Map<String, Object> repoMap = (Map<String, Object>) stringObjectEntry.getValue();
+                result.add(new RepositoryObject((String) repoMap.get("host"),
+                        (int) repoMap.get("port"), (String) repoMap.get("uri")));
             }
         }
         return result;
-
     }
 }

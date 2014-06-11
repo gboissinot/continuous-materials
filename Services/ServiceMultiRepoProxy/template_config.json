@@ -1,7 +1,7 @@
 {
     "proxyPath": "/multiRepoProxy",
     "proxyPort": 8081,
-    "repositories": [
+e    "repositories.get": [
         {
             "repository1": {
                 "host": "google.fr",
@@ -23,5 +23,10 @@
                 "uri": "/nexus/content/repositories/releases/"
             }
         }
-    ]
+    ],
+    "repo.put": {
+        "host": "localhost",
+        "port": 8081,
+        "uri": "/nexus/content/repositories/releases/"
+    }
 }

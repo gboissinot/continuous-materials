@@ -7,26 +7,31 @@ import org.vertx.java.core.http.HttpServerRequest;
  */
 public class RepositoryRequestBuilder {
 
-    private final String repoHost;
-    private final int repoPort;
-    private final String repoURIPath;
-    private String serverProxyPath;
+    private final String serverProxyPath;
+    private final RepositoryObject repositoryObject;
 
-    public RepositoryRequestBuilder(String serverProxyPath, String repoHost, int repoPort, String repoURIPath) {
+    public RepositoryRequestBuilder(String serverProxyPath, RepositoryObject repositoryObject) {
         this.serverProxyPath = serverProxyPath;
-        this.repoHost = repoHost;
-        this.repoPort = repoPort;
-        this.repoURIPath = repoURIPath;
+        this.repositoryObject = repositoryObject;
     }
 
-    public String getRepoHost() {
-        return repoHost;
+    public RepositoryRequestBuilder(String serverProxyPath, String host, int port, String uri) {
+        this.serverProxyPath = serverProxyPath;
+        this.repositoryObject = new RepositoryObject(host, port, uri);
+    }
+
+    public String getServerProxyPath() {
+        return serverProxyPath;
+    }
+
+    public RepositoryObject getRepositoryObject() {
+        return repositoryObject;
     }
 
     public String buildRequestPath(final HttpServerRequest request) {
         String artifactPath = request.path().substring(serverProxyPath.length() + 1);
+        String repoURIPath = repositoryObject.getUri();
         return repoURIPath.endsWith("/") ? (repoURIPath + artifactPath) : (repoURIPath + "/" + artifactPath);
     }
-
 
 }

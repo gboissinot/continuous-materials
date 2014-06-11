@@ -1,6 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pull;
 
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.GETHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.AsyncResultHandler;
@@ -8,15 +9,18 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.http.*;
+import org.vertx.java.core.http.HttpClientRequest;
+import org.vertx.java.core.http.HttpClientResponse;
+import org.vertx.java.core.http.HttpHeaders;
+import org.vertx.java.core.http.HttpServerRequest;
 
 /**
  * @author Gregory Boissinot
  */
 public class GETPOMHandler extends GETHandler {
 
-    public GETPOMHandler(Vertx vertx, HttpClient vertxHttpClient, String proxyPath, String repoHost, int repoPort, String repoUri) {
-        super(vertx, vertxHttpClient, proxyPath, repoHost, repoPort, repoUri);
+    public GETPOMHandler(Vertx vertx, String proxyPath, String repoHost, int repoPort, String repoUri) {
+        super(vertx, proxyPath, repoHost, repoPort, repoUri);
     }
 
     @Override
@@ -75,7 +79,7 @@ public class GETPOMHandler extends GETHandler {
             public void handle(Throwable throwable) {
                 request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
                 StringBuilder errorMsg = new StringBuilder();
-                errorMsg.append("Exception from ").append(repositoryRequestBuilder.getRepoHost());
+                errorMsg.append("Exception from ").append(repositoryRequestBuilder.getRepositoryObject().getHost());
                 errorMsg.append("-->").append(throwable.toString());
                 errorMsg.append("\n");
                 request.response().end(errorMsg.toString());

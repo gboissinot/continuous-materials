@@ -1,5 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.GETHandler;
+import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryObject;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryRequestBuilder;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
@@ -8,7 +10,6 @@ import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.streams.Pump;
 
 import java.util.List;
 
@@ -18,27 +19,26 @@ import java.util.List;
 public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
 
     private final Vertx vertx;
-
     private final RepositoryScanner repositoryScanner;
+    private final String proxyPath;
 
-    RepositoryRequestBuilder repositoryRequestBuilder=null;
-
-    public ProxyRequestPullHandler(Vertx vertx, List<RepositoryObject> repos) {
+    public ProxyRequestPullHandler(Vertx vertx, String proxyPath, List<RepositoryObject> repos) {
         this.vertx = vertx;
 
         if (repos == null || repos.size() == 0) {
             throw new IllegalArgumentException("repos");
         }
         this.repositoryScanner = new RepositoryScanner(repos);
+        this.proxyPath = proxyPath;
     }
 
     @Override
     public void handle(final HttpServerRequest request) {
-        processRepo(request, 0);
+        processRepository(request, 0);
     }
 
-    private void processRepo(final HttpServerRequest request,
-                             final int repoIndex) {
+    private void processRepository(final HttpServerRequest request,
+                                   final int repoIndex) {
 
         if (repositoryScanner.isLastRepo(repoIndex)) {
             request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
@@ -48,11 +48,11 @@ public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
         }
 
         final RepositoryObject repositoryInfo = repositoryScanner.getRepoFromIndex(repoIndex);
-
         final HttpClient vertxHttpClient = vertx.createHttpClient();
         vertxHttpClient.setHost(repositoryInfo.getHost()).setPort(repositoryInfo.getPort());
 
-        final String repoURIPath = repositoryInfo.getUri();
+        RepositoryRequestBuilder repositoryRequestBuilder =
+                new RepositoryRequestBuilder(proxyPath, repositoryInfo);
 
         HttpClientRequest vertxRequest = vertxHttpClient.head(repositoryRequestBuilder.buildRequestPath(request), new Handler<HttpClientResponse>() {
             @Override
@@ -69,12 +69,12 @@ public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
                                 }
                             });
                         } else {
-                            makeGetRepoRequest(request, vertxHttpClient, repoURIPath);
+                            makeGetRepoRequest(request, repositoryInfo);
                         }
                         break;
                     case 301:
                     case 404:
-                        processRepo(request, repositoryScanner.getNextIndex(repoIndex));
+                        processRepository(request, repositoryScanner.getNextIndex(repoIndex));
                         break;
                     default:
                         request.response().setStatusCode(clientResponse.statusCode());
@@ -100,41 +100,9 @@ public class ProxyRequestPullHandler implements Handler<HttpServerRequest> {
         vertxRequest.end();
     }
 
-    private void makeGetRepoRequest(final HttpServerRequest request, final HttpClient vertxHttpClient, final String repoUri) {
-
-        HttpClientRequest vertxRequest = vertxHttpClient.get(repositoryRequestBuilder.buildRequestPath(request), new Handler<HttpClientResponse>() {
-            @Override
-            public void handle(HttpClientResponse clientResponse) {
-                final int statusCode = clientResponse.statusCode();
-                request.response().setStatusCode(statusCode);
-                request.response().setStatusMessage(clientResponse.statusMessage());
-                request.response().headers().set(clientResponse.headers());
-                clientResponse.endHandler(new Handler<Void>() {
-                    public void handle(Void event) {
-                        request.response().end();
-                    }
-                });
-                if (statusCode == HttpResponseStatus.NOT_MODIFIED.code()
-                        || statusCode == HttpResponseStatus.OK.code()) {
-                    //Send result to original client
-                    Pump.createPump(clientResponse, request.response().setChunked(true)).start();
-                }
-            }
-        });
-
-        vertxRequest.exceptionHandler(new Handler<Throwable>() {
-            @Override
-            public void handle(Throwable e) {
-                request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
-                StringBuilder errorMsg = new StringBuilder();
-                errorMsg.append("Exception from ").append(repoUri);
-                errorMsg.append("-->").append(e.toString());
-                errorMsg.append("\n");
-                request.response().end(errorMsg.toString());
-            }
-        });
-
-        vertxRequest.end();
+    private void makeGetRepoRequest(final HttpServerRequest request, RepositoryObject repositoryInfo) {
+        GETHandler getHandler = new GETHandler(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri());
+        getHandler.handle(request);
     }
 
 }
