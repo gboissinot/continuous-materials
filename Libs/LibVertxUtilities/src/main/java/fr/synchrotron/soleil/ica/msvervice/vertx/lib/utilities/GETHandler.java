@@ -25,7 +25,6 @@ public class GETHandler implements Handler<HttpServerRequest> {
         this.repositoryRequestBuilder = new RepositoryRequestBuilder(proxyPath, repoHost, repoPort, repoUri);
     }
 
-
     @Override
     public void handle(final HttpServerRequest request) {
 
@@ -57,7 +56,6 @@ public class GETHandler implements Handler<HttpServerRequest> {
                     pump.start();
                 }
                 clientResponse.resume();
-
             }
         });
 
