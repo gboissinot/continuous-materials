@@ -3,6 +3,7 @@ package fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
+import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.http.*;
 import org.vertx.java.core.streams.Pump;
 
@@ -42,6 +43,11 @@ public class PUTHandler implements Handler<HttpServerRequest> {
                 if (setCookie != null) {
                     request.response().headers().set(HttpHeaders.SET_COOKIE, repositoryRequestBuilder.getNewCookieContent(setCookie));
                 }
+                clientResponse.dataHandler(new Handler<Buffer>() {
+                    public void handle(Buffer data) {
+                        request.response().write(data);
+                    }
+                });
                 clientResponse.endHandler(new Handler<Void>() {
                     public void handle(Void event) {
                         request.response().end();
@@ -51,7 +57,8 @@ public class PUTHandler implements Handler<HttpServerRequest> {
         });
 
         vertxHttpClientRequest.headers().set(request.headers());
-        vertxHttpClientRequest.setChunked(true);
+        //TODO REMOVE IT
+        //vertxHttpClientRequest.setChunked(true);
         vertxHttpClientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
