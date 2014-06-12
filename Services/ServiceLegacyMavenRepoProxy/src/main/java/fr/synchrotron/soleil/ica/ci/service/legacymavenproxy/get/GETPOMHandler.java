@@ -30,7 +30,7 @@ public class GETPOMHandler extends GETHandler {
         final String path = repositoryRequestBuilder.buildRequestPath(request);
         System.out.println("Download " + path);
 
-        final POMCache pomCache = new POMCache();
+        final POMCache pomCache = new POMCache(vertx);
         final String pomContent = pomCache.loadPomContentFromCache(vertx, path);
         if (pomContent != null) {
             request.response().setStatusCode(HttpResponseStatus.OK.code());
@@ -78,7 +78,7 @@ public class GETPOMHandler extends GETHandler {
                                             request.response().headers().set(HttpHeaders.SET_COOKIE, repositoryRequestBuilder.getNewCookieContent(setCookie));
                                         }
 
-                                        pomCache.putPomContent(vertx, path, returnedPomContent);
+                                        pomCache.putPomContent(path, returnedPomContent);
 
                                         request.response().end(pomResultContent);
                                     }

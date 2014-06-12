@@ -21,8 +21,8 @@ public class GETPOMSha1Handler extends GETHandler {
         final String path = repositoryRequestBuilder.buildRequestPath(request);
         System.out.println("Download " + path);
 
-        final POMCache pomCache = new POMCache();
-        final String sha1 = pomCache.getSha1(vertx, path);
+        final POMCache pomCache = new POMCache(vertx);
+        final String sha1 = pomCache.getSha1(path);
         if (sha1 != null) {
             request.response().setStatusCode(HttpResponseStatus.OK.code());
             request.response().putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(sha1.getBytes().length));
