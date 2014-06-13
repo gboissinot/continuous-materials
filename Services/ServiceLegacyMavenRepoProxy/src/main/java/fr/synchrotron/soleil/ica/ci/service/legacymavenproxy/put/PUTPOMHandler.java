@@ -3,9 +3,12 @@ package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.put;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
 import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.PUTHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.vertx.java.core.AsyncResult;
+import org.vertx.java.core.AsyncResultHandler;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.buffer.Buffer;
+import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpHeaders;
@@ -26,6 +29,8 @@ public class PUTPOMHandler extends PUTHandler {
         final String path = repositoryRequestBuilder.buildRequestPath(request);
         System.out.println("Upload " + path);
 
+        final Buffer pomContentBuffer = new Buffer();
+
         final HttpClientRequest vertxHttpClientRequest = vertxHttpClient.put(path, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
@@ -39,7 +44,17 @@ public class PUTPOMHandler extends PUTHandler {
                 }
                 clientResponse.endHandler(new Handler<Void>() {
                     public void handle(Void event) {
-                        request.response().end();
+                        vertx.eventBus().sendWithTimeout(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, pomContentBuffer.toString(), 10000l, new AsyncResultHandler<Message<Boolean>>() {
+                            @Override
+                            public void handle(AsyncResult<Message<Boolean>> asyncResult) {
+                                if (asyncResult.failed()) {
+                                    request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
+                                    request.response().setStatusMessage(asyncResult.cause().getMessage());
+                                }
+                                request.response().end();
+                            }
+                        });
+
                     }
                 });
             }
@@ -54,11 +69,11 @@ public class PUTPOMHandler extends PUTHandler {
             }
         });
 
-        final Buffer body = new Buffer();
+
         request.dataHandler(new Handler<Buffer>() {
             @Override
             public void handle(Buffer data) {
-                body.appendBuffer(data);
+                pomContentBuffer.appendBuffer(data);
                 vertxHttpClientRequest.write(data);
             }
         });
@@ -67,7 +82,6 @@ public class PUTPOMHandler extends PUTHandler {
             @Override
             public void handle(Void event) {
                 vertxHttpClientRequest.end();
-                vertx.eventBus().send(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, body.toString());
             }
         });
 

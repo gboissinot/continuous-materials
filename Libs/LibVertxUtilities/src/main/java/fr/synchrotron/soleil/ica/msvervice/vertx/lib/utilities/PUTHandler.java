@@ -36,6 +36,7 @@ public class PUTHandler implements Handler<HttpServerRequest> {
         final HttpClientRequest vertxHttpClientRequest = vertxHttpClient.put(path, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
+                request.response().setChunked(true);
                 request.response().setStatusCode(clientResponse.statusCode());
                 request.response().setStatusMessage(clientResponse.statusMessage());
                 request.response().headers().set(clientResponse.headers());
@@ -57,8 +58,6 @@ public class PUTHandler implements Handler<HttpServerRequest> {
         });
 
         vertxHttpClientRequest.headers().set(request.headers());
-        //TODO REMOVE IT
-        //vertxHttpClientRequest.setChunked(true);
         vertxHttpClientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
