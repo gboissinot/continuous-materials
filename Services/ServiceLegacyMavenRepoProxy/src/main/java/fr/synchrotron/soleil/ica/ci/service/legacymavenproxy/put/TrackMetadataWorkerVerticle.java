@@ -29,7 +29,7 @@ public class TrackMetadataWorkerVerticle extends BusModBase {
             public void handle(Message<String> message) {
                 try {
                     pomImportService.importPomFile(message.body());
-                    message.reply(true);
+                    message.reply();
                 } catch (Throwable e) {
                     message.fail(-1, e.getMessage());
                 }

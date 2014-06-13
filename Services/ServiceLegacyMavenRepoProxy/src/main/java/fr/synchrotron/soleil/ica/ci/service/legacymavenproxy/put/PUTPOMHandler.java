@@ -44,9 +44,9 @@ public class PUTPOMHandler extends PUTHandler {
                 }
                 clientResponse.endHandler(new Handler<Void>() {
                     public void handle(Void event) {
-                        vertx.eventBus().sendWithTimeout(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, pomContentBuffer.toString(), 10000l, new AsyncResultHandler<Message<Boolean>>() {
+                        vertx.eventBus().sendWithTimeout(ServiceAddressRegistry.EB_ADDRESS_TRACK_POM_SERVICE, pomContentBuffer.toString(), 10000l, new AsyncResultHandler<Message<Void>>() {
                             @Override
-                            public void handle(AsyncResult<Message<Boolean>> asyncResult) {
+                            public void handle(AsyncResult<Message<Void>> asyncResult) {
                                 if (asyncResult.failed()) {
                                     request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
                                     request.response().setStatusMessage(asyncResult.cause().getMessage());
