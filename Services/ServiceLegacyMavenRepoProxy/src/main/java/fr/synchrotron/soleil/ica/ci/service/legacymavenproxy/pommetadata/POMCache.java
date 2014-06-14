@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
+package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pommetadata;
 
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.shareddata.ConcurrentSharedMap;

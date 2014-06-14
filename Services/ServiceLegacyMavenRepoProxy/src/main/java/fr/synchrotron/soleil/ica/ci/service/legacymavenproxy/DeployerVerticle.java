@@ -1,7 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get.FixLegacyPOMWorkerVerticle;
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.put.TrackMetadataWorkerVerticle;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pommetadata.POMMetadataWorkerVerticle;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
@@ -17,8 +16,6 @@ public class DeployerVerticle extends Verticle {
         container.deployVerticle(HttpArtifactProxyEndpointVerticle.class.getCanonicalName(), config);
 
         final JsonObject mongo = config.getObject("mongo");
-        container.deployWorkerVerticle(FixLegacyPOMWorkerVerticle.class.getCanonicalName(), mongo, 3);
-        container.deployWorkerVerticle(TrackMetadataWorkerVerticle.class.getCanonicalName(), mongo, 3);
-
+        container.deployWorkerVerticle(POMMetadataWorkerVerticle.class.getCanonicalName(), mongo, 3);
     }
 }

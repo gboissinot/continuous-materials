@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities;
+package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
 /**
  * @author Gregory Boissinot

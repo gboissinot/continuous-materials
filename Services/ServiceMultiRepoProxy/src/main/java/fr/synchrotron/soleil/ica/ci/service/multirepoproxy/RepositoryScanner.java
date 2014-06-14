@@ -1,7 +1,5 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
-import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryObject;
-
 import java.util.ArrayList;
 import java.util.List;
 

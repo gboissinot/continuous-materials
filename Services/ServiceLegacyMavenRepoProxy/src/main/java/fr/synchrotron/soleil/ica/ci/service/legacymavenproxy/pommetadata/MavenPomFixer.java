@@ -1,4 +1,4 @@
-package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get;
+package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.pommetadata;
 
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.repository.ArtifactRepository;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.latestversionrresolver.service.ArtifactVersionResolverService;
@@ -16,31 +16,27 @@ import java.util.Properties;
 /**
  * @author Gregory Boissinot
  */
-public class LegacyPomContentFixer {
+public class MavenPomFixer {
 
     private final ArtifactRepository artifactRepository;
 
-    public LegacyPomContentFixer(ArtifactRepository artifactRepository) {
+    public MavenPomFixer(ArtifactRepository artifactRepository) {
         this.artifactRepository = artifactRepository;
     }
 
     public Model getModelWithResolvedParent(String originalPomContent) {
 
         StringReader pomReader = new StringReader(originalPomContent);
-
         final MavenXpp3Reader mavenXpp3Reader = new MavenXpp3Reader();
-        Model model = null;
+        Model model;
         try {
             model = mavenXpp3Reader.read(pomReader);
         } catch (IOException xe) {
-            new RuntimeException(xe);
+            throw new RuntimeException(xe);
         } catch (XmlPullParserException xe) {
-            new RuntimeException(xe);
+            throw new RuntimeException(xe);
         }
-
-
         pomReader.close();
-
 
         final Parent parent = model.getParent();
         if (parent != null && "RELEASE".equals(parent.getVersion())) {

@@ -5,7 +5,5 @@ package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
  */
 public class ServiceAddressRegistry {
 
-    public static final String EB_ADDRESS_FIXLEGACYPOM_SERVICE = "legacymavenproxy.pom.fix";
-
-    public static final String EB_ADDRESS_TRACK_POM_SERVICE = "legacymavenproxy.pom.track";
+    public static final String EB_ADDRESS_POMMETADATA_SERVICE = "legacymavenproxy.pom";
 }

@@ -7,6 +7,8 @@ import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+import java.util.Map;
+
 /**
  * @author Gregory Boissinot
  */
@@ -16,9 +18,9 @@ public class MessagingTemplate {
         return new InternalMessagingTemplate(eventBus, address);
     }
 
-    static class InternalMessagingTemplate {
+    public static class InternalMessagingTemplate {
 
-        private static final long DEFAULTVALUE_TIMOUT = 10l;
+        private static final long DEFAULTVALUE_TIMOUT = 10 * 1000L; //10 seconds
 
         private static final String KEY_ACTION = "action";
         private static final String KEY_CONTENT = "content";
@@ -69,7 +71,6 @@ public class MessagingTemplate {
             return this;
         }
 
-
         public InternalMessagingTemplate content(Character content) {
             this.content = content;
             return this;
@@ -80,7 +81,6 @@ public class MessagingTemplate {
             this.content = content;
             return this;
         }
-
 
         public InternalMessagingTemplate timeout(long timeout) {
             this.timeout = timeout;
@@ -100,10 +100,21 @@ public class MessagingTemplate {
         }
 
         private JsonObject getEventBusMessage() {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.putString(KEY_ACTION, action);
-            jsonObject.putValue(KEY_CONTENT, content);
-            return jsonObject;
+            JsonObject sendObject = new JsonObject();
+            sendObject.putString(KEY_ACTION, action);
+
+            //TODO Refactor
+            if (content instanceof JsonObject) {
+                JsonObject jsonObject = (JsonObject) content;
+                final Map<String, Object> jsonObjectMap = jsonObject.toMap();
+                for (Map.Entry<String, Object> entry : jsonObjectMap.entrySet()) {
+                    sendObject.putValue(entry.getKey(), entry.getValue());
+                }
+                return sendObject;
+            }
+
+            sendObject.putValue(KEY_CONTENT, content);
+            return sendObject;
         }
     }
 

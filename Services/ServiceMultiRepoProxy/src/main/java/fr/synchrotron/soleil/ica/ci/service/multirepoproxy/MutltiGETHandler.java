@@ -1,8 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
-import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.GETHandler;
-import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryObject;
-import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.RepositoryRequestBuilder;
+import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
@@ -51,10 +50,9 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
         final HttpClient vertxHttpClient = vertx.createHttpClient();
         vertxHttpClient.setHost(repositoryInfo.getHost()).setPort(repositoryInfo.getPort());
 
-        RepositoryRequestBuilder repositoryRequestBuilder =
-                new RepositoryRequestBuilder(proxyPath, repositoryInfo);
+        final HttpClientProxy httpClientProxy = new HttpClientProxy(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri());
 
-        HttpClientRequest vertxRequest = vertxHttpClient.head(repositoryRequestBuilder.buildRequestPath(request), new Handler<HttpClientResponse>() {
+        HttpClientRequest vertxRequest = vertxHttpClient.head(httpClientProxy.getRequestPath(request), new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
 
@@ -87,13 +85,8 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
 
         vertxRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
-            public void handle(Throwable e) {
-                request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
-                StringBuilder errorMsg = new StringBuilder();
-                errorMsg.append("Exception from ").append(repositoryInfo);
-                errorMsg.append("-->").append(e.toString());
-                errorMsg.append("\n");
-                request.response().end(errorMsg.toString());
+            public void handle(Throwable throwable) {
+                httpClientProxy.sendErrorClientResponse(request, throwable);
             }
         });
 
@@ -101,7 +94,7 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
     }
 
     private void makeGetRepoRequest(final HttpServerRequest request, RepositoryObject repositoryInfo) {
-        GETHandler getHandler = new GETHandler(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri());
+        GETHandler getHandler = new GETHandler(new HttpClientProxy(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri()));
         getHandler.handle(request);
     }
 

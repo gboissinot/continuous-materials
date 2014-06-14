@@ -1,10 +1,11 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get.GETPOMHandler;
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.get.GETPOMSha1Handler;
-import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.put.PUTPOMHandler;
-import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.GETHandler;
-import fr.synchrotron.soleil.ica.msvervice.vertx.lib.utilities.PUTHandler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection.GETPOMHandler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection.GETPOMSha1Handler;
+import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection.PUTPOMHandler;
+import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
+import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.Handler;
@@ -65,9 +66,9 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
         final String repoURIPathGET = getJsonObject.getString("uri");
 
         routeMatcher
-                .getWithRegEx(proxyPath + "/.*.pom", new GETPOMHandler(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET))
-                .getWithRegEx(proxyPath + "/.*.pom.sha1", new GETPOMSha1Handler(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET))
-                .getWithRegEx(proxyPath + "/.*", new GETHandler(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET));
+                .getWithRegEx(proxyPath + "/.*.pom", new GETPOMHandler(new HttpClientProxy(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET)))
+                .getWithRegEx(proxyPath + "/.*.pom.sha1", new GETPOMSha1Handler(new HttpClientProxy(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET)))
+                .getWithRegEx(proxyPath + "/.*", new GETHandler(new HttpClientProxy(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET)));
     }
 
     private void populatePUTRouteMatcher(RouteMatcher routeMatcher, String proxyPath) {
@@ -77,8 +78,8 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
         final String repoURIPathPUT = putJsonObject.getString("uri");
 
         routeMatcher
-                .putWithRegEx(proxyPath + "/.*.pom", new PUTPOMHandler(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT))
-                .putWithRegEx(proxyPath + "/.*", new PUTHandler(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT));
+                .putWithRegEx(proxyPath + "/.*.pom", new PUTPOMHandler(new HttpClientProxy(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)))
+                .putWithRegEx(proxyPath + "/.*", new PUTHandler(new HttpClientProxy(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)));
     }
 
 }
