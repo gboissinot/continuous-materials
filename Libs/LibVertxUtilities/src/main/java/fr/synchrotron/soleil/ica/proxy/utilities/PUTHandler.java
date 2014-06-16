@@ -27,14 +27,22 @@ public class PUTHandler implements Handler<HttpServerRequest> {
         final HttpClientRequest vertxHttpClientRequest = httpClientProxy.getVertxHttpClient().put(path, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
-                httpClientProxy.sendClientResponse(request, clientResponse);
+                if (clientResponse.statusCode() > 199 && clientResponse.statusCode() < 300) {
+                    httpClientProxy.sendClientResponse(request, clientResponse);
+                }
+                if (clientResponse.statusCode() == 401) {
+                } else {
+                    httpClientProxy.sendErrorClientResponse(request, clientResponse);
+                    System.err.println(clientResponse.statusCode() + " " + clientResponse.statusMessage());
+                    throw new RuntimeException("Request failure");
+                }
             }
         });
         vertxHttpClientRequest.headers().set(request.headers());
         vertxHttpClientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
-                httpClientProxy.sendErrorClientResponse(request, throwable);
+                httpClientProxy.sendError(request, throwable);
             }
         });
 

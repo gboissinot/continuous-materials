@@ -84,11 +84,11 @@ public class HttpClientProxy {
         });
     }
 
-    public void sendNotFoundClientResponse(HttpServerRequest request, HttpClientResponse clientResponse, String messagePayload) {
-        request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
-        request.response().setStatusMessage("Artifact NOT FOUND");
-        request.response().end();
-    }
+//    public void sendNotFoundClientResponse(HttpServerRequest request, HttpClientResponse clientResponse, String messagePayload) {
+//        request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
+//        request.response().setStatusMessage("Artifact NOT FOUND");
+//        request.response().end();
+//    }
 
     private void sendClientResponseWithPayload(HttpServerRequest request, HttpClientResponse clientResponse, String messagePayload) {
         request.response().putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(messagePayload.getBytes().length));
@@ -99,9 +99,8 @@ public class HttpClientProxy {
         request.response().end(messagePayload);
     }
 
-    public void sendErrorClientResponse(HttpServerRequest request, Throwable throwable) {
+    public void sendError(HttpServerRequest request, Throwable throwable) {
         request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
-        //TODO Refactor error log
         throwable.printStackTrace();
         final String message = throwable.getMessage();
         if (message != null) {
@@ -154,7 +153,7 @@ public class HttpClientProxy {
                     jsonObjectMessage.putString("content", asyncResult.result().body());
                     applyFiltersAndRespond(vertx, request, clientResponse, messageFilterServiceList, jsonObjectMessage);
                 } else {
-                    sendErrorClientResponse(request, asyncResult.cause());
+                    sendError(request, asyncResult.cause());
                 }
             }
         };
@@ -176,7 +175,7 @@ public class HttpClientProxy {
         clientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
-                sendErrorClientResponse(request, throwable);
+                sendError(request, throwable);
             }
         });
         clientRequest.end();
@@ -195,8 +194,14 @@ public class HttpClientProxy {
     }
 
     private String getNewCookieContent(String cookie) {
-        final String startRepoPath = repoUri.substring(0, repoUri.indexOf("/", 1));
-        return cookie.replace(startRepoPath, proxyPath);
+        int index = repoUri.indexOf("/", 1);
+        if (index < 0)
+            index = repoUri.length();
+        return cookie.replace(repoUri.substring(0, index), proxyPath);
     }
 
+    public void sendErrorClientResponse(HttpServerRequest request, HttpClientResponse clientResponse) {
+        System.err.println("ERROR ON PROXY");
+        sendClientResponse(request, clientResponse);
+    }
 }

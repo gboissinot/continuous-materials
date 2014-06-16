@@ -86,7 +86,7 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
         vertxRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
-                httpClientProxy.sendErrorClientResponse(request, throwable);
+                httpClientProxy.sendError(request, throwable);
             }
         });
 
