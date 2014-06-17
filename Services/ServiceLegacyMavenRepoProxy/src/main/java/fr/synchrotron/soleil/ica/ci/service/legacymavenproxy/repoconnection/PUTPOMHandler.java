@@ -68,7 +68,7 @@ public class PUTPOMHandler extends PUTHandler {
         vertxHttpClientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
-                httpClientProxy.sendErrorClientResponse(request, throwable);
+                httpClientProxy.sendError(request, throwable);
             }
         });
 

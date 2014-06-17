@@ -70,9 +70,9 @@ public class HttpClientProxy {
 //    }
 
     public void sendClientResponse(final HttpServerRequest request, HttpClientResponse clientResponse) {
-        request.response().headers().set(clientResponse.headers());
         request.response().setStatusCode(clientResponse.statusCode());
         request.response().setStatusMessage(clientResponse.statusMessage());
+        request.response().headers().set(clientResponse.headers());
         fixWarningCookieDomain(request, clientResponse);
         clientResponse.dataHandler(new Handler<Buffer>() {
             public void handle(Buffer data) {

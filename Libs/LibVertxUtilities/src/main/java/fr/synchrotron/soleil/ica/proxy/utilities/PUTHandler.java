@@ -29,12 +29,8 @@ public class PUTHandler implements Handler<HttpServerRequest> {
             public void handle(HttpClientResponse clientResponse) {
                 if (clientResponse.statusCode() > 199 && clientResponse.statusCode() < 300) {
                     httpClientProxy.sendClientResponse(request, clientResponse);
-                }
-                if (clientResponse.statusCode() == 401) {
                 } else {
                     httpClientProxy.sendErrorClientResponse(request, clientResponse);
-                    System.err.println(clientResponse.statusCode() + " " + clientResponse.statusMessage());
-                    throw new RuntimeException("Request failure");
                 }
             }
         });
