@@ -93,6 +93,8 @@ public class HttpClientProxy {
 //    }
 
     private void sendClientResponseWithPayload(HttpServerRequest request, HttpClientResponse clientResponse, String messagePayload) {
+        request.response().setStatusCode(clientResponse.statusCode());
+        request.response().setStatusMessage(clientResponse.statusMessage());
         request.response().putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(messagePayload.getBytes().length));
         request.response().putHeader(HttpHeaders.ETAG, clientResponse.headers().get(HttpHeaders.ETAG));
         request.response().putHeader(HttpHeaders.LAST_MODIFIED, clientResponse.headers().get(HttpHeaders.LAST_MODIFIED));
