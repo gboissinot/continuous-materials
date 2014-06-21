@@ -17,15 +17,12 @@ public class GETHandler implements Handler<HttpServerRequest> {
 
     @Override
     public void handle(final HttpServerRequest request) {
-
-        Handler<HttpClientResponse> clientResponseHandler = new Handler<HttpClientResponse>() {
+        httpClientProxy.processGETRepositoryRequest(request, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
                 httpClientProxy.sendClientResponse(request, clientResponse);
             }
-        };
-
-        httpClientProxy.processGETRepositoryRequest(request, clientResponseHandler);
+        });
     }
 
 }
