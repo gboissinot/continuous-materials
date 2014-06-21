@@ -18,7 +18,6 @@ public class GETPOMSha1Handler extends GETHandler {
 
     @Override
     public void handle(final HttpServerRequest request) {
-
         final String path = httpClientProxy.getRequestPath(request);
         final POMCache pomCache = new POMCache(httpClientProxy.getVertx());
         final String sha1 = pomCache.getSha1(path);
@@ -29,7 +28,6 @@ public class GETPOMSha1Handler extends GETHandler {
             request.response().end(sha1);
             return;
         }
-
         super.handle(request);
     }
 }
