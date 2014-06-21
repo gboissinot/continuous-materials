@@ -10,8 +10,8 @@ initscript {
 
 
 def configMongo = [
-        mongoHost: '127.0.0.1',
-        mongoPort: 27017,
+        mongoHost  : '127.0.0.1',
+        mongoPort  : 27017,
         mongoDbName: 'repo'
 ]
 
