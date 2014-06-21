@@ -1,15 +1,10 @@
 {
     "proxyPath": "/legacyMavenRepoProxy",
     "proxyPort": 8090,
-    "repo.get": {
+    "repository": {
         "host": "localhost",
         "port": 8081,
         "uri": "/nexus/content/repositories/public/"
-    },
-    "repo.put": {
-        "host": "localhost",
-        "port": 8081,
-        "uri": "/nexus/content/repositories/snapshots/"
     },
     "mongo": {
         "mongoHost": "127.0.0.1",
