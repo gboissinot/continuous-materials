@@ -26,14 +26,13 @@ public class GETPOMHandler extends GETHandler {
         final List filterServiceList = new ArrayList();
         filterServiceList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "fixWrongValue"));
         filterServiceList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "cache"));
-        Handler<HttpClientResponse> clientResponseHandler = new Handler<HttpClientResponse>() {
+
+        httpClientProxy.processGETRepositoryRequest(request, new Handler<HttpClientResponse>() {
             @Override
             public void handle(final HttpClientResponse clientResponse) {
                 httpClientProxy.sendClientResponseWithFilters(request, clientResponse, filterServiceList);
             }
-        };
-
-        httpClientProxy.processGETRepositoryRequest(request, clientResponseHandler);
+        });
     }
 
 }
