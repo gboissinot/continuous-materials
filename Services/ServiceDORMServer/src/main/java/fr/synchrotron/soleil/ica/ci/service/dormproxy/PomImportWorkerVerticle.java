@@ -31,7 +31,7 @@ public class PomImportWorkerVerticle extends BusModBase {
                     message.reply(true);
                 } catch (Throwable e) {
                     //TODO BUILD ERROR MESSAGE
-                    message.reply(e.getMessage());
+                    message.fail(-1, e.getMessage());
                 }
             }
         });
