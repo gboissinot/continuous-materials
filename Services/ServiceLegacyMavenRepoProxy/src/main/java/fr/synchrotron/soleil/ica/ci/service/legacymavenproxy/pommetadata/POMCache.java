@@ -5,7 +5,6 @@ import org.vertx.java.core.shareddata.ConcurrentSharedMap;
 import org.vertx.java.core.shareddata.SharedData;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -26,10 +25,6 @@ public class POMCache {
         pomSha1Map = sharedData.getMap(KEY_CACHE_POM_SHA1);
     }
 
-    public String loadPomContentFromCache(Vertx vertx, String pomPath) {
-        return pomContentMap.get(pomPath);
-    }
-
     public String getSha1(String pomSha1Path) {
         return pomSha1Map.get(pomSha1Path);
     }
@@ -44,9 +39,7 @@ public class POMCache {
             MessageDigest crypt = MessageDigest.getInstance("SHA-1");
             crypt.reset();
             crypt.update(pomContent.getBytes("UTF-8"));
-
-            String sha1 = new BigInteger(1, crypt.digest()).toString(16);
-            pomSha1Map.put(sha1Path, sha1);
+            pomSha1Map.put(sha1Path, String.valueOf(crypt.digest()));
 
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
