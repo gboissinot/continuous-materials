@@ -21,6 +21,9 @@ public class PUTPOMHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(final HttpServerRequest request) {
 
+        String path = request.path();
+        System.out.println("PUT " + path);
+
         final Buffer body = new Buffer();
         request.dataHandler(new Handler<Buffer>() {
             @Override

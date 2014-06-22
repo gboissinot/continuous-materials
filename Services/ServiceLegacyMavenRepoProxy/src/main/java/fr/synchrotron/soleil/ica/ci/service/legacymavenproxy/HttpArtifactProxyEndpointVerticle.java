@@ -17,6 +17,7 @@ import org.vertx.java.core.json.JsonObject;
 /**
  * @author Gregory Boissinot
  */
+
 public class HttpArtifactProxyEndpointVerticle extends BusModBase {
 
     @Override
@@ -26,27 +27,14 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
 
         final int port = getMandatoryIntConfig("proxyPort");
         final String proxyPath = getMandatoryStringConfig("proxyPath");
-
-        final JsonObject getJsonObject = config.getObject("repository");
-        final String repositoryHost = getJsonObject.getString("host");
-        final int repositoryPort = getJsonObject.getInteger("port");
-        final String repositoryURI = getJsonObject.getString("uri");
-
         HttpServer httpServer = null;
         try {
-            RouteMatcher routeMatcher = new RouteMatcher();
-
             //--GET
-            routeMatcher
-                    .getWithRegEx(proxyPath + "/.*.pom", new GETPOMHandler(new HttpClientProxy(vertx, proxyPath, repositoryHost, repositoryPort, repositoryURI)))
-                    .getWithRegEx(proxyPath + "/.*.pom.sha1", new GETPOMSha1Handler(new HttpClientProxy(vertx, proxyPath, repositoryHost, repositoryPort, repositoryURI)))
-                    .getWithRegEx(proxyPath + "/.*", new GETHandler(new HttpClientProxy(vertx, proxyPath, repositoryHost, repositoryPort, repositoryURI)));
+            RouteMatcher routeMatcher = new RouteMatcher();
+            populateGETRouteMatcher(routeMatcher, proxyPath);
 
             //--PUT
-            routeMatcher
-                    .putWithRegEx(proxyPath + "/.*.pom", new PUTPOMHandler(new HttpClientProxy(vertx, proxyPath, repositoryHost, repositoryPort, repositoryURI)))
-                    .putWithRegEx(proxyPath + "/.*", new PUTHandler(new HttpClientProxy(vertx, proxyPath, repositoryHost, repositoryPort, repositoryURI)));
-
+            populatePUTRouteMatcher(routeMatcher, proxyPath);
 
             //-- NO MATCH
             routeMatcher.noMatch(new Handler<HttpServerRequest>() {
@@ -71,5 +59,27 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
         }
     }
 
-}
+    private void populateGETRouteMatcher(RouteMatcher routeMatcher, String proxyPath) {
+        final JsonObject getJsonObject = config.getObject("repo.get");
+        final String repoHostGET = getJsonObject.getString("host");
+        final int repoPortGET = getJsonObject.getInteger("port");
+        final String repoURIPathGET = getJsonObject.getString("uri");
 
+        routeMatcher
+                .getWithRegEx(proxyPath + "/.*.pom", new GETPOMHandler(new HttpClientProxy(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET)))
+                .getWithRegEx(proxyPath + "/.*.pom.sha1", new GETPOMSha1Handler(new HttpClientProxy(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET)))
+                .getWithRegEx(proxyPath + "/.*", new GETHandler(new HttpClientProxy(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET)));
+    }
+
+    private void populatePUTRouteMatcher(RouteMatcher routeMatcher, String proxyPath) {
+        final JsonObject putJsonObject = config.getObject("repo.put");
+        final String repoHostPUT = putJsonObject.getString("host");
+        final int repoPortPUT = putJsonObject.getInteger("port");
+        final String repoURIPathPUT = putJsonObject.getString("uri");
+
+        routeMatcher
+                .putWithRegEx(proxyPath + "/.*.pom", new PUTPOMHandler(new HttpClientProxy(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)))
+                .putWithRegEx(proxyPath + "/.*", new PUTHandler(new HttpClientProxy(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)));
+    }
+
+}

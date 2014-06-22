@@ -11,12 +11,12 @@ import java.io.File;
 /**
  * @author Gregory Boissinot
  */
-public class BinaryHandler implements Handler<HttpServerRequest> {
+public class PUTFileHandler implements Handler<HttpServerRequest> {
 
     private final Vertx vertx;
     private final String fsRepositoryRootDir;
 
-    public BinaryHandler(Vertx vertx, String fsRepositoryRootDir) {
+    public PUTFileHandler(Vertx vertx, String fsRepositoryRootDir) {
         this.vertx = vertx;
         this.fsRepositoryRootDir = fsRepositoryRootDir;
     }
@@ -25,6 +25,8 @@ public class BinaryHandler implements Handler<HttpServerRequest> {
     public void handle(final HttpServerRequest request) {
 
         final String path = request.path();
+        System.out.println("PUT" + path);
+
         final String prefix = DORMProxyEndpointVerticle.PROXY_PATH;
         String artifactPath = path.substring(prefix.length() + 1);
 

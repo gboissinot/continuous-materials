@@ -73,6 +73,7 @@ public class HttpClientProxy {
         request.response().setStatusCode(clientResponse.statusCode());
         request.response().setStatusMessage(clientResponse.statusMessage());
         request.response().headers().set(clientResponse.headers());
+        request.response().setChunked(true);
         fixWarningCookieDomain(request, clientResponse);
         clientResponse.dataHandler(new Handler<Buffer>() {
             public void handle(Buffer data) {
@@ -165,15 +166,11 @@ public class HttpClientProxy {
                 .address(vertx.eventBus(), messageFilterService.getAddress())
                 .action(messageFilterService.getAction())
                 .content(jsonObjectMessage).send(responseHandler);
-
     }
 
     public void processGETRepositoryRequest(final HttpServerRequest request, Handler<HttpClientResponse> responseHandler) {
-
         final String path = getRequestPath(request);
-        //TODO refactor log
         System.out.println("Download " + path);
-
         HttpClientRequest clientRequest = vertxHttpClient.get(path, responseHandler);
         clientRequest.headers().set(request.headers());
         clientRequest.exceptionHandler(new Handler<Throwable>() {
@@ -203,9 +200,9 @@ public class HttpClientProxy {
             index = repoUri.length();
         return cookie.replace(repoUri.substring(0, index), proxyPath);
     }
-
-    public void sendErrorClientResponse(HttpServerRequest request, HttpClientResponse clientResponse) {
-        System.err.println("ERROR ON PROXY");
-        sendClientResponse(request, clientResponse);
-    }
+//
+//    public void sendErrorClientResponse(HttpServerRequest request, HttpClientResponse clientResponse) {
+//        System.err.println("ERROR ON PROXY");
+//        sendClientResponse(request, clientResponse);
+//    }
 }

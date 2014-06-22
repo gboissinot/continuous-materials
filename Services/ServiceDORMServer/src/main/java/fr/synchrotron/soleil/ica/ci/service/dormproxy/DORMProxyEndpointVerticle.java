@@ -12,7 +12,7 @@ import org.vertx.java.core.http.RouteMatcher;
  */
 public class DORMProxyEndpointVerticle extends BusModBase {
 
-    public static final String PROXY_PATH = "/dormproxy";
+    public static final String PROXY_PATH = "/legacyMavenRepoProxy";
 
     @Override
     public void start() {
@@ -25,27 +25,21 @@ public class DORMProxyEndpointVerticle extends BusModBase {
         final HttpServer httpServer = vertx.createHttpServer();
         RouteMatcher routeMatcher = new RouteMatcher();
 
-        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.jar", new BinaryHandler(vertx, fsRepositoryRootDir));
-        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.jar.sha1", new BinaryHandler(vertx, fsRepositoryRootDir));
-        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.jar.md5", new BinaryHandler(vertx, fsRepositoryRootDir));
 
+        //=========================
+        //=============  MAVEN
+        //=========================
         routeMatcher.putWithRegEx(PROXY_PATH + "/.*.pom", new PUTPOMHandler(vertx));
-        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.pom.sha1", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(HttpServerRequest request) {
-                request.response().setStatusCode(HttpResponseStatus.NO_CONTENT.code());
-                request.response().end();
-                ;
-            }
-        });
-        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.pom.md5", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(HttpServerRequest request) {
-                request.response().setStatusCode(HttpResponseStatus.NO_CONTENT.code());
-                request.response().end();
-                ;
-            }
-        });
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*/maven-metadata.xml", new PUTNoActionHandler());
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*/maven-metadata.xml.sha1", new PUTNoActionHandler());
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*/maven-metadata.xml.md5", new PUTNoActionHandler());
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.pom.sha1", new PUTNoActionHandler());
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*.pom.md5", new PUTNoActionHandler());
+        routeMatcher.putWithRegEx(PROXY_PATH + "/.*", new PUTFileHandler(vertx, fsRepositoryRootDir));
+
+        routeMatcher.getWithRegEx(PROXY_PATH + "/.*/maven-metadata.xml", new GETMetadataHandler());
+        routeMatcher.getWithRegEx(PROXY_PATH + "/.*", new GETFileHandler(vertx, fsRepositoryRootDir));
+
 
         routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
             @Override
@@ -54,7 +48,6 @@ public class DORMProxyEndpointVerticle extends BusModBase {
                 request.response().end();
             }
         });
-
         routeMatcher.noMatch(new Handler<HttpServerRequest>() {
             @Override
             public void handle(HttpServerRequest request) {

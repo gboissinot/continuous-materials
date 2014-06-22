@@ -1,0 +1,10 @@
+INFO
+
+GET /legacyMavenRepoProxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.19-SNAPSHOT/maven-metadata.xml
+PUT/legacyMavenRepoProxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.19-SNAPSHOT/mongodb-util-1.0.19-20140622.185307-1.jar
+PUT/legacyMavenRepoProxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.19-SNAPSHOT/mongodb-util-1.0.19-20140622.185307-1.jar.sha1
+PUT/legacyMavenRepoProxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.19-SNAPSHOT/mongodb-util-1.0.19-20140622.185307-1.jar.md5
+PUT /legacyMavenRepoProxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.19-SNAPSHOT/mongodb-util-1.0.19-20140622.185307-1.pom
+GET /legacyMavenRepoProxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml
+PUT/legacyMavenRepoProxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/1.0.19-SNAPSHOT/maven-metadata.xml
+PUT/legacyMavenRepoProxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml

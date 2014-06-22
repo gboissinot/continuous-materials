@@ -28,7 +28,7 @@ public class PUTPOMHandler extends PUTHandler {
     public void handle(final HttpServerRequest request) {
 
         final String path = httpClientProxy.getRequestPath(request);
-        System.out.println("Upload POM" + path);
+        System.out.println("Upload POM " + path);
 
         final Buffer pomContentBuffer = new Buffer();
 

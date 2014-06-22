@@ -1,8 +1,0 @@
-- Put in MongoDB
-- Ignore .sha1 and .md5
-
-- GET MongoDB --> export
-- GET jar --> sendFile
-
-Manage the following line for mvn deploy
-http://localhost:8092/dormproxy/fr/synchrotron/soleil/ica/ci/lib/mongodb-util/maven-metadata.xml
