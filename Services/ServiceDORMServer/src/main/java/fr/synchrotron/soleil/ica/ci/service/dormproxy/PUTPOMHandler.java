@@ -53,7 +53,7 @@ public class PUTPOMHandler implements Handler<HttpServerRequest> {
                                     request.response().end();
                                 } else {
                                     request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
-                                    //request.response().setStatusMessage(asyncResult.cause().getMessage());
+                                    request.response().setStatusMessage(asyncResult.cause().getMessage());
                                     request.response().end();
                                 }
 
