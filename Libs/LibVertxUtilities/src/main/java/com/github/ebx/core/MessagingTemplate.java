@@ -14,6 +14,9 @@ import java.util.Map;
  */
 public class MessagingTemplate {
 
+    private MessagingTemplate() {
+    }
+
     public static InternalMessagingTemplate address(EventBus eventBus, String address) {
         return new InternalMessagingTemplate(eventBus, address);
     }
