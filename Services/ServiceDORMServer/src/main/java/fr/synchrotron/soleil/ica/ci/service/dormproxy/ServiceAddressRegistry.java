@@ -5,5 +5,5 @@ package fr.synchrotron.soleil.ica.ci.service.dormproxy;
  */
 public class ServiceAddressRegistry {
 
-    public static final String EB_ADDRESS_POMIMPORT_SERVICE = "dormproxy.pom.import";
+    public static final String EB_ADDRESS_POMIMPORT_SERVICE = "dorm.pom";
 }
