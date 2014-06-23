@@ -25,7 +25,6 @@ public class DORMProxyEndpointVerticle extends BusModBase {
         final HttpServer httpServer = vertx.createHttpServer();
         RouteMatcher routeMatcher = new RouteMatcher();
 
-
         //=========================
         //=============  MAVEN
         //=========================
@@ -39,6 +38,7 @@ public class DORMProxyEndpointVerticle extends BusModBase {
 
         routeMatcher.getWithRegEx(PROXY_PATH + "/.*/maven-metadata.xml", new GETMetadataHandler());
         routeMatcher.getWithRegEx(PROXY_PATH + "/.*", new GETFileHandler(vertx, fsRepositoryRootDir));
+        routeMatcher.getWithRegEx(PROXY_PATH + "/.*", new GETPOMHandler(vertx));
 
 
         routeMatcher.allWithRegEx(PROXY_PATH + "/.*", new Handler<HttpServerRequest>() {
