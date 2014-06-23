@@ -185,6 +185,7 @@ project(':Services/ServiceLegacyMavenRepoProxy') {
 project(':Services/ServiceDORMServer') {
     dependencies {
         compile project(':Libs/LibMongoPomImporter')
+        compile project(':Libs/LibMongoPomExporter')
     }
 }
 
