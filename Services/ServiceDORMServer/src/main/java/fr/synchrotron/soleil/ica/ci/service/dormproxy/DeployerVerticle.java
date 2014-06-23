@@ -14,6 +14,6 @@ public class DeployerVerticle extends Verticle {
         container.deployVerticle(DORMProxyEndpointVerticle.class.getCanonicalName(), config);
 
         final JsonObject mongo = config.getObject("mongo");
-        container.deployWorkerVerticle(PomImportWorkerVerticle.class.getCanonicalName(), mongo, 3);
+        container.deployWorkerVerticle(POMMetadataWorkerVerticle.class.getCanonicalName(), mongo, 3);
     }
 }
