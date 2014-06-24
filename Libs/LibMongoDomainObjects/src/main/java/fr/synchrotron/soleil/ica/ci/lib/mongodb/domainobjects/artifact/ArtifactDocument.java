@@ -15,6 +15,16 @@ public class ArtifactDocument {
 
     public static final String MONGO_ARTIFACTS_COLLECTION_NAME = "artifacts";
 
+//    private ArtifactDocumentKey _id;
+//
+//    public ArtifactDocumentKey get_id() {
+//        return _id;
+//    }
+//
+//    public void set_id(ArtifactDocumentKey _id) {
+//        this._id = _id;
+//    }
+
     private String org;
 
     private String name;
@@ -202,5 +212,30 @@ public class ArtifactDocument {
 
     public void setModules(List<String> modules) {
         this.modules = modules;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtifactDocument{" +
+                "org='" + org + '\'' +
+                ", name='" + name + '\'' +
+                ", version='" + version + '\'' +
+                ", status='" + status + '\'' +
+                ", type='" + type + '\'' +
+                ", isThirdParty=" + isThirdParty +
+                ", creationDate=" + creationDate +
+                ", publicationDate=" + publicationDate +
+                ", sha1='" + sha1 + '\'' +
+                ", md5='" + md5 + '\'' +
+                ", description='" + description + '\'' +
+                ", fileExtension='" + fileExtension + '\'' +
+                ", fileSize=" + fileSize +
+                ", isForce=" + isForce +
+                ", javaLanguage=" + javaLanguage +
+                ", cLanguage=" + cLanguage +
+                ", dependencies=" + dependencies +
+                ", buildContext=" + buildContext +
+                ", modules=" + modules +
+                '}';
     }
 }

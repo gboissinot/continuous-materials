@@ -1,0 +1,39 @@
+
+// Add a specif index on artifacts collection
+db.artifacts.ensureIndex({org:1,name:1,version:1,type:1,status:1},{unique:true})
+
+//Apply map/reduce version on artifacts collection, output is artifacts.latest collection
+db.artifacts.mapReduce(map_version_function,reduce_latestversion_function,{ out: "artifacts.latest", scope:{ version_compare:version_compare }, finalize:finalize_function})
+
+//Apply map/reduce deprecated_version on artifacts collection, output is artifacts.deprecated collection
+db.artifacts.mapReduce(map_version_function,reduce_deprecatedversion_function,{ out: "artifacts.deprecated", scope:{  version_compare:version_compare,reduce_latestversion_function:reduce_latestversion_function },finalize:finalize_function })
+
+// Find samples
+db.artifacts.find({org:"wicket",name:"wicket-extensions"},{version:1}).pretty()
+db.artifacts.latest.find({_id:{org:"wicket",name:"wicket-extensions",type:"binary",status:"RELEASED"}}).pretty()
+db.artifacts.deprecated.find({_id:{org:"wicket",name:"wicket-extensions",type:"binary",status:"RELEASED"}}).pretty()
+
+//Update samples
+db.artifacts.update({org:"wicket",name:"wicket-extensions", type:"binary", status:"RELEASED", version:"1.2.1"},{$set:{isReferenceVersion:true}})
+
+./mongo localhost:27017/repo --shell /Users/gregory/Dev/maven-mongoimporter/infra/mongodb/mapReduce.js
+
+./mongo --nodb  /Users/gregory/Dev/maven-mongoimporter/infra/mongodb/mapReduceScript.js
+
+./mongoexport --db repo --collection artifacts.latest --fields _id.org,_id.name,value --csv
+
+//TEST DATA
+db.artifacts.remove({org:"test", name:"test", type:"binary", status:"RELEASED"})
+db.artifacts.insert({org:"test", name:"test", type:"binary", status:"RELEASED", version:"3.10", isForce:false})
+db.artifacts.insert({org:"test", name:"test", type:"binary", status:"RELEASED", version:"3.8", isForce:false})
+db.artifacts.insert({org:"test", name:"test", type:"binary", status:"RELEASED", version:"3.6", isForce:false})
+db.artifacts.insert({org:"test", name:"test", type:"binary", status:"RELEASED", version:"3.12", isForce:false})
+db.artifacts.insert({org:"test", name:"test", type:"binary", status:"RELEASED", version:"3.4", isForce:false})
+db.artifacts.update({org:"test", type:"binary", status:"RELEASED", version:"3.8"},{$set:{isForce:true}})
+
+//TEST DATA REQUEST
+db.artifacts.find({org:"test", name:"test"}).pretty()
+db.artifacts.mapReduce(map_version_function,reduce_latestversion_function,{ out: { merge: 'artifacts.latest'}, scope:{ version_compare:version_compare }, query: {org:'test',name:'test'}, finalize:finalize_function})
+db.artifacts.latest.find({_id:{org:"test", name:"test",type:"binary",status:"RELEASED"}}).pretty()
+db.artifacts.mapReduce(map_version_function,reduce_deprecatedversion_function,{ out: "artifacts.deprecated", scope:{  version_compare:version_compare,reduce_latestversion_function:reduce_latestversion_function},query: {org:'test',name:'test'},finalize:finalize_function })
+db.artifacts.deprecated.find({_id:{org:"test", name:"test",type:"binary",status:"RELEASED"}}).pretty()

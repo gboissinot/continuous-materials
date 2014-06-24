@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+        http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <context:annotation-config/>
+
+    <context:property-placeholder properties-ref="configProps"/>
+
+    <beans profile="mongodb">
+
+        <util:properties id="configProps" location="config/remote/infra.properties"/>
+
+        <!--<mongo:mapping-converter id="mappingConverter">-->
+        <!--<mongo:custom-converters>-->
+        <!--<mongo:converter>-->
+        <!--<bean class="fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.mongodb.MongoArtifactWriterConverter"/>-->
+        <!--</mongo:converter>-->
+        <!--</mongo:custom-converters>-->
+        <!--</mongo:mapping-converter>-->
+
+        <mongo:mongo host="${mongodb.host}" port="${mongodb.port}"/>
+
+        <mongo:db-factory id="mongoDbFactory" mongo-ref="mongo" dbname="${mongodb.databaseName}"/>
+
+        <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+            <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+            <!--<constructor-arg name="mongoConverter" ref="mappingConverter"/>-->
+        </bean>
+    </beans>
+
+</beans>
+

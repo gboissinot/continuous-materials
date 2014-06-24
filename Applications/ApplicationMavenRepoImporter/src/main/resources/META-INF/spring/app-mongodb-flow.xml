@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/integration
+        http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd
+
+
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <beans profile="mongodb">
+
+        <int:channel id="workingMongoDBChannel">
+            <int:dispatcher task-executor="poolThreadMongoDB"/>
+        </int:channel>
+
+        <int:chain input-channel="workingMongoDBChannel">
+            <int:filter ref="binaryArtifactFilter"/>
+            <int:transformer expression="@thirdPartyArtifactEnricher.enrich(payload, headers['repo.url'])"/>
+            <int:router expression="@artifactRouter.nextRoute(headers['repo.url'])"/>
+        </int:chain>
+
+        <!--<int:chain input-channel="java" output-channel="pooledArtifacts">-->
+        <!--<int:transformer ref="javaLanguageArtifactTransformer"/>-->
+        <!--</int:chain>-->
+        <int:bridge input-channel="java" output-channel="pooledArtifacts">
+
+        </int:bridge>
+
+        <int:chain input-channel="c" output-channel="pooledArtifacts">
+            <int:transformer expression="@cLanguageArtifactTransformer.addCMetadata(payload, headers['repo.url'])"/>
+        </int:chain>
+
+        <int:chain input-channel="unknown">
+            <int:service-activator ref="artifactErrorLogger"/>
+        </int:chain>
+
+        <int:chain input-channel="pooledArtifacts">
+            <!--<int-mongo:outbound-channel-adapter-->
+
+            <!--mongodb-factory="mongoDbFactory"-->
+            <!--collection-name="artifacts"/>-->
+            <int:service-activator>
+                <bean class="fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.mongodb.MongoInsertion">
+                <constructor-arg ref="mongoTemplate"/>
+                </bean>
+            </int:service-activator>
+    </int:chain>
+    <!--mongo-converter="mappingConverter"-->
+
+    <bean id="artifactRouter"
+          class="fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.mongodb.integration.ArtifactLanguageRouter"/>
+
+    <bean id="artifactErrorLogger"
+          class="fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.mongodb.integration.ArtifactErrorLogger"/>
+
+    <task:executor id="poolThreadMongoDB" pool-size="10"/>
+
+    <bean id="binaryArtifactFilter"
+          class="fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.mongodb.integration.BinaryArtifactFilter"/>
+    <bean id="thirdPartyArtifactEnricher"
+          class="fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.mongodb.integration.ThirdPartyArtifactEnricher"/>
+
+    <bean id="cLanguageArtifactTransformer"
+          class="fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.mongodb.integration.CLanguageArtifactTransformer">
+        <constructor-arg>
+            <bean class="fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.maven.artifact.c.ArtifactNameExtractor"/>
+        </constructor-arg>
+    </bean>
+
+</beans>
+
+        </beans>

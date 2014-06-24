@@ -11,4 +11,5 @@ include 'Libs/LibWorkflow',
         'Services/ServiceLegacyMavenRepoProxy',
         'Services/ServiceDORMServer',
         'Services/ServiceMultiRepoProxy',
+        'Applications/ApplicationMavenRepoImporter',
         'Tools/GradleDistribution'

@@ -1,0 +1,19 @@
+- Spring AOP pour les log
+- Ajout Package info
+- Rajouter unique key  sur org,name,type,status,version
+- Scripter création view Couchbase
+- Supprimmer données Couchbase avant traitement
+- Regarder du côté d'un adapteur Couchbase Spring Integration
+- Telecharger zip
+
+
+Performance Spring Integration
+Spring Batch
+Partionning
+Delegation à Spring Integration
+
+
+Launch Batch Jobs through Spring Integration Messages
+Generate Informational Messages
+Externalize Batch Process Execution using Spring Integration
+Create Big Data Pipelines with Spring Batch and Spring Integration
