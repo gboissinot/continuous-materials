@@ -9,17 +9,18 @@ initscript {
 }
 
 
-def configMongo = [
-        mongoHost  : '127.0.0.1',
-        mongoPort  : 27017,
-        mongoDbName: 'repo'
-]
 
 apply plugin: LatestDependencyPlugin
 
 import fr.synchrotron.soleil.ica.tools.gradle.distrib.MavenVersionResolver;
 
 class LatestDependencyPlugin implements Plugin<Gradle> {
+
+    def configMongo = [
+            mongoHost  : '127.0.0.1',
+            mongoPort  : '27017',
+            mongoDbName: 'repo'
+    ]
 
     void apply(Gradle gradle) {
 
