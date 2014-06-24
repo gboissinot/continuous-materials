@@ -8,6 +8,7 @@ import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.*;
 import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.streams.Pump;
 
 import java.util.List;
 
@@ -27,8 +28,6 @@ public class HttpClientProxy {
     private final int repoPort;
     private final String repoUri;
 
-    private final HttpClient vertxHttpClient;
-
     public HttpClientProxy(Vertx vertx,
                            String proxyPath,
                            String repoHost,
@@ -39,23 +38,22 @@ public class HttpClientProxy {
         this.repoHost = repoHost;
         this.repoPort = repoPort;
         this.repoUri = repoUri;
-
-        this.vertxHttpClient = vertx.createHttpClient().setHost(repoHost).setPort(repoPort);
     }
+
 
     public Vertx getVertx() {
         return vertx;
     }
 
     public HttpClient getVertxHttpClient() {
-        return vertxHttpClient;
+        return vertx.createHttpClient().setHost(repoHost).setPort(repoPort);
     }
 
-//    Initial sendClientResponse for GET request
-//    public void sendClientResponse(final HttpServerRequest request, HttpClientResponse clientResponse) {
+    //    Initial sendClientResponse for GET request
+//    public void sendClientResponsePump(final HttpServerRequest request, HttpClientResponse clientResponse) {
 //        clientResponse.pause();
-//        request.response().headers().set(clientResponse.headers());
-//        //request.response().setChunked(true);
+//        //request.response().headers().set(clientResponse.headers());
+//        request.response().setChunked(true);
 //        fixWarningCookieDomain(request, clientResponse);
 //        clientResponse.endHandler(new Handler<Void>() {
 //            public void handle(Void event) {
@@ -73,25 +71,22 @@ public class HttpClientProxy {
         request.response().setStatusCode(clientResponse.statusCode());
         request.response().setStatusMessage(clientResponse.statusMessage());
         request.response().headers().set(clientResponse.headers());
-        request.response().setChunked(true);
+
+        //request.response().setChunked(true);
         fixWarningCookieDomain(request, clientResponse);
         clientResponse.dataHandler(new Handler<Buffer>() {
             public void handle(Buffer data) {
                 request.response().write(data);
             }
         });
+
         clientResponse.endHandler(new Handler<Void>() {
             public void handle(Void event) {
                 request.response().end();
             }
         });
-    }
 
-//    public void sendNotFoundClientResponse(HttpServerRequest request, HttpClientResponse clientResponse, String messagePayload) {
-//        request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
-//        request.response().setStatusMessage("Artifact NOT FOUND");
-//        request.response().end();
-//    }
+    }
 
     private void sendClientResponseWithPayload(HttpServerRequest request, HttpClientResponse clientResponse, String messagePayload) {
         request.response().setStatusCode(clientResponse.statusCode());
@@ -102,6 +97,7 @@ public class HttpClientProxy {
         request.response().putHeader(HttpHeaders.CONTENT_TYPE, clientResponse.headers().get(HttpHeaders.CONTENT_TYPE));
         fixWarningCookieDomain(request, clientResponse);
         request.response().end(messagePayload);
+        System.out.println("Ending sending pom");
     }
 
     public void sendError(HttpServerRequest request, Throwable throwable) {
@@ -169,6 +165,8 @@ public class HttpClientProxy {
     }
 
     public void processGETRepositoryRequest(final HttpServerRequest request, Handler<HttpClientResponse> responseHandler) {
+
+        HttpClient vertxHttpClient = getVertxHttpClient();
         final String path = getRequestPath(request);
         System.out.println("Download " + path);
         HttpClientRequest clientRequest = vertxHttpClient.get(path, responseHandler);
@@ -181,6 +179,23 @@ public class HttpClientProxy {
         });
         clientRequest.end();
     }
+
+
+    public void processHEADRepositoryRequest(final HttpServerRequest request, Handler<HttpClientResponse> responseHandler) {
+        HttpClient vertxHttpClient = vertx.createHttpClient().setHost(repoHost).setPort(repoPort);
+        final String path = getRequestPath(request);
+        System.out.println("HEAD " + path);
+        HttpClientRequest clientRequest = vertxHttpClient.head(path, responseHandler);
+        clientRequest.headers().set(request.headers());
+        clientRequest.exceptionHandler(new Handler<Throwable>() {
+            @Override
+            public void handle(Throwable throwable) {
+                sendError(request, throwable);
+            }
+        });
+        clientRequest.end();
+    }
+
 
     public void fixWarningCookieDomain(HttpServerRequest request, HttpClientResponse clientResponse) {
         final String setCookie = clientResponse.headers().get(HttpHeaders.SET_COOKIE);
