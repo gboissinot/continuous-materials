@@ -39,6 +39,8 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
     private void processRepository(final HttpServerRequest request,
                                    final int repoIndex) {
 
+        System.out.println("Trying to download " + request.path() + "from " + repositoryScanner.getRepoFromIndex(repoIndex));
+
         if (repositoryScanner.isLastRepo(repoIndex)) {
             request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
             request.response().setStatusMessage("Artifact NOT FOUND");
@@ -49,7 +51,6 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
         final RepositoryObject repositoryInfo = repositoryScanner.getRepoFromIndex(repoIndex);
         final HttpClient vertxHttpClient = vertx.createHttpClient();
         vertxHttpClient.setHost(repositoryInfo.getHost()).setPort(repositoryInfo.getPort());
-
         final HttpClientProxy httpClientProxy = new HttpClientProxy(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri());
 
         HttpClientRequest vertxRequest = vertxHttpClient.head(httpClientProxy.getRequestPath(request), new Handler<HttpClientResponse>() {
@@ -94,6 +95,7 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
     }
 
     private void makeGetRepoRequest(final HttpServerRequest request, RepositoryObject repositoryInfo) {
+        System.out.println("Downloding " + request.path() + " from " + repositoryInfo);
         GETHandler getHandler = new GETHandler(new HttpClientProxy(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri()));
         getHandler.handle(request);
     }
