@@ -29,7 +29,7 @@ public class RepositoryObject {
 
     @Override
     public String toString() {
-        return "RepositoryObject{" +
+        return "{" +
                 "host='" + host + '\'' +
                 ", port=" + port +
                 ", uri='" + uri + '\'' +
