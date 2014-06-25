@@ -35,13 +35,6 @@ public class MongoDBIntegrationService {
                 if (metadata != null) {
                     final ArtifactInfo ai = IndexUtils.constructArtifactInfo(doc, repoMavenContext);
                     final ArtifactDocument artifactObj = builderService.buildArtifactObj(ai);
-//                    final String org = artifactObj.getOrg();
-//                    final String name = artifactObj.getName();
-//                    final String version = artifactObj.getVersion();
-//                    if ("org.codehaus.service-conduit".equals(org)
-//                            && "sca4j-xmlfactory".equals(name) && "0.9.6".equals(version) ) {
-//
-
                     System.out.println("Processing artifact with MongoDB and SI... " + artifactObj);
                     final Message<ArtifactDocument> artifactObjMessage =
                             MessageBuilder
@@ -49,7 +42,6 @@ public class MongoDBIntegrationService {
                                     .setHeader("repo.url", repoURL)
                                     .build();
                     inputChannel.send(artifactObjMessage);
-//                    }
                 }
             }
         }

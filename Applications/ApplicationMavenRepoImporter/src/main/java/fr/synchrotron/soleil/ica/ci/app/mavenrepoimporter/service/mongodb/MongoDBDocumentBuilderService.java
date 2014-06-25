@@ -3,7 +3,6 @@ package fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.mongodb;
 import fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.domain.maven.MavenArtifactDocument;
 import fr.synchrotron.soleil.ica.ci.app.mavenrepoimporter.service.maven.MavenDocumentBuilderService;
 import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocument;
-import fr.synchrotron.soleil.ica.ci.lib.mongodb.domainobjects.artifact.ArtifactDocumentKey;
 import org.apache.maven.index.ArtifactInfo;
 
 import java.util.Date;
@@ -22,20 +21,12 @@ public class MongoDBDocumentBuilderService {
     public ArtifactDocument buildArtifactObj(ArtifactInfo artifactInfo) {
 
         MavenArtifactDocument mavenArtifactDocument = mavenDocumentBuilderService.buildArtifactObj(artifactInfo);
-
         ArtifactDocument mongoDBArtifactObj = new ArtifactDocument();
 
         mongoDBArtifactObj.setOrg(mavenArtifactDocument.getOrganisation());
         mongoDBArtifactObj.setName(mavenArtifactDocument.getName());
         mongoDBArtifactObj.setVersion(mavenArtifactDocument.getVersion());
         mongoDBArtifactObj.setStatus(mavenArtifactDocument.getStatus());
-
-//        mongoDBArtifactObj.set_id(new ArtifactDocumentKey(
-//                mavenArtifactDocument.getOrganisation(),
-//                mavenArtifactDocument.getName(),
-//                mavenArtifactDocument.getVersion(),
-//                mavenArtifactDocument.getStatus()
-//        ));
 
         mongoDBArtifactObj.setType(mavenArtifactDocument.getType());
         mongoDBArtifactObj.setSha1(mavenArtifactDocument.getSha1());
