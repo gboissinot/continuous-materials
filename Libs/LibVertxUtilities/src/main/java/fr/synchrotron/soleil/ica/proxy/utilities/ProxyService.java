@@ -56,7 +56,7 @@ public class ProxyService {
         request.response().setStatusCode(clientResponse.statusCode());
         request.response().setStatusMessage(clientResponse.statusMessage());
         request.response().headers().set(clientResponse.headers());
-        //request.response().setChunked(true);
+        request.response().setChunked(true);
         fixWarningCookieDomain(request, clientResponse);
         clientResponse.endHandler(new Handler<Void>() {
             public void handle(Void event) {
