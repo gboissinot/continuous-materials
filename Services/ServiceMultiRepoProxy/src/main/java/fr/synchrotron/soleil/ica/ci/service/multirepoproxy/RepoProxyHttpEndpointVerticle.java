@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
 import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
 import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
+import fr.synchrotron.soleil.ica.proxy.utilities.RequestHandlerWrapper;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServer;
@@ -31,8 +32,9 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         final JsonArray repositories = config.getArray("repositories.get");
         final List<RepositoryObject> repos = buildRepoUrls(repositories);
         RouteMatcher routeMatcher = new RouteMatcher();
-        routeMatcher.headWithRegEx(proxyPath + "/.*", new MutltiGETHandler(vertx, proxyPath, repos));
-        routeMatcher.getWithRegEx(proxyPath + "/.*", new MutltiGETHandler(vertx, proxyPath, repos));
+        final MutltiGETHandler mutltiGETHandler = new MutltiGETHandler(vertx, proxyPath, repos);
+        routeMatcher.headWithRegEx(proxyPath + "/.*", mutltiGETHandler);
+        routeMatcher.getWithRegEx(proxyPath + "/.*", mutltiGETHandler);
 
         //PUT
         final JsonObject putJsonObject = config.getObject("repo.put");
@@ -61,7 +63,7 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         });
 
         final HttpServer httpServer = vertx.createHttpServer();
-        httpServer.requestHandler(routeMatcher);
+        httpServer.requestHandler(new RequestHandlerWrapper(routeMatcher));
         httpServer.listen(port);
 
         container.logger().info("Webserver proxy started, listening on port:" + port);
