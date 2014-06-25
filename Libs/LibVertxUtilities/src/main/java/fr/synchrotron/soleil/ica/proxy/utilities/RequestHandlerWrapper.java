@@ -1,6 +1,6 @@
 package fr.synchrotron.soleil.ica.proxy.utilities;
 
-import org.apache.commons.httpclient.HttpStatus;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
@@ -30,7 +30,7 @@ public class RequestHandlerWrapper implements Handler<HttpServerRequest> {
             @Override
             public void handle(Throwable t) {
                 LOG.error("Severe error during request processing :", t);
-                request.response().setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+                request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
                 request.response().end();
             }
         });
@@ -40,7 +40,7 @@ public class RequestHandlerWrapper implements Handler<HttpServerRequest> {
         } catch (Throwable t) {
             LOG.error("The routeMatcher throw an error", t);
             LOG.error("Severe error during request processing :", t);
-            request.response().setStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+            request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
             request.response().end();
         }
     }
