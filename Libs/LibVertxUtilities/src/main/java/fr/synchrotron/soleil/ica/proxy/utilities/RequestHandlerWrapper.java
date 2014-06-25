@@ -38,7 +38,7 @@ public class RequestHandlerWrapper implements Handler<HttpServerRequest> {
 
         try {
             request.headers().remove(HttpHeaders.KEEP_ALIVE);
-            request.headers().remove("Connection");
+            request.headers().remove(HttpHeaders.CONNECTION);  //not necessary with keepAlive to false
             routeMatcher.handle(request);
         } catch (Throwable t) {
             LOG.error("The routeMatcher throw an error", t);
