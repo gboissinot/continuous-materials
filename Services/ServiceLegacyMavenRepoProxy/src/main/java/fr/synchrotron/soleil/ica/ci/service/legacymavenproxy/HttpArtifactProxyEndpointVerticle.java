@@ -6,6 +6,7 @@ import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection.PUTP
 import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
 import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
 import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
+import fr.synchrotron.soleil.ica.proxy.utilities.RequestHandlerWrapper;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.Handler;
@@ -55,7 +56,7 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
             });
 
             httpServer = vertx.createHttpServer();
-            httpServer.requestHandler(routeMatcher);
+            httpServer.requestHandler(new RequestHandlerWrapper(routeMatcher));
             httpServer.listen(port);
 
             container.logger().info("Webserver proxy started, listening on port:" + port);
@@ -74,10 +75,7 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
         final int repoPortGET = getJsonObject.getInteger("port");
         final String repoURIPathGET = getJsonObject.getString("uri");
 
-
-//        HttpClient vertxHttpClient = vertx.createHttpClient().setHost(repoHostGET).setPort(repoPortGET).setMaxPoolSize(100);
         final HttpClientProxy httpClientProxy = new HttpClientProxy(vertx, proxyPath, repoHostGET, repoPortGET, repoURIPathGET);
-
         routeMatcher
                 .getWithRegEx(proxyPath + "/.*.pom", new GETPOMHandler(httpClientProxy))
                 .getWithRegEx(proxyPath + "/.*.pom.sha1", new GETPOMSha1Handler(httpClientProxy))
@@ -90,9 +88,10 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
         final int repoPortPUT = putJsonObject.getInteger("port");
         final String repoURIPathPUT = putJsonObject.getString("uri");
 
+        final HttpClientProxy httpClientProxy = new HttpClientProxy(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT);
         routeMatcher
-                .putWithRegEx(proxyPath + "/.*.pom", new PUTPOMHandler(new HttpClientProxy(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)))
-                .putWithRegEx(proxyPath + "/.*", new PUTHandler(new HttpClientProxy(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)));
+                .putWithRegEx(proxyPath + "/.*.pom", new PUTPOMHandler(httpClientProxy))
+                .putWithRegEx(proxyPath + "/.*", new PUTHandler(httpClientProxy));
     }
 
 }

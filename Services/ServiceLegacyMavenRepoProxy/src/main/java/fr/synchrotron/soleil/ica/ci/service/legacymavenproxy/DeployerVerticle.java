@@ -13,7 +13,7 @@ public class DeployerVerticle extends Verticle {
     public void start() {
 
         final JsonObject config = container.config();
-        container.deployVerticle(HttpArtifactProxyEndpointVerticle.class.getCanonicalName(), config);
+        container.deployVerticle(HttpArtifactProxyEndpointVerticle.class.getCanonicalName(), config, 5);
 
         final JsonObject mongo = config.getObject("mongo");
         container.deployWorkerVerticle(POMMetadataWorkerVerticle.class.getCanonicalName(), mongo, 3);
