@@ -35,7 +35,11 @@ public class HttpClientProxy {
         this.repoHost = repoHost;
         this.repoPort = repoPort;
         this.repoUri = repoUri;
-        httpClient = vertx.createHttpClient().setHost(repoHost).setPort(repoPort).setMaxPoolSize(20);
+        httpClient = vertx.createHttpClient()
+                .setHost(repoHost)
+                .setPort(repoPort)
+                .setKeepAlive(false)
+                .setMaxPoolSize(20);
     }
 
 
@@ -58,6 +62,7 @@ public class HttpClientProxy {
         clientResponse.endHandler(new Handler<Void>() {
             public void handle(Void event) {
                 request.response().end();
+                //httpClient.close();
             }
         });
 
