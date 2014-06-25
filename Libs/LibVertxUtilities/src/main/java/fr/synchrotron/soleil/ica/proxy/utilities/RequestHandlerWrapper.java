@@ -2,6 +2,7 @@ package fr.synchrotron.soleil.ica.proxy.utilities;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.http.HttpHeaders;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.logging.Logger;
@@ -36,6 +37,8 @@ public class RequestHandlerWrapper implements Handler<HttpServerRequest> {
         });
 
         try {
+            request.headers().remove(HttpHeaders.KEEP_ALIVE);
+            request.headers().remove("Connection");
             routeMatcher.handle(request);
         } catch (Throwable t) {
             LOG.error("The routeMatcher throw an error", t);

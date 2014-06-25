@@ -1,6 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
+import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -10,19 +10,19 @@ import org.vertx.java.core.http.HttpServerRequest;
  */
 public class HEADHandler implements Handler<HttpServerRequest> {
 
-    protected final HttpClientProxy httpClientProxy;
+    protected final ProxyService proxyService;
 
-    public HEADHandler(HttpClientProxy httpClientProxy) {
-        this.httpClientProxy = httpClientProxy;
+    public HEADHandler(ProxyService proxyService) {
+        this.proxyService = proxyService;
     }
 
     @Override
     public void handle(final HttpServerRequest request) {
 
-        httpClientProxy.processHEADRepositoryRequest(request, new Handler<HttpClientResponse>() {
+        proxyService.processHEADRepositoryRequest(request, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
-                httpClientProxy.sendClientResponse(request, clientResponse);
+                proxyService.sendClientResponse(request, clientResponse);
             }
         });
     }

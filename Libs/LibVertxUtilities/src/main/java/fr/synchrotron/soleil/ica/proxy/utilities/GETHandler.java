@@ -9,18 +9,18 @@ import org.vertx.java.core.http.HttpServerRequest;
  */
 public class GETHandler implements Handler<HttpServerRequest> {
 
-    protected final HttpClientProxy httpClientProxy;
+    protected final ProxyService proxyService;
 
-    public GETHandler(HttpClientProxy httpClientProxy) {
-        this.httpClientProxy = httpClientProxy;
+    public GETHandler(ProxyService proxyService) {
+        this.proxyService = proxyService;
     }
 
     @Override
     public void handle(final HttpServerRequest request) {
-        httpClientProxy.processGETRepositoryRequest(request, new Handler<HttpClientResponse>() {
+        proxyService.processGETRepositoryRequest(request, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
-                httpClientProxy.sendClientResponse(request, clientResponse);
+                proxyService.sendClientResponse(request, clientResponse);
             }
         });
     }

@@ -3,7 +3,7 @@ package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection;
 import com.github.ebx.core.MessageFilterService;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
 import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
-import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
+import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class GETPOMHandler extends GETHandler {
 
-    public GETPOMHandler(HttpClientProxy httpClientProxy) {
-        super(httpClientProxy);
+    public GETPOMHandler(ProxyService proxyService) {
+        super(proxyService);
     }
 
     @Override
@@ -27,10 +27,10 @@ public class GETPOMHandler extends GETHandler {
         filterServiceList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "fixWrongValue"));
         filterServiceList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "cache"));
 
-        httpClientProxy.processGETRepositoryRequest(request, new Handler<HttpClientResponse>() {
+        proxyService.processGETRepositoryRequest(request, new Handler<HttpClientResponse>() {
             @Override
             public void handle(final HttpClientResponse clientResponse) {
-                httpClientProxy.sendClientResponseWithFilters(request, clientResponse, filterServiceList);
+                proxyService.sendClientResponseWithFilters(request, clientResponse, filterServiceList);
             }
         });
     }

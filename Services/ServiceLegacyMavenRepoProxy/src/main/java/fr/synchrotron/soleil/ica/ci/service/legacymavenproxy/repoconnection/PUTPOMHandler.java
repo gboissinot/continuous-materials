@@ -2,7 +2,7 @@ package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection;
 
 import com.github.ebx.core.MessagingTemplate;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
-import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
+import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
@@ -20,26 +20,26 @@ import org.vertx.java.core.json.JsonObject;
  */
 public class PUTPOMHandler extends PUTHandler {
 
-    public PUTPOMHandler(HttpClientProxy httpClientProxy) {
-        super(httpClientProxy);
+    public PUTPOMHandler(ProxyService proxyService) {
+        super(proxyService);
     }
 
     @Override
     public void handle(final HttpServerRequest request) {
 
-        final String path = httpClientProxy.getRequestPath(request);
+        final String path = proxyService.getRequestPath(request);
         System.out.println("Upload POM " + path);
 
         final Buffer pomContentBuffer = new Buffer();
 
-        final HttpClientRequest vertxHttpClientRequest = httpClientProxy.getVertxHttpClient().put(path, new Handler<HttpClientResponse>() {
+        final HttpClientRequest vertxHttpClientRequest = proxyService.getVertxHttpClient().put(path, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
                 final int statusCode = clientResponse.statusCode();
                 request.response().setStatusCode(statusCode);
                 request.response().setStatusMessage(clientResponse.statusMessage());
                 request.response().headers().set(clientResponse.headers());
-                httpClientProxy.fixWarningCookieDomain(request, clientResponse);
+                proxyService.fixWarningCookieDomain(request, clientResponse);
                 clientResponse.endHandler(new Handler<Void>() {
                     public void handle(Void event) {
                         final AsyncResultHandler<Message<Void>> replyHandler = new AsyncResultHandler<Message<Void>>() {
@@ -56,7 +56,7 @@ public class PUTPOMHandler extends PUTHandler {
                         jsonObject.putString("action", "store");
                         jsonObject.putString("content", pomContentBuffer.toString());
                         MessagingTemplate
-                                .address(httpClientProxy.getVertx().eventBus(), ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE)
+                                .address(proxyService.getVertx().eventBus(), ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE)
                                 .action("store")
                                 .content(jsonObject).send(replyHandler);
                     }
@@ -68,7 +68,7 @@ public class PUTPOMHandler extends PUTHandler {
         vertxHttpClientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
-                httpClientProxy.sendError(request, throwable);
+                proxyService.sendError(request, throwable);
             }
         });
 

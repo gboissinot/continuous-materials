@@ -1,7 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
 import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
-import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
+import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
@@ -51,9 +51,9 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
         final RepositoryObject repositoryInfo = repositoryScanner.getRepoFromIndex(repoIndex);
         final HttpClient vertxHttpClient = vertx.createHttpClient();
         vertxHttpClient.setHost(repositoryInfo.getHost()).setPort(repositoryInfo.getPort());
-        final HttpClientProxy httpClientProxy = new HttpClientProxy(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri());
+        final ProxyService proxyService = new ProxyService(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri());
 
-        HttpClientRequest vertxRequest = vertxHttpClient.head(httpClientProxy.getRequestPath(request), new Handler<HttpClientResponse>() {
+        HttpClientRequest vertxRequest = vertxHttpClient.head(proxyService.getRequestPath(request), new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
 
@@ -87,7 +87,7 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
         vertxRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
-                httpClientProxy.sendError(request, throwable);
+                proxyService.sendError(request, throwable);
             }
         });
 
@@ -96,7 +96,7 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
 
     private void makeGetRepoRequest(final HttpServerRequest request, RepositoryObject repositoryInfo) {
         System.out.println("Downloding " + request.path() + " from " + repositoryInfo);
-        GETHandler getHandler = new GETHandler(new HttpClientProxy(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri()));
+        GETHandler getHandler = new GETHandler(new ProxyService(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri()));
         getHandler.handle(request);
     }
 

@@ -11,29 +11,29 @@ import org.vertx.java.core.streams.Pump;
  */
 public class PUTHandler implements Handler<HttpServerRequest> {
 
-    protected final HttpClientProxy httpClientProxy;
+    protected final ProxyService proxyService;
 
-    public PUTHandler(HttpClientProxy httpClientProxy) {
-        this.httpClientProxy = httpClientProxy;
+    public PUTHandler(ProxyService proxyService) {
+        this.proxyService = proxyService;
     }
 
     @Override
     public void handle(final HttpServerRequest request) {
 
-        final String path = httpClientProxy.getRequestPath(request);
+        final String path = proxyService.getRequestPath(request);
 
         request.pause();
-        final HttpClientRequest vertxHttpClientRequest = httpClientProxy.getVertxHttpClient().put(path, new Handler<HttpClientResponse>() {
+        final HttpClientRequest vertxHttpClientRequest = proxyService.getVertxHttpClient().put(path, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
-                httpClientProxy.sendClientResponse(request, clientResponse);
+                proxyService.sendClientResponse(request, clientResponse);
             }
         });
         vertxHttpClientRequest.headers().set(request.headers());
         vertxHttpClientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
-                httpClientProxy.sendError(request, throwable);
+                proxyService.sendError(request, throwable);
             }
         });
 

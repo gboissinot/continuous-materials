@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Gregory Boissinot
  */
-public class HttpClientProxy {
+public class ProxyService {
 
     private final Vertx vertx;
     private final String proxyPath;
@@ -25,11 +25,11 @@ public class HttpClientProxy {
 
     private final HttpClient httpClient;
 
-    public HttpClientProxy(Vertx vertx,
-                           String proxyPath,
-                           String repoHost,
-                           int repoPort,
-                           String repoUri) {
+    public ProxyService(Vertx vertx,
+                        String proxyPath,
+                        String repoHost,
+                        int repoPort,
+                        String repoUri) {
         this.vertx = vertx;
         this.proxyPath = proxyPath;
         this.repoHost = repoHost;
@@ -41,7 +41,6 @@ public class HttpClientProxy {
                 .setKeepAlive(false)
                 .setMaxPoolSize(20);
     }
-
 
     public Vertx getVertx() {
         return vertx;

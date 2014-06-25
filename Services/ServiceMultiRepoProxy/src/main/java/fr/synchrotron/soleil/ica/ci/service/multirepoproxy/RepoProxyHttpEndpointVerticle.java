@@ -1,6 +1,6 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
-import fr.synchrotron.soleil.ica.proxy.utilities.HttpClientProxy;
+import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
 import fr.synchrotron.soleil.ica.proxy.utilities.RequestHandlerWrapper;
 import io.netty.handler.codec.http.HttpResponseStatus;
@@ -41,7 +41,7 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         final String repoHostPUT = putJsonObject.getString("host");
         final int repoPortPUT = putJsonObject.getInteger("port");
         final String repoURIPathPUT = putJsonObject.getString("uri");
-        routeMatcher.putWithRegEx(proxyPath + "/.*", new PUTHandler(new HttpClientProxy(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)));
+        routeMatcher.putWithRegEx(proxyPath + "/.*", new PUTHandler(new ProxyService(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)));
 
 
         //Other than HEAD, GET or PUT are not supported
@@ -79,7 +79,7 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
             for (Map.Entry<String, Object> stringObjectEntry : stringObjectMap.entrySet()) {
                 final Map<String, Object> repoMap = (Map<String, Object>) stringObjectEntry.getValue();
                 result.add(new RepositoryObject((String) repoMap.get("host"),
-                        (int) repoMap.get("port"), (String) repoMap.get("uri")));
+                        (Integer) repoMap.get("port"), (String) repoMap.get("uri")));
             }
         }
         return result;
