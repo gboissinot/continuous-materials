@@ -11,6 +11,7 @@ import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,8 +63,8 @@ class ArtifactDocumentLoaderService {
         final BuildTool buildTool = new BuildTool();
         buildTool.setMaven(mavenProjectInfo);
         buildContext.setBuildTool(buildTool);
+        buildContext.setBuildtime(new Date());
         artifactDocument.setBuildContext(buildContext);
-
 
         return artifactDocument;
     }

@@ -15,16 +15,6 @@ public class ArtifactDocument {
 
     public static final String MONGO_ARTIFACTS_COLLECTION_NAME = "artifacts";
 
-//    private ArtifactDocumentKey _id;
-//
-//    public ArtifactDocumentKey get_id() {
-//        return _id;
-//    }
-//
-//    public void set_id(ArtifactDocumentKey _id) {
-//        this._id = _id;
-//    }
-
     private String org;
 
     private String name;
@@ -32,16 +22,17 @@ public class ArtifactDocument {
     private String version;
 
     private String status;
+
     private String type;
-    private boolean isThirdParty;
+    private boolean thirdParty;
     private Date creationDate;
     private Date publicationDate;
     private String sha1;
     private String md5;
     private String description;
     private String fileExtension;
-    private long fileSize;
-    private boolean isForce;
+    private Long fileSize;
+    private boolean force;
     private ArtifactDocumentForJava javaLanguage;
     private ArtifactDocumentForC cLanguage;
     private List<ArtifactDependency> dependencies;
@@ -103,11 +94,11 @@ public class ArtifactDocument {
     }
 
     public boolean isThirdParty() {
-        return isThirdParty;
+        return thirdParty;
     }
 
-    public void setThirdParty(boolean isThirdParty) {
-        this.isThirdParty = isThirdParty;
+    public void setThirdParty(boolean thirdParty) {
+        this.thirdParty = thirdParty;
     }
 
     public Date getCreationDate() {
@@ -158,20 +149,20 @@ public class ArtifactDocument {
         this.fileExtension = fileExtension;
     }
 
-    public long getFileSize() {
+    public Long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(long fileSize) {
+    public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
     }
 
     public boolean isForce() {
-        return isForce;
+        return force;
     }
 
-    public void setForce(boolean isForce) {
-        this.isForce = isForce;
+    public void setForce(boolean force) {
+        this.force = force;
     }
 
     public ArtifactDocumentForJava getJavaLanguage() {
@@ -222,7 +213,7 @@ public class ArtifactDocument {
                 ", version='" + version + '\'' +
                 ", status='" + status + '\'' +
                 ", type='" + type + '\'' +
-                ", isThirdParty=" + isThirdParty +
+                ", thirdParty=" + thirdParty +
                 ", creationDate=" + creationDate +
                 ", publicationDate=" + publicationDate +
                 ", sha1='" + sha1 + '\'' +
@@ -230,7 +221,7 @@ public class ArtifactDocument {
                 ", description='" + description + '\'' +
                 ", fileExtension='" + fileExtension + '\'' +
                 ", fileSize=" + fileSize +
-                ", isForce=" + isForce +
+                ", isForce=" + force +
                 ", javaLanguage=" + javaLanguage +
                 ", cLanguage=" + cLanguage +
                 ", dependencies=" + dependencies +
