@@ -18,7 +18,7 @@ public class RepositoryScanner {
     }
 
     public boolean isLastRepo(int index) {
-        return index == repos.size() - 1;
+        return index == -1;
     }
 
     public RepositoryObject getRepoFromIndex(int index) {
@@ -26,7 +26,11 @@ public class RepositoryScanner {
     }
 
     public int getNextIndex(int index) {
-        return ++index;
+        int nextIndex = ++index;
+        if (nextIndex > repos.size() - 1) {
+            return -1;
+        }
+        return nextIndex;
     }
 
 
