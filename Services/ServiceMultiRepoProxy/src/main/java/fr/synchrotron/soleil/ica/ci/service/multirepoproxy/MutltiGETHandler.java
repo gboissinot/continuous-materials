@@ -50,10 +50,8 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
         System.out.println("Trying to download " + request.path() + "from " + repositoryScanner.getRepoFromIndex(repoIndex));
 
         final RepositoryObject repositoryInfo = repositoryScanner.getRepoFromIndex(repoIndex);
-        final HttpClient vertxHttpClient = vertx.createHttpClient();
-        vertxHttpClient.setHost(repositoryInfo.getHost()).setPort(repositoryInfo.getPort());
         final ProxyService proxyService = new ProxyService(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri());
-
+        final HttpClient vertxHttpClient = proxyService.getVertxHttpClient();
         HttpClientRequest vertxRequest = vertxHttpClient.head(proxyService.getRequestPath(request), new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
