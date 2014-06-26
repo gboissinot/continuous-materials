@@ -11,18 +11,6 @@ public class BinaryArtifactFilter {
     @Filter
     @SuppressWarnings("unused")
     public boolean filteringBinaryArtifacts(ArtifactDocument artifactObj) {
-
-        final String org = artifactObj.getOrg();
-        final String name = artifactObj.getName();
-        final String version = artifactObj.getVersion();
-        if ("org.codehaus.service-conduit".equals(org)
-                && "sca4j-xmlfactory".equals(name)
-                && "0.9.6".equals(version) && "binary".equals(artifactObj.getType())) {
-            return true;
-        } else {
-            return false;
-        }
-
-//        return ("binary".equals(artifactObj.getType()));
+        return ("binary".equals(artifactObj.getType()));
     }
 }
