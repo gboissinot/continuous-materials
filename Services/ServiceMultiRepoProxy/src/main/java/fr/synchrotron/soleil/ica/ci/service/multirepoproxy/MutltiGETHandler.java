@@ -10,6 +10,7 @@ import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerRequest;
 
+import java.nio.channels.UnresolvedAddressException;
 import java.util.List;
 
 /**
@@ -39,14 +40,14 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
     private void processRepository(final HttpServerRequest request,
                                    final int repoIndex) {
 
-        System.out.println("Trying to download " + request.path() + "from " + repositoryScanner.getRepoFromIndex(repoIndex));
-
         if (repositoryScanner.isLastRepo(repoIndex)) {
             request.response().setStatusCode(HttpResponseStatus.NOT_FOUND.code());
             request.response().setStatusMessage("Artifact NOT FOUND");
             request.response().end();
             return;
         }
+
+        System.out.println("Trying to download " + request.path() + "from " + repositoryScanner.getRepoFromIndex(repoIndex));
 
         final RepositoryObject repositoryInfo = repositoryScanner.getRepoFromIndex(repoIndex);
         final HttpClient vertxHttpClient = vertx.createHttpClient();
@@ -87,7 +88,15 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
         vertxRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
-                proxyService.sendError(request, throwable);
+                if (isUnreasolvedHost(throwable)) {
+                    processRepository(request, repositoryScanner.getNextIndex(repoIndex));
+                } else {
+                    proxyService.sendError(request, throwable);
+                }
+            }
+
+            private boolean isUnreasolvedHost(Throwable throwable) {
+                return throwable.getClass().equals(UnresolvedAddressException.class);
             }
         });
 
