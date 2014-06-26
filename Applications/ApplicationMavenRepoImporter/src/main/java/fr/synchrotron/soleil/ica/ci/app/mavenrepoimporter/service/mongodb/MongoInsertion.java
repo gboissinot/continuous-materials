@@ -20,8 +20,15 @@ public class MongoInsertion {
 
     private MongoTemplate mongoTemplate;
 
+    private ObjectMapper objectMapper;
+
     public MongoInsertion(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+        this.objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+
     }
 
     public void insert(ArtifactDocument artifactDocument) {
@@ -33,13 +40,6 @@ public class MongoInsertion {
                 .addCriteria(Criteria.where("version").is(artifactDocument.getVersion()));
 
         final BasicDBObject basicDBObject = new BasicDBObject();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        //objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
         Map<String, Object> map = objectMapper.convertValue(artifactDocument, Map.class);
         basicDBObject.putAll(map);
 
