@@ -2,14 +2,15 @@ package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection;
 
 import com.github.ebx.core.MessagingTemplate;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
-import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
+import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.AsyncResultHandler;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -25,14 +26,14 @@ public class PUTPOMHandler extends PUTHandler {
     }
 
     @Override
-    public void handle(final HttpServerRequest request) {
+    public void handleRequest(final HttpServerRequest request, final HttpClient vertxHttpClient) {
 
         final String path = proxyService.getRequestPath(request);
         System.out.println("Upload POM " + path);
 
         final Buffer pomContentBuffer = new Buffer();
 
-        final HttpClientRequest vertxHttpClientRequest = proxyService.getVertxHttpClient().put(path, new Handler<HttpClientResponse>() {
+        final HttpClientRequest vertxHttpClientRequest = vertxHttpClient.put(path, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
                 final int statusCode = clientResponse.statusCode();
@@ -50,6 +51,7 @@ public class PUTPOMHandler extends PUTHandler {
                                     request.response().setStatusMessage(asyncResult.cause().getMessage());
                                 }
                                 request.response().end();
+                                vertxHttpClient.close();
                             }
                         };
                         final JsonObject jsonObject = new JsonObject();
@@ -69,6 +71,7 @@ public class PUTPOMHandler extends PUTHandler {
             @Override
             public void handle(Throwable throwable) {
                 proxyService.sendError(request, throwable);
+                vertxHttpClient.close();
             }
         });
 

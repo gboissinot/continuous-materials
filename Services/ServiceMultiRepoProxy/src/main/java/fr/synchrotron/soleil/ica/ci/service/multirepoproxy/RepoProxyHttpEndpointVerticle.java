@@ -1,8 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
-import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
-import fr.synchrotron.soleil.ica.proxy.utilities.RequestHandlerWrapper;
+import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServer;
@@ -63,7 +62,7 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         });
 
         final HttpServer httpServer = vertx.createHttpServer();
-        httpServer.requestHandler(new RequestHandlerWrapper(routeMatcher));
+        httpServer.requestHandler(routeMatcher);
         httpServer.listen(port);
 
         container.logger().info("Webserver proxy started, listening on port:" + port);

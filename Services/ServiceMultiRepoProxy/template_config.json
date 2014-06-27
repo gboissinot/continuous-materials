@@ -1,10 +1,10 @@
 {
-    "proxyPath": "/multiRepoProxy",
-    "proxyPort": 8081,
+    "proxyPath": "/maven",
+    "proxyPort": 8090,
     "repositories.get": [
         {
             "repository1": {
-                "host": "google.fr",
+                "host": "2.4.5.6:80",
                 "port": 80,
                 "uri": "/maven2"
             }
@@ -20,7 +20,7 @@
             "repository3": {
                 "host": "localhost",
                 "port": 8081,
-                "uri": "/nexus/content/repositories/releases/"
+                "uri": "/nexus/content/repositories/public/"
             }
         }
     ],

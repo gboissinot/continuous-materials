@@ -64,20 +64,24 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
                             clientResponse.endHandler(new Handler<Void>() {
                                 public void handle(Void event) {
                                     request.response().end();
+                                    vertxHttpClient.close();
                                 }
                             });
                         } else {
+                            vertxHttpClient.close();
                             makeGetRepoRequest(request, repositoryInfo);
                         }
                         break;
                     case 301:
                     case 404:
+                        vertxHttpClient.close();
                         processRepository(request, repositoryScanner.getNextIndex(repoIndex));
                         break;
                     default:
                         request.response().setStatusCode(clientResponse.statusCode());
                         request.response().setStatusMessage(clientResponse.statusMessage());
                         request.response().end();
+                        vertxHttpClient.close();
                         break;
                 }
             }

@@ -5,6 +5,7 @@ import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegis
 import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
 import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerRequest;
 
@@ -21,16 +22,16 @@ public class GETPOMHandler extends GETHandler {
     }
 
     @Override
-    public void handle(final HttpServerRequest request) {
+    public void handleRequest(final HttpServerRequest request, final HttpClient vertxHttpClient) {
 
         final List filterServiceList = new ArrayList();
         filterServiceList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "fixWrongValue"));
         filterServiceList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "cache"));
 
-        proxyService.processGETRepositoryRequest(request, new Handler<HttpClientResponse>() {
+        proxyService.processGETRepositoryRequest(request, vertxHttpClient, new Handler<HttpClientResponse>() {
             @Override
             public void handle(final HttpClientResponse clientResponse) {
-                proxyService.sendClientResponseWithFilters(request, clientResponse, filterServiceList);
+                proxyService.sendClientResponseWithFilters(request, clientResponse, vertxHttpClient, filterServiceList);
             }
         });
     }

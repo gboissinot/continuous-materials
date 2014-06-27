@@ -23,8 +23,6 @@ public class ProxyService {
     private final int repoPort;
     private final String repoUri;
 
-    private final HttpClient httpClient;
-
     public ProxyService(Vertx vertx,
                         String proxyPath,
                         String repoHost,
@@ -35,11 +33,6 @@ public class ProxyService {
         this.repoHost = repoHost;
         this.repoPort = repoPort;
         this.repoUri = repoUri;
-        httpClient = vertx.createHttpClient()
-                .setHost(repoHost)
-                .setPort(repoPort)
-                .setKeepAlive(false)
-                .setMaxPoolSize(20);
     }
 
     public Vertx getVertx() {
@@ -47,12 +40,19 @@ public class ProxyService {
     }
 
     public HttpClient getVertxHttpClient() {
-        return httpClient;
+        //We have here a particular situation (reverse proxy).
+        //We create an HttpClient object for each server request
+        //It is supposed to be lightweight
+        return vertx.createHttpClient()
+                .setHost(repoHost)
+                .setPort(repoPort)
+                .setKeepAlive(false);
     }
 
-    public void sendClientResponse(final HttpServerRequest request, HttpClientResponse clientResponse) {
+    public void sendClientResponse(final HttpServerRequest request,
+                                   HttpClientResponse clientResponse,
+                                   final HttpClient httpClient) {
         clientResponse.pause();
-
         request.response().setStatusCode(clientResponse.statusCode());
         request.response().setStatusMessage(clientResponse.statusMessage());
         request.response().headers().set(clientResponse.headers());
@@ -61,12 +61,10 @@ public class ProxyService {
         clientResponse.endHandler(new Handler<Void>() {
             public void handle(Void event) {
                 request.response().end();
-                //httpClient.close();
+                httpClient.close();
             }
         });
-
         Pump.createPump(clientResponse, request.response()).start();
-
         clientResponse.resume();
     }
 
@@ -91,6 +89,7 @@ public class ProxyService {
 
     public void sendClientResponseWithFilters(final HttpServerRequest request,
                                               final HttpClientResponse clientResponse,
+                                              final HttpClient httpClient,
                                               final List<MessageFilterService> messageFilterServiceList) {
 
         final Buffer clientRepsonseBody = new Buffer();
@@ -107,12 +106,15 @@ public class ProxyService {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.putString("requestPath", getRequestPath(request));
                 jsonObject.putString("content", clientRepsonseBody.toString());
-                applyFiltersAndRespond(vertx, request, clientResponse, messageFilterServiceList, jsonObject);
+                applyFiltersAndRespond(vertx, httpClient, request, clientResponse, messageFilterServiceList, jsonObject);
+                httpClient.close();
             }
         });
     }
 
-    private void applyFiltersAndRespond(final Vertx vertx, final HttpServerRequest request,
+    private void applyFiltersAndRespond(final Vertx vertx,
+                                        final HttpClient httpClient,
+                                        final HttpServerRequest request,
                                         final HttpClientResponse clientResponse,
                                         final List<MessageFilterService> messageFilterServiceList,
                                         final JsonObject jsonObjectMessage) {
@@ -121,6 +123,7 @@ public class ProxyService {
 
         if (messageFilterServiceList.size() == 0) {
             sendClientResponseWithPayload(request, clientResponse, messagePayload);
+            httpClient.close();
             return;
         }
 
@@ -131,9 +134,10 @@ public class ProxyService {
                 if (asyncResult.succeeded()) {
                     messageFilterServiceList.remove(0);
                     jsonObjectMessage.putString("content", asyncResult.result().body());
-                    applyFiltersAndRespond(vertx, request, clientResponse, messageFilterServiceList, jsonObjectMessage);
+                    applyFiltersAndRespond(vertx, httpClient, request, clientResponse, messageFilterServiceList, jsonObjectMessage);
                 } else {
                     sendError(request, asyncResult.cause());
+                    httpClient.close();
                 }
             }
         };
@@ -143,30 +147,33 @@ public class ProxyService {
                 .content(jsonObjectMessage).send(responseHandler);
     }
 
-    public void processGETRepositoryRequest(final HttpServerRequest request, Handler<HttpClientResponse> responseHandler) {
+    public void processGETRepositoryRequest(final HttpServerRequest request,
+                                            final HttpClient httpClient,
+                                            Handler<HttpClientResponse> responseHandler) {
 
-        HttpClient vertxHttpClient = getVertxHttpClient();
         final String path = getRequestPath(request);
-        HttpClientRequest clientRequest = vertxHttpClient.get(path, responseHandler);
+        HttpClientRequest clientRequest = httpClient.get(path, responseHandler);
         clientRequest.headers().set(request.headers());
         clientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
                 sendError(request, throwable);
+                httpClient.close();
+
             }
         });
         clientRequest.end();
     }
 
-    public void processHEADRepositoryRequest(final HttpServerRequest request, Handler<HttpClientResponse> responseHandler) {
-        HttpClient vertxHttpClient = vertx.createHttpClient().setHost(repoHost).setPort(repoPort);
+    public void processHEADRepositoryRequest(final HttpServerRequest request, final HttpClient httpClient, Handler<HttpClientResponse> clientResponseHandler) {
         final String path = getRequestPath(request);
-        HttpClientRequest clientRequest = vertxHttpClient.head(path, responseHandler);
+        HttpClientRequest clientRequest = httpClient.head(path, clientResponseHandler);
         clientRequest.headers().set(request.headers());
         clientRequest.exceptionHandler(new Handler<Throwable>() {
             @Override
             public void handle(Throwable throwable) {
                 sendError(request, throwable);
+                httpClient.close();
             }
         });
         clientRequest.end();

@@ -4,9 +4,8 @@ import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection.GETP
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection.GETPOMSha1Handler;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection.PUTPOMHandler;
 import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
-import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
-import fr.synchrotron.soleil.ica.proxy.utilities.RequestHandlerWrapper;
+import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.busmods.BusModBase;
 import org.vertx.java.core.Handler;
@@ -56,7 +55,7 @@ public class HttpArtifactProxyEndpointVerticle extends BusModBase {
             });
 
             httpServer = vertx.createHttpServer();
-            httpServer.requestHandler(new RequestHandlerWrapper(routeMatcher));
+            httpServer.requestHandler(routeMatcher);
             httpServer.listen(port);
 
             container.logger().info("Webserver proxy started, listening on port:" + port);

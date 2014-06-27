@@ -1,6 +1,7 @@
 package fr.synchrotron.soleil.ica.proxy.utilities;
 
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerRequest;
@@ -9,24 +10,21 @@ import org.vertx.java.core.streams.Pump;
 /**
  * @author Gregory Boissinot
  */
-public class PUTHandler implements Handler<HttpServerRequest> {
-
-    protected final ProxyService proxyService;
+public class PUTHandler extends RequestHandlerWrapper {
 
     public PUTHandler(ProxyService proxyService) {
-        this.proxyService = proxyService;
+        super(proxyService);
     }
 
     @Override
-    public void handle(final HttpServerRequest request) {
-
+    public void handleRequest(final HttpServerRequest request, final HttpClient vertxHttpClient) {
         final String path = proxyService.getRequestPath(request);
 
         request.pause();
-        final HttpClientRequest vertxHttpClientRequest = proxyService.getVertxHttpClient().put(path, new Handler<HttpClientResponse>() {
+        final HttpClientRequest vertxHttpClientRequest = vertxHttpClient.put(path, new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
-                proxyService.sendClientResponse(request, clientResponse);
+                proxyService.sendClientResponse(request, clientResponse, vertxHttpClient);
             }
         });
         vertxHttpClientRequest.headers().set(request.headers());
@@ -34,6 +32,7 @@ public class PUTHandler implements Handler<HttpServerRequest> {
             @Override
             public void handle(Throwable throwable) {
                 proxyService.sendError(request, throwable);
+                vertxHttpClient.close();
             }
         });
 

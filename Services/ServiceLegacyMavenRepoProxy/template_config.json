@@ -1,5 +1,5 @@
 {
-    "proxyPath": "/legacyMavenRepoProxy",
+    "proxyPath": "/maven",
     "proxyPort": 8090,
     "repo.get": {
         "host": "localhost",
