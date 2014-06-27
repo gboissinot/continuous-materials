@@ -36,9 +36,11 @@ public class POMMetadataWorkerVerticle extends BusModBase {
                         switch (action) {
                             case ACTION_IMPORT:
                                 importPom(message, mongoHost, mongoPort, mongoDbName);
+                                message.reply(true);
                                 break;
                             case ACTION_EXPORT:
                                 exportPom(message, mongoHost, mongoPort, mongoDbName);
+                                message.reply(true);
                                 break;
                             default:
                                 message.reply("Wrong Verticle Action in POMMetadataWorkerVerticle.");
