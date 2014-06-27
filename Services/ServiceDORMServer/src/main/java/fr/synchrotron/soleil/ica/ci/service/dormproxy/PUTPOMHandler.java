@@ -5,6 +5,7 @@ import org.vertx.java.core.*;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.json.JsonObject;
 
 
 /**
@@ -40,12 +41,16 @@ public class PUTPOMHandler implements Handler<HttpServerRequest> {
             }
         });
 
+
         request.endHandler(new VoidHandler() {
             @Override
             protected void handle() {
+                final JsonObject message = new JsonObject();
+                message.putString("action", "import");
+                message.putString("content", body.toString());
                 vertx.eventBus().sendWithTimeout(
                         ServiceAddressRegistry.EB_ADDRESS_POMIMPORT_SERVICE,
-                        body.toString(), Integer.MAX_VALUE, new AsyncResultHandler<Message<Boolean>>() {
+                        message, Integer.MAX_VALUE, new AsyncResultHandler<Message<Boolean>>() {
                             @Override
                             public void handle(AsyncResult<Message<Boolean>> asyncResult) {
                                 if (asyncResult.succeeded()) {
