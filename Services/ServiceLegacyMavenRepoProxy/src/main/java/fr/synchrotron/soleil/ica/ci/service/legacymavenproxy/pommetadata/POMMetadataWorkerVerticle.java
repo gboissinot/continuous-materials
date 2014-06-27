@@ -73,6 +73,7 @@ public class POMMetadataWorkerVerticle extends BusModBase {
             message.reply(stringWriter.toString());
 
         } catch (Throwable e) {
+            e.printStackTrace();
             message.fail(-1, e.getMessage());
         }
     }
