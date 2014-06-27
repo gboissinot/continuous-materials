@@ -2,11 +2,14 @@ package fr.synchrotron.soleil.ica.proxy.utilities;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.http.HttpHeaders;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.logging.Logger;
 import org.vertx.java.core.logging.impl.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * @author Gregory Boissinot
@@ -37,8 +40,7 @@ public class RequestHandlerWrapper implements Handler<HttpServerRequest> {
         });
 
         try {
-            request.headers().remove(HttpHeaders.KEEP_ALIVE);
-            request.headers().remove(HttpHeaders.CONNECTION);  //not necessary with keepAlive to false
+            cleanRequestHttpHeaders(request);
             routeMatcher.handle(request);
         } catch (Throwable t) {
             LOG.error("The routeMatcher throw an error", t);
@@ -46,6 +48,19 @@ public class RequestHandlerWrapper implements Handler<HttpServerRequest> {
             request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
             request.response().end();
         }
+    }
+
+    private void cleanRequestHttpHeaders(HttpServerRequest request) {
+        final MultiMap headers = request.headers();
+        for (Map.Entry<String, String> header : headers) {
+            String headerValue = header.getValue();
+            if (headerValue == null) {
+                headers.remove(header.getKey());
+            }
+        }
+        headers.remove(HttpHeaders.KEEP_ALIVE);
+        headers.remove(HttpHeaders.CONNECTION);  //not necessary with keepAlive to false from clients
+
     }
 
 }
