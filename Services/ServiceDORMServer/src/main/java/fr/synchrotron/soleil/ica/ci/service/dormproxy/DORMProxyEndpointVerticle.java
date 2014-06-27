@@ -12,7 +12,7 @@ import org.vertx.java.core.http.RouteMatcher;
  */
 public class DORMProxyEndpointVerticle extends BusModBase {
 
-    public static final String PROXY_PATH = "/legacyMavenRepoProxy";
+    public static final String PROXY_PATH = "/dormservice";
 
     @Override
     public void start() {
