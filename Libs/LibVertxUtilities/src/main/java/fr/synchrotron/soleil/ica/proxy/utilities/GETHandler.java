@@ -1,27 +1,19 @@
 package fr.synchrotron.soleil.ica.proxy.utilities;
 
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientResponse;
-import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.Vertx;
 
 /**
  * @author Gregory Boissinot
  */
-public class GETHandler extends RequestHandlerWrapper {
+public class GETHandler extends HandlerHttpServerRequest {
 
-    public GETHandler(ProxyService proxyService) {
-        super(proxyService);
+    public GETHandler(Vertx vertx, String contextPath, HttpEndpointInfo httpEndpointInfo) {
+        super(vertx, contextPath, httpEndpointInfo);
     }
 
     @Override
-    public void handleRequest(final HttpServerRequest request, final HttpClient vertxHttpClient) {
-        proxyService.processGETRepositoryRequest(request, vertxHttpClient, new Handler<HttpClientResponse>() {
-            @Override
-            public void handle(HttpClientResponse clientResponse) {
-                proxyService.sendClientResponse(request, clientResponse, vertxHttpClient);
-            }
-        });
+    public void handle(HttpServerRequestWrapper request) {
+        request.clientTemplate().getAndRespond();
     }
 
 }

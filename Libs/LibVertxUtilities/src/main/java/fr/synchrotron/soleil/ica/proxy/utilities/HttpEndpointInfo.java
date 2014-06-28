@@ -1,15 +1,15 @@
-package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
+package fr.synchrotron.soleil.ica.proxy.utilities;
 
 /**
  * @author Gregory Boissinot
  */
-public class RepositoryObject {
+public class HttpEndpointInfo {
 
-    private String host;
-    private int port;
-    private String uri;
+    private final String host;
+    private final int port;
+    private final String uri;
 
-    public RepositoryObject(String host, int port, String uri) {
+    public HttpEndpointInfo(String host, int port, String uri) {
         this.host = host;
         this.port = port;
         this.uri = uri;
@@ -29,10 +29,11 @@ public class RepositoryObject {
 
     @Override
     public String toString() {
-        return "{" +
+        return "HttpEndpointInfo{" +
                 "host='" + host + '\'' +
                 ", port=" + port +
                 ", uri='" + uri + '\'' +
                 '}';
     }
 }
+

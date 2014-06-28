@@ -1,30 +1,23 @@
 package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy;
 
-import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
-import fr.synchrotron.soleil.ica.proxy.utilities.RequestHandlerWrapper;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientResponse;
-import org.vertx.java.core.http.HttpServerRequest;
+import fr.synchrotron.soleil.ica.proxy.utilities.HandlerHttpServerRequest;
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpEndpointInfo;
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpServerRequestWrapper;
+import org.vertx.java.core.Vertx;
+
 
 /**
- * Created by Administrateur on 24/06/14.
+ * @author Gregory Boissinot
  */
-public class HEADHandler extends RequestHandlerWrapper {
+public class HEADHandler extends HandlerHttpServerRequest {
 
-    public HEADHandler(ProxyService proxyService) {
-        super(proxyService);
+    public HEADHandler(Vertx vertx, String contextPath, HttpEndpointInfo httpEndpointInfo) {
+        super(vertx, contextPath, httpEndpointInfo);
     }
 
     @Override
-    public void handleRequest(final HttpServerRequest request, final HttpClient vertxHttpClient) {
-
-        proxyService.processHEADRepositoryRequest(request, vertxHttpClient, new Handler<HttpClientResponse>() {
-            @Override
-            public void handle(HttpClientResponse clientResponse) {
-                proxyService.sendClientResponse(request, clientResponse, vertxHttpClient);
-            }
-        });
+    public void handle(HttpServerRequestWrapper request) {
+        request.clientTemplate().headAndRespond();
     }
 
 }

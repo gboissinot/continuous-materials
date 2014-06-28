@@ -1,7 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpEndpointInfo;
 import fr.synchrotron.soleil.ica.proxy.utilities.PUTHandler;
-import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.http.HttpServer;
@@ -29,7 +29,7 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
 
         //GET
         final JsonArray repositories = config.getArray("repositories.get");
-        final List<RepositoryObject> repos = buildRepoUrls(repositories);
+        final List<HttpEndpointInfo> repos = buildRepoUrls(repositories);
         RouteMatcher routeMatcher = new RouteMatcher();
         final MutltiGETHandler mutltiGETHandler = new MutltiGETHandler(vertx, proxyPath, repos);
         routeMatcher.headWithRegEx(proxyPath + "/.*", mutltiGETHandler);
@@ -40,7 +40,8 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
         final String repoHostPUT = putJsonObject.getString("host");
         final int repoPortPUT = putJsonObject.getInteger("port");
         final String repoURIPathPUT = putJsonObject.getString("uri");
-        routeMatcher.putWithRegEx(proxyPath + "/.*", new PUTHandler(new ProxyService(vertx, proxyPath, repoHostPUT, repoPortPUT, repoURIPathPUT)));
+        HttpEndpointInfo httpEndpointInfo = new HttpEndpointInfo(repoHostPUT, repoPortPUT, repoURIPathPUT);
+        routeMatcher.putWithRegEx(proxyPath + "/.*", new PUTHandler(vertx, proxyPath, httpEndpointInfo));
 
 
         //Other than HEAD, GET or PUT are not supported
@@ -69,15 +70,15 @@ public class RepoProxyHttpEndpointVerticle extends Verticle {
 
     }
 
-    private List<RepositoryObject> buildRepoUrls(JsonArray repositories) {
-        List<RepositoryObject> result = new ArrayList<RepositoryObject>();
+    private List<HttpEndpointInfo> buildRepoUrls(JsonArray repositories) {
+        List<HttpEndpointInfo> result = new ArrayList<>();
         for (Object repository : repositories) {
             JsonObject repositoryOject = (JsonObject) repository;
 
             final Map<String, Object> stringObjectMap = repositoryOject.toMap();
             for (Map.Entry<String, Object> stringObjectEntry : stringObjectMap.entrySet()) {
                 final Map<String, Object> repoMap = (Map<String, Object>) stringObjectEntry.getValue();
-                result.add(new RepositoryObject((String) repoMap.get("host"),
+                result.add(new HttpEndpointInfo((String) repoMap.get("host"),
                         (Integer) repoMap.get("port"), (String) repoMap.get("uri")));
             }
         }

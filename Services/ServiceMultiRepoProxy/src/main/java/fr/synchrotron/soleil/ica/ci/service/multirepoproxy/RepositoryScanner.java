@@ -1,5 +1,7 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpEndpointInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +10,9 @@ import java.util.List;
  */
 public class RepositoryScanner {
 
-    private List<RepositoryObject> repos = new ArrayList<RepositoryObject>();
+    private List<HttpEndpointInfo> repos = new ArrayList<HttpEndpointInfo>();
 
-    public RepositoryScanner(List<RepositoryObject> repoList) {
+    public RepositoryScanner(List<HttpEndpointInfo> repoList) {
         if (repoList == null) {
             throw new NullPointerException("A list of repo is required.");
         }
@@ -21,7 +23,7 @@ public class RepositoryScanner {
         return index == -1;
     }
 
-    public RepositoryObject getRepoFromIndex(int index) {
+    public HttpEndpointInfo getRepoFromIndex(int index) {
         return repos.get(index);
     }
 

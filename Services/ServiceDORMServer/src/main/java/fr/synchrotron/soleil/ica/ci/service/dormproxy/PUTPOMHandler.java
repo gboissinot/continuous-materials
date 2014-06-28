@@ -6,12 +6,16 @@ import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.logging.Logger;
+import org.vertx.java.core.logging.impl.LoggerFactory;
 
 
 /**
  * @author Gregory Boissinot
  */
 public class PUTPOMHandler implements Handler<HttpServerRequest> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PUTPOMHandler.class);
 
     private Vertx vertx;
 
@@ -23,7 +27,7 @@ public class PUTPOMHandler implements Handler<HttpServerRequest> {
     public void handle(final HttpServerRequest request) {
 
         String path = request.path();
-        System.out.println("PUT " + path);
+        System.out.println("PUT POM" + path);
 
         final Buffer body = new Buffer();
         request.dataHandler(new Handler<Buffer>() {
@@ -57,6 +61,8 @@ public class PUTPOMHandler implements Handler<HttpServerRequest> {
                                     request.response().setStatusCode(HttpResponseStatus.NO_CONTENT.code());
                                     request.response().end();
                                 } else {
+                                    asyncResult.cause().printStackTrace();
+                                    LOG.error(asyncResult.cause().getMessage());
                                     request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
                                     request.response().setStatusMessage(asyncResult.cause().getMessage());
                                     request.response().end();

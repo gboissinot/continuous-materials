@@ -1,7 +1,8 @@
 package fr.synchrotron.soleil.ica.ci.service.multirepoproxy;
 
 import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
-import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpEndpointInfo;
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpServerRequestWrapper;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
@@ -9,6 +10,8 @@ import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.http.HttpServerRequest;
+import org.vertx.java.core.logging.Logger;
+import org.vertx.java.core.logging.impl.LoggerFactory;
 
 import java.nio.channels.UnresolvedAddressException;
 import java.util.List;
@@ -18,11 +21,13 @@ import java.util.List;
  */
 public class MutltiGETHandler implements Handler<HttpServerRequest> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MutltiGETHandler.class);
+
     private final Vertx vertx;
     private final RepositoryScanner repositoryScanner;
     private final String proxyPath;
 
-    public MutltiGETHandler(Vertx vertx, String proxyPath, List<RepositoryObject> repos) {
+    public MutltiGETHandler(Vertx vertx, String proxyPath, List<HttpEndpointInfo> repos) {
         this.vertx = vertx;
 
         if (repos == null || repos.size() == 0) {
@@ -49,10 +54,33 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
 
         System.out.println("Trying to download " + request.path() + "from " + repositoryScanner.getRepoFromIndex(repoIndex));
 
-        final RepositoryObject repositoryInfo = repositoryScanner.getRepoFromIndex(repoIndex);
-        final ProxyService proxyService = new ProxyService(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri());
-        final HttpClient vertxHttpClient = proxyService.getVertxHttpClient();
-        HttpClientRequest vertxRequest = vertxHttpClient.head(proxyService.getRequestPath(request), new Handler<HttpClientResponse>() {
+        final HttpEndpointInfo httpEndpointInfo = repositoryScanner.getRepoFromIndex(repoIndex);
+
+        //We have here a particular situation (reverse proxy).
+        //We create an HttpClient object for each server request
+        //It is supposed to be lightweight
+        final HttpClient httpClient = vertx.createHttpClient()
+                .setHost(httpEndpointInfo.getHost())
+                .setPort(httpEndpointInfo.getPort())
+                .setKeepAlive(false);
+
+        //Sample use case: timeout on client request
+        request.exceptionHandler(new Handler<Throwable>() {
+            @Override
+            public void handle(Throwable t) {
+                LOG.error("Severe error during request processing :", t);
+                request.response().setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code());
+                request.response().end();
+                httpClient.close();
+            }
+        });
+
+        final HttpServerRequestWrapper requestWrapper
+                = new HttpServerRequestWrapper(request, httpClient, proxyPath, httpEndpointInfo, vertx);
+
+        final HttpServerRequestWrapper.RequestTemplate requestTemplate = requestWrapper.clientTemplate();
+
+        HttpClientRequest vertxRequest = httpClient.head(requestTemplate.getClientRequestPath(), new Handler<HttpClientResponse>() {
             @Override
             public void handle(HttpClientResponse clientResponse) {
 
@@ -64,24 +92,25 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
                             clientResponse.endHandler(new Handler<Void>() {
                                 public void handle(Void event) {
                                     request.response().end();
-                                    vertxHttpClient.close();
+                                    httpClient.close();
                                 }
                             });
                         } else {
-                            vertxHttpClient.close();
-                            makeGetRepoRequest(request, repositoryInfo);
+                            httpClient.close();
+                            GETHandler getHandler = new GETHandler(vertx, proxyPath, httpEndpointInfo);
+                            getHandler.handle(requestWrapper);
                         }
                         break;
                     case 301:
                     case 404:
-                        vertxHttpClient.close();
+                        httpClient.close();
                         processRepository(request, repositoryScanner.getNextIndex(repoIndex));
                         break;
                     default:
                         request.response().setStatusCode(clientResponse.statusCode());
                         request.response().setStatusMessage(clientResponse.statusMessage());
                         request.response().end();
-                        vertxHttpClient.close();
+                        httpClient.close();
                         break;
                 }
             }
@@ -93,7 +122,7 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
                 if (isUnreasolvedHost(throwable)) {
                     processRepository(request, repositoryScanner.getNextIndex(repoIndex));
                 } else {
-                    proxyService.sendError(request, throwable);
+                    requestTemplate.sendError(throwable);
                 }
             }
 
@@ -103,12 +132,6 @@ public class MutltiGETHandler implements Handler<HttpServerRequest> {
         });
 
         vertxRequest.end();
-    }
-
-    private void makeGetRepoRequest(final HttpServerRequest request, RepositoryObject repositoryInfo) {
-        System.out.println("Downloding " + request.path() + " from " + repositoryInfo);
-        GETHandler getHandler = new GETHandler(new ProxyService(vertx, proxyPath, repositoryInfo.getHost(), repositoryInfo.getPort(), repositoryInfo.getUri()));
-        getHandler.handle(request);
     }
 
 }

@@ -3,11 +3,9 @@ package fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.repoconnection;
 import com.github.ebx.core.MessageFilterService;
 import fr.synchrotron.soleil.ica.ci.service.legacymavenproxy.ServiceAddressRegistry;
 import fr.synchrotron.soleil.ica.proxy.utilities.GETHandler;
-import fr.synchrotron.soleil.ica.proxy.utilities.ProxyService;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientResponse;
-import org.vertx.java.core.http.HttpServerRequest;
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpEndpointInfo;
+import fr.synchrotron.soleil.ica.proxy.utilities.HttpServerRequestWrapper;
+import org.vertx.java.core.Vertx;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,23 +15,16 @@ import java.util.List;
  */
 public class GETPOMHandler extends GETHandler {
 
-    public GETPOMHandler(ProxyService proxyService) {
-        super(proxyService);
+    public GETPOMHandler(Vertx vertx, String contextPath, HttpEndpointInfo httpEndpointInfo) {
+        super(vertx, contextPath, httpEndpointInfo);
     }
 
     @Override
-    public void handleRequest(final HttpServerRequest request, final HttpClient vertxHttpClient) {
-
-        final List filterServiceList = new ArrayList();
-        filterServiceList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "fixWrongValue"));
-        filterServiceList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "cache"));
-
-        proxyService.processGETRepositoryRequest(request, vertxHttpClient, new Handler<HttpClientResponse>() {
-            @Override
-            public void handle(final HttpClientResponse clientResponse) {
-                proxyService.sendClientResponseWithFilters(request, clientResponse, vertxHttpClient, filterServiceList);
-            }
-        });
+    public void handle(final HttpServerRequestWrapper request) {
+        final List<MessageFilterService> responseFilterList = new ArrayList<>();
+        responseFilterList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "fixWrongValue"));
+        responseFilterList.add(new MessageFilterService(ServiceAddressRegistry.EB_ADDRESS_POMMETADATA_SERVICE, "cache"));
+        request.clientTemplate().getAndRespond(responseFilterList);
     }
 
 }
