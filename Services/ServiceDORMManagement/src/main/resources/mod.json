@@ -1,0 +1,6 @@
+{
+    "main": "fr.synchrotron.soleil.ica.ci.service.dornmanagement.DeployerVerticle",
+    "description": "DORM Management Service",
+    "licenses": ["MIT license"],
+    "author": "Gregory Boissinot"
+}

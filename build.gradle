@@ -195,4 +195,14 @@ project(':Applications/ApplicationMavenRepoImporter'){
     }
 }
 
+project(':Services/ServiceDORMManagement'){
+    dependencies {
+        compile project(':Libs/LibMongoRepository')
+    }
+}
 
+project(':Services/ServiceDORMManagementSolution'){
+    dependencies {
+        compile project(':Libs/LibMongoRepository')
+    }
+}

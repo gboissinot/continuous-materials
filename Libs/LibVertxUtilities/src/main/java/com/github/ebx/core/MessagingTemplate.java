@@ -1,5 +1,6 @@
 package com.github.ebx.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -81,7 +82,9 @@ public class MessagingTemplate {
 
         public InternalMessagingTemplate content(Object content) {
             //TODO Serialize Object into JSON
-            this.content = content;
+//            ObjectMapper objectMapper = new ObjectMapper();
+//
+//            this.content = objectMapper.convertValue(content, JS);
             return this;
         }
 

@@ -1,0 +1,17 @@
+{
+    "service.path": "/mgr",
+    "service.port": 8090,
+    "mongo": {
+        "mongoHost": "127.0.0.1",
+        "mongoPort": 27017,
+        "mongoDbName": "repo"
+    },
+    "jenkins": {
+        "url": {
+            "host": "localhost",
+            "port": 8080,
+            "path": "/"
+        },
+        "config.template.dir": "/Users/gregory/Dev/TZ/Solution/continuous-materials/Services/ServiceDORMManagement/"
+    }
+}
