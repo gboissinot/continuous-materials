@@ -1,0 +1,7 @@
+
+//Launch mongo --shell init.js
+conn = new Mongo("localhost:27017");
+db = conn.getDB("repo");
+db.projects.insert({ "org" : "com.zenika", "name" : "component1", "developers" : [ 	{ 	"id" : "gbois", 	"name" : "Gregory Boissinot", 	"email" : "gregory.boissinot@gmail.com", 	"roles" : [ 	"Project owner", 	"Project developer" ], 	"timezone" : "+1" } ], "scmConnection" : "https://github.com/synchrotron-soleil-ica/mongodb-util.git", "licences" : [ 	{ 	"name" : "MIT license", 	"comments" : "All source code is under the MIT license." } ] })
+db.projects.insert({ "org" : "com.zenika", "name" : "component2", "developers" : [ 	{ 	"id" : "gbois", 	"name" : "Gregory Boissinot", 	"email" : "gregory.boissinot@gmail.com", 	"roles" : [ 	"Project owner", 	"Project developer" ], 	"timezone" : "+1" } ], "scmConnection" : "https://github.com/synchrotron-soleil-ica/mongodb-util.git", "licences" : [ 	{ 	"name" : "MIT license", 	"comments" : "All source code is under the MIT license." } ] })
+db.projects.insert({ "org" : "com.zenika", "name" : "component3", "developers" : [ 	{ 	"id" : "gbois", 	"name" : "Gregory Boissinot", 	"email" : "gregory.boissinot@gmail.com", 	"roles" : [ 	"Project owner", 	"Project developer" ], 	"timezone" : "+1" } ], "scmConnection" : "https://github.com/synchrotron-soleil-ica/mongodb-util.git", "licences" : [ 	{ 	"name" : "MIT license", 	"comments" : "All source code is under the MIT license." } ] })

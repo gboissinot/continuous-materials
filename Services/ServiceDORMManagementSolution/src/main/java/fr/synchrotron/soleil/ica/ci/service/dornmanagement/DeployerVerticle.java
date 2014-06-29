@@ -15,10 +15,10 @@ public class DeployerVerticle extends Verticle {
         container.deployVerticle(HttpDORMManagementEndpointVerticle.class.getCanonicalName(), serviceConfig, 2);
 
         final JsonObject mongoConfig = serviceConfig.getObject("mongo");
-        container.deployWorkerVerticle(ProjectPersistorWorkerVerticle.class.getCanonicalName(), mongoConfig, 5);
+        container.deployWorkerVerticle(ProjectPersistorWorkerVerticle.class.getCanonicalName(), mongoConfig, 3);
 
         final JsonObject jenkinsConfig = serviceConfig.getObject("jenkins");
-        container.deployVerticle(JenkinsJobVerticle.class.getCanonicalName(), jenkinsConfig, 5);
+        container.deployVerticle(JenkinsJobVerticle.class.getCanonicalName(), jenkinsConfig, 3);
 
     }
 

@@ -1,0 +1,41 @@
+# Launch Jenkins
+java -jar jenkins.war
+
+#Test if a Job exists (returns 302 or 404)
+curl -X HEAD http://localhost:8080/job/sample-job
+
+# GET config.xml
+curl -X GET http://localhost:8080/job/sample-job/config.xml > config.xml
+
+# Create a new Jenkins Job
+curl -X POST -H "Content-Type:application/xml" -d @config.xml "http://localhost:8080/createItem?name=sample-job"
+
+# Update an existing Job
+curl -X POST -H "Content-Type:application/xml" -d @config.xml "http://localhost:8080/job/sample-job/config.xml"
+
+#Launch Synchro Service
+curl -X PUT http://localhost:8090/mgr/syncJenkinsJobs
+
+
+1. Pre-recquis
+
+a. Faire un git clone https://github.com/gboissinot/continuous-materials.git
+b. gradle clean build
+c. Importation dans IntelliJ
+Open the build.gradle and follow next steps
+
+d. Lancer MongoDB
+./mongod --dbpath data
+
+c. Importer les données
+./mongo --shell init.js
+
+
+2. Demarche
+
+a. Creer le EndpointVerticle qui dispatche vers un Handler
+
+b. Creer une worker vericle qui
+
+
+
